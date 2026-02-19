@@ -1,36 +1,31 @@
 /**
  * 소셜 로그인 버튼 컴포넌트
+ * [수정] 이모지 아이콘 전부 제거 → 빈 원형 플레이스홀더
  */
 
 import React from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import KakaoLoginIcon from '../../assets/icon/kakao_login.svg';
+import NaverLoginIcon from '../../assets/icon/naver_login.svg';
+import GoogleLoginIcon from '../../assets/icon/google_login.svg';
+import AppleLoginIcon from '../../assets/icon/apple_login.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { borderRadius, spacing } from '../../styles/spacing';
 import type { SocialLoginButtonProps, SocialProvider } from '../../types';
 
-// 소셜 로그인 아이콘
-const SocialIcons: Record<SocialProvider, React.FC> = {
-  kakao: () => (
-    <View style={[styles.iconContainer, { backgroundColor: colors.kakao }]}>
-      <Text style={[styles.iconText, { color: colors.kakaoText }]}>K</Text>
-    </View>
-  ),
-  naver: () => (
-    <View style={[styles.iconContainer, { backgroundColor: colors.naver }]}>
-      <Text style={[styles.iconText, { color: colors.naverText }]}>N</Text>
-    </View>
-  ),
-  google: () => (
-    <View style={[styles.iconContainer, styles.googleIcon]}>
-      <Text style={[styles.iconText, { color: '#4285F4' }]}>G</Text>
-    </View>
-  ),
-  apple: () => (
-    <View style={[styles.iconContainer, { backgroundColor: colors.apple }]}>
-      <Text style={[styles.iconText, { color: colors.appleText }]}>🍎</Text>
-    </View>
-  ),
+const SocialIcons: Record<SocialProvider, React.FC<any>> = {
+  kakao: KakaoLoginIcon,
+  naver: NaverLoginIcon,
+  google: GoogleLoginIcon,
+  apple: AppleLoginIcon,
+};
+
+const socialColors: Record<SocialProvider, { bg: string; border?: string }> = {
+  kakao: { bg: colors.kakao },
+  naver: { bg: colors.naver },
+  google: { bg: colors.white, border: colors.googleBorder },
+  apple: { bg: colors.apple },
 };
 
 const SocialLabels: Record<SocialProvider, string> = {
@@ -47,8 +42,8 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
   disabled = false,
   style,
 }) => {
-  const IconComponent = SocialIcons[provider];
   const label = SocialLabels[provider];
+  const colorConfig = socialColors[provider];
 
   if (variant === 'icon') {
     return (
@@ -58,7 +53,15 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
         disabled={disabled}
         activeOpacity={0.7}
       >
-        <IconComponent />
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: colorConfig.bg },
+            colorConfig.border ? { borderWidth: 1, borderColor: colorConfig.border } : null,
+          ]}
+        >
+          {React.createElement(SocialIcons[provider], { width: 24, height: 24 })}
+        </View>
         <Text style={styles.iconLabel}>{label}</Text>
       </TouchableOpacity>
     );
@@ -111,8 +114,8 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
       activeOpacity={0.8}
     >
       <View style={styles.fullButtonContent}>
-        <View style={styles.fullButtonIcon}>
-          <IconComponent />
+        <View style={styles.fullButtonIconPlaceholder}>
+          {React.createElement(SocialIcons[provider], { width: 20, height: 20 })}
         </View>
         <Text style={[styles.fullButtonText, getTextStyle()]}>{label}</Text>
       </View>
@@ -125,21 +128,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 72,
   },
+  /* [수정] 아이콘 컨테이너 - 내부 텍스트 없이 빈 원형 */
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  googleIcon: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.googleBorder,
-  },
-  iconText: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   iconLabel: {
     ...typography.bodySmall,
@@ -159,7 +154,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  fullButtonIcon: {
+  fullButtonIconPlaceholder: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: spacing.md,
   },
   fullButtonText: {

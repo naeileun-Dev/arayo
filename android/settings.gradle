@@ -1,13 +1,10 @@
-pluginManagement {
-    includeBuild("../node_modules/@react-native/gradle-plugin")
-}
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
 
-plugins {
-    id("com.facebook.react.settings")
+extensions.configure(com.facebook.react.ReactSettingsExtension.class) { ex ->
+    ex.autolinkLibrariesFromCommand()
 }
-
-def reactSettingsExtension = extensions.getByType(com.facebook.react.ReactSettingsExtension)
-reactSettingsExtension.autolinkLibrariesFromCommand()
 
 rootProject.name = 'ArayoMarketplace'
 include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')

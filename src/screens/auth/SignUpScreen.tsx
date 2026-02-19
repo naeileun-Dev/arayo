@@ -463,6 +463,8 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               label="마케팅 수신 동의"
               onViewDetail={() => handleViewAgreement('marketing')}
             />
+
+            {renderErrors(errors.agreements)}
           </View>
 
           {/* 회원가입 버튼 */}
@@ -474,6 +476,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
           />
         </ScrollView>
       </KeyboardAvoidingView>
+
     </SafeAreaView>
   );
 };

@@ -1,6 +1,7 @@
 /**
  * 회원가입 완료 화면
  * UI-MMBR-105
+ * [수정] 이모지 아이콘 전부 제거
  */
 
 import React from 'react';
@@ -13,6 +14,8 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from '../../components/common';
+import StateCheckIcon from '../../assets/icon/State=check.svg';
+import RefreshCwIcon from '../../assets/icon/refresh-cw.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, screenPadding, borderRadius } from '../../styles/spacing';
@@ -34,11 +37,8 @@ const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* 성공 아이콘 */}
         <View style={styles.iconContainer}>
-          <View style={styles.successIcon}>
-            <Text style={styles.successIconText}>✓</Text>
-          </View>
+          <StateCheckIcon width={64} height={64} />
         </View>
 
         {/* 환영 메시지 */}
@@ -67,7 +67,7 @@ const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
           onPress={handleUpgradeToBusiness}
           activeOpacity={0.8}
         >
-          <Text style={styles.upgradeButtonIcon}>🔄</Text>
+          <RefreshCwIcon width={18} height={18} color={colors.white} />
           <Text style={styles.upgradeButtonText}>기업회원 전환</Text>
         </TouchableOpacity>
       </View>
@@ -88,18 +88,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginBottom: spacing.xl,
-  },
-  successIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.success,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  successIconText: {
-    fontSize: 32,
-    color: colors.white,
   },
   title: {
     ...typography.h3,
@@ -146,13 +134,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderRadius: borderRadius.md,
   },
-  upgradeButtonIcon: {
-    fontSize: 18,
-    marginRight: spacing.sm,
-  },
   upgradeButtonText: {
     ...typography.button,
     color: colors.white,
+    marginLeft: spacing.sm,
   },
 });
 

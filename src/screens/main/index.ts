@@ -1,0 +1,8 @@
+/**
+ * 메인 화면 Export
+ */
+
+export { default as HomeScreen } from './HomeScreen';
+export { default as CategoryScreen } from './CategoryScreen';
+export { default as WishlistScreen } from './WishlistScreen';
+export { default as MyPageScreen } from './MyPageScreen';

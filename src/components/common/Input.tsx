@@ -11,17 +11,12 @@ import {
   TouchableOpacity,
   TextInputProps,
 } from 'react-native';
+import EyeIcon from '../../assets/icon/eye.svg';
+import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 import { colors } from '../../styles/colors';
 import { typography, fontFamily, fontSize } from '../../styles/typography';
 import { borderRadius, componentHeight, spacing } from '../../styles/spacing';
 import type { InputProps } from '../../types';
-
-// 아이콘 컴포넌트
-const EyeIcon: React.FC<{ visible: boolean }> = ({ visible }) => (
-  <Text style={{ fontSize: 18, color: colors.textTertiary }}>
-    {visible ? '👁' : '👁‍🗨'}
-  </Text>
-);
 
 const Input = forwardRef<TextInput, InputProps & TextInputProps>(
   (
@@ -115,7 +110,11 @@ const Input = forwardRef<TextInput, InputProps & TextInputProps>(
               onPress={togglePasswordVisibility}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <EyeIcon visible={isPasswordVisible} />
+              {isPasswordVisible ? (
+                <EyeIcon width={20} height={20} color={colors.textTertiary} />
+              ) : (
+                <EyeClosedIcon width={20} height={20} color={colors.textTertiary} />
+              )}
             </TouchableOpacity>
           )}
 

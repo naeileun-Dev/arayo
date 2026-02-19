@@ -7,7 +7,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
-import { AuthNavigator } from './src/navigation';
+import { RootNavigator } from './src/navigation';
 import { colors } from './src/styles/colors';
 
 const App: React.FC = () => {
@@ -15,7 +15,7 @@ const App: React.FC = () => {
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <NavigationContainer>
-        <AuthNavigator />
+        <RootNavigator />
       </NavigationContainer>
     </SafeAreaProvider>
   );

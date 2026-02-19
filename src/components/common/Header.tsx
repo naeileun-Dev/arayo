@@ -1,5 +1,6 @@
 /**
  * 공통 Header 컴포넌트
+ * [수정] 이모지 아이콘 제거 → 텍스트 심볼로 최소화 (이미지 직접 교체용)
  */
 
 import React from 'react';
@@ -10,19 +11,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
+import XIcon from '../../assets/icon/X.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, componentHeight, iconSize } from '../../styles/spacing';
 import type { HeaderProps } from '../../types';
-
-// 간단한 아이콘 컴포넌트
-const BackIcon: React.FC = () => (
-  <Text style={{ fontSize: 24, color: colors.textPrimary }}>←</Text>
-);
-
-const CloseIcon: React.FC = () => (
-  <Text style={{ fontSize: 24, color: colors.textPrimary }}>✕</Text>
-);
 
 const Header: React.FC<HeaderProps> = ({
   title,
@@ -59,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
             onPress={onBack}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <BackIcon />
+            <ChevronLeftIcon width={24} height={24} color={colors.textPrimary} />
           </TouchableOpacity>
         ) : (
           <View style={styles.placeholder} />
@@ -85,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({
             onPress={onClose}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <CloseIcon />
+            <XIcon width={24} height={24} color={colors.textPrimary} />
           </TouchableOpacity>
         ) : (
           <View style={styles.placeholder} />

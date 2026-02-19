@@ -1,6 +1,8 @@
 /**
  * 계정정보 찾기 화면
  * UI-MMBR-106 ~ UI-MMBR-110
+ * [수정] 이모지 아이콘 제거
+ * [수정] Input 언더라인 스타일 자동 적용 (Input 컴포넌트 변경)
  */
 
 import React, { useState } from 'react';
@@ -200,8 +202,10 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
   // 비밀번호 재설정 완료 화면
   const renderPasswordCompleteView = () => (
     <View style={styles.completeContainer}>
+      {/* [수정] 이모지 제거 → 빈 아이콘 자리 */}
       <View style={styles.successIcon}>
-        <Text style={styles.successIconText}>✓</Text>
+        {/* [아이콘 자리] 체크마크 아이콘 - 직접 추가 */}
+        <View style={styles.successCheckmark} />
       </View>
 
       <Text style={styles.completeTitle}>
@@ -335,6 +339,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: spacing['5xl'],
   },
+  /* [수정] 이모지 제거 → 빈 아이콘 자리 */
   successIcon: {
     width: 64,
     height: 64,
@@ -344,9 +349,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.xl,
   },
-  successIconText: {
-    fontSize: 32,
-    color: colors.white,
+  /* [수정] 체크마크 플레이스홀더 */
+  successCheckmark: {
+    width: 32,
+    height: 32,
   },
   completeTitle: {
     ...typography.h3,

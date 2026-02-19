@@ -1,5 +1,6 @@
 /**
  * 공통 Checkbox 컴포넌트
+ * [수정] 이모지 체크마크 제거 → 순수 View 기반 체크마크
  */
 
 import React from 'react';
@@ -45,7 +46,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
           disabled && styles.checkboxDisabled,
         ]}
       >
-        {checked && <Text style={styles.checkmark}>✓</Text>}
+        {/* [수정] 이모지 대신 순수 View 기반 체크마크 */}
+        {checked && (
+          <View style={styles.checkmarkContainer}>
+            <View style={[styles.checkmarkShort, size === 'small' && styles.checkmarkShortSmall]} />
+            <View style={[styles.checkmarkLong, size === 'small' && styles.checkmarkLongSmall]} />
+          </View>
+        )}
       </View>
       {label && (
         <Text
@@ -83,10 +90,38 @@ const styles = StyleSheet.create({
     backgroundColor: colors.borderLight,
     borderColor: colors.borderLight,
   },
-  checkmark: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: 'bold',
+  /* [수정] View 기반 체크마크 */
+  checkmarkContainer: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkmarkShort: {
+    position: 'absolute',
+    width: 2,
+    height: 6,
+    backgroundColor: colors.white,
+    borderRadius: 1,
+    transform: [{ rotate: '-45deg' }, { translateX: -2.5 }, { translateY: 1 }],
+  },
+  checkmarkShortSmall: {
+    height: 5,
+    width: 1.5,
+    transform: [{ rotate: '-45deg' }, { translateX: -2 }, { translateY: 0.5 }],
+  },
+  checkmarkLong: {
+    position: 'absolute',
+    width: 2,
+    height: 10,
+    backgroundColor: colors.white,
+    borderRadius: 1,
+    transform: [{ rotate: '45deg' }, { translateX: 1.5 }, { translateY: -0.5 }],
+  },
+  checkmarkLongSmall: {
+    height: 8,
+    width: 1.5,
+    transform: [{ rotate: '45deg' }, { translateX: 1 }, { translateY: -0.5 }],
   },
   label: {
     ...typography.body,

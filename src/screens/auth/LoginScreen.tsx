@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   SafeAreaView,
   ScrollView,
@@ -15,8 +16,10 @@ import {
   Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { CommonActions } from '@react-navigation/native';
 import { Button, Input, Checkbox } from '../../components/common';
 import { SocialLoginButton } from '../../components/auth';
+import MainLogo from '../../assets/images/main_logo.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, screenPadding, borderRadius } from '../../styles/spacing';
@@ -30,13 +33,27 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [autoLogin, setAutoLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  /* [수정] 로그인 에러 상태 추가 */
+  const [loginError, setLoginError] = useState('');
+
   const handleLogin = async () => {
+    setLoginError('');
     setIsLoading(true);
     try {
-      // TODO: 로그인 API 호출
+      // TODO: 실제 로그인 API 호출
       console.log('Login attempt:', { userId, password, autoLogin });
+
+      // 로그인 성공 → Main 화면으로 이동 (Auth 스택을 리셋)
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main' as any }],
+        }),
+      );
     } catch (error) {
-      console.error('Login failed:', error);
+      setLoginError(
+        '아이디 또는 비밀번호가 일치하지 않습니다.\n입력하신 내용을 다시 확인해 주세요.',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +61,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleSocialLogin = (provider: SocialProvider) => {
     console.log('Social login:', provider);
-    // TODO: 소셜 로그인 처리
   };
 
   const handleFindId = () => {
@@ -72,34 +88,39 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         >
           {/* 로고 */}
           <View style={styles.logoContainer}>
-            <View style={styles.logoWrapper}>
-              <View style={styles.logoIcon}>
-                <Text style={styles.logoIconText}>⚙️</Text>
-              </View>
-              <View>
-                <Text style={styles.logoText}>아라요</Text>
-                <Text style={styles.logoSubText}>기계장터</Text>
-              </View>
-            </View>
+            <MainLogo width={180} height={60} />
           </View>
 
           {/* 로그인 폼 */}
           <View style={styles.formContainer}>
             <Input
-              placeholder="아이디 입력을 입력해 주세요.."
+              placeholder="아이디를 입력해 주세요."
               value={userId}
-              onChangeText={setUserId}
+              onChangeText={(text) => {
+                setUserId(text);
+                if (loginError) setLoginError(''); /* [수정] 입력 시 에러 초기화 */
+              }}
               autoCapitalize="none"
               containerStyle={styles.inputContainer}
             />
 
             <Input
-              placeholder="비밀번호를 입력해 주세요.."
+              placeholder="비밀번호를 입력해 주세요."
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (loginError) setLoginError(''); /* [수정] 입력 시 에러 초기화 */
+              }}
               secureTextEntry
               containerStyle={styles.inputContainer}
             />
+
+            {/* [수정] 로그인 에러 메시지 표시 */}
+            {loginError ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{loginError}</Text>
+              </View>
+            ) : null}
 
             {/* 옵션 링크들 */}
             <View style={styles.optionsRow}>
@@ -157,17 +178,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 하단 배너 */}
+          {/* [수정] 하단 배너  */}
           <View style={styles.bannerContainer}>
-            <View style={styles.banner}>
-              <View style={styles.bannerContent}>
-                <Text style={styles.bannerTitle}>아라요 기계장터 신규가입</Text>
-                <Text style={styles.bannerSubtitle}>웰컴 쿠폰 혜택</Text>
-              </View>
-              <View style={styles.bannerCoupon}>
-                <Text style={styles.couponText}>💳</Text>
-              </View>
-            </View>
+              <Image
+                source={{ uri: 'https://blog.kakaocdn.net/dna/oDWIF/btqHiNlxyqr/AAAAAAAAAAAAAAAAAAAAAOkUmQ2YFcGK7K_lkyEm5R7xoJ6T35d_RtANwBqbDjAv/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1772290799&allow_ip=&allow_referer=&signature=xBUiXqbG5HKCMjsMdf9kBm7XLfE%3D' }}
+                style={styles.bannerImage}
+                resizeMode="cover"
+              />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -192,35 +209,21 @@ const styles = StyleSheet.create({
     paddingTop: spacing['3xl'],
     paddingBottom: spacing['2xl'],
   },
-  logoWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: borderRadius.full,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.sm,
-  },
-  logoIconText: {
-    fontSize: 24,
-  },
-  logoText: {
-    ...typography.h2,
-    color: colors.primary,
-  },
-  logoSubText: {
-    ...typography.bodySmall,
-    color: colors.textSecondary,
-  },
   formContainer: {
     paddingVertical: spacing.base,
   },
   inputContainer: {
     marginBottom: spacing.md,
+  },
+  /* [수정] 에러 메시지 컨테이너 */
+  errorContainer: {
+    marginBottom: spacing.md,
+  },
+  /* [수정] 에러 텍스트 */
+  errorText: {
+    ...typography.bodySmall,
+    color: colors.error,
+    lineHeight: 18,
   },
   optionsRow: {
     flexDirection: 'row',
@@ -262,31 +265,12 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     paddingBottom: spacing.xl,
   },
-  banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.primary,
+  bannerImage: {
+    width: '100%',
+    height: 70,
     borderRadius: borderRadius.lg,
-    padding: spacing.base,
   },
-  bannerContent: {},
-  bannerTitle: {
-    ...typography.bodySmall,
-    color: colors.white,
-  },
-  bannerSubtitle: {
-    ...typography.h4,
-    color: '#FFE082',
-  },
-  bannerCoupon: {
-    backgroundColor: '#FFF9C4',
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-  },
-  couponText: {
-    fontSize: 24,
-  },
+
 });
 
 export default LoginScreen;
