@@ -7,6 +7,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './AuthNavigator';
 import { SearchScreen } from '../screens/main';
+import { NotificationScreen } from '../screens/main/NotificationScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -33,6 +34,11 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="Search"
         component={SearchScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Notification"
+        component={NotificationScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

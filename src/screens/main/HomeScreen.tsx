@@ -178,7 +178,7 @@ export default function HomeScreen() {
           <SearchIcon width={20} height={20} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.alarmIcon}>
+      <TouchableOpacity style={styles.alarmIcon} onPress={() => (navigation as any).navigate('Notification')}>
         <AlarmIcon width={24} height={24} />
       </TouchableOpacity>
     </View>
