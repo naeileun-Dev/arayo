@@ -1,17 +1,15 @@
 /**
  * 메인 탭 네비게이터
- * 하단 탭: 홈 | 카테고리 | (+등록) | 찜 | 마이
+ * 하단 탭: 홈 | 카테고리 | 메뉴 | 찜 | 마이
  */
 
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Platform,
 } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   HomeScreen,
   CategoryScreen,
@@ -22,35 +20,32 @@ import HomeIcon from '../assets/icon/bottom_navigator/home.svg';
 import HomeActiveIcon from '../assets/icon/bottom_navigator/home_active.svg';
 import CategoryIcon from '../assets/icon/bottom_navigator/category.svg';
 import CategoryActiveIcon from '../assets/icon/bottom_navigator/category_active.svg';
+import MenuIcon from '../assets/icon/bottom_navigator/menu.svg';
+import MenuActiveIcon from '../assets/icon/bottom_navigator/menu_active.svg';
 import ChatIcon from '../assets/icon/bottom_navigator/chat.svg';
 import ChatActiveIcon from '../assets/icon/bottom_navigator/chat_active.svg';
 import MypageIcon from '../assets/icon/bottom_navigator/mypage.svg';
 import MypageActiveIcon from '../assets/icon/bottom_navigator/mypage_active.svg';
 import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
-import { spacing, shadows } from '../styles/spacing';
+import { spacing } from '../styles/spacing';
 import type { MainTabParamList } from '../types';
 
 // 탭 아이콘 매핑
 const TAB_ICONS: Record<string, { icon: React.FC<any>; activeIcon: React.FC<any> }> = {
   Home: { icon: HomeIcon, activeIcon: HomeActiveIcon },
   CategoryTab: { icon: CategoryIcon, activeIcon: CategoryActiveIcon },
+  Menu: { icon: MenuIcon, activeIcon: MenuActiveIcon },
   Wishlist: { icon: ChatIcon, activeIcon: ChatActiveIcon },
   MyPage: { icon: MypageIcon, activeIcon: MypageActiveIcon },
 };
 
 // 탭 정보
-interface TabItem {
-  key: keyof MainTabParamList;
-  label: string;
-}
-
-const TAB_ITEMS: TabItem[] = [
-  { key: 'Home', label: '홈' },
-  { key: 'CategoryTab', label: '카테고리' },
-  { key: 'Post', label: '' },
-  { key: 'Wishlist', label: '찜' },
-  { key: 'MyPage', label: '마이' },
+const TAB_ITEMS: Array<keyof MainTabParamList> = [
+  'Home',
+  'CategoryTab',
+  'Menu',
+  'Wishlist',
+  'MyPage',
 ];
 
 // 커스텀 탭 바 컴포넌트
@@ -63,44 +58,19 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({ activeTab, onTabPress }) =>
   return (
     <View style={styles.tabBarContainer}>
       <View style={styles.tabBar}>
-        {TAB_ITEMS.map((tab) => {
-          const isActive = tab.key === activeTab;
-          const isCenter = tab.key === 'Post';
-
-          if (isCenter) {
-            return (
-              <TouchableOpacity
-                key={tab.key}
-                style={styles.centerButton}
-                onPress={() => onTabPress(tab.key)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.centerButtonInner}>
-                  <Text style={styles.centerButtonText}>+</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }
-
-          const icons = TAB_ICONS[tab.key];
+        {TAB_ITEMS.map((tabKey) => {
+          const isActive = tabKey === activeTab;
+          const icons = TAB_ICONS[tabKey];
           const IconComponent = isActive ? icons.activeIcon : icons.icon;
 
           return (
             <TouchableOpacity
-              key={tab.key}
+              key={tabKey}
               style={styles.tabItem}
-              onPress={() => onTabPress(tab.key)}
+              onPress={() => onTabPress(tabKey)}
               activeOpacity={0.7}
             >
-              <IconComponent width={24} height={24} />
-              <Text
-                style={[
-                  styles.tabLabel,
-                  isActive && styles.tabLabelActive,
-                ]}
-              >
-                {tab.label}
-              </Text>
+              <IconComponent width={58} height={46} />
             </TouchableOpacity>
           );
         })}
@@ -114,11 +84,6 @@ const MainTabNavigator: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<keyof MainTabParamList>('Home');
 
   const handleTabPress = (tab: keyof MainTabParamList) => {
-    if (tab === 'Post') {
-      // 등록 화면은 모달로 처리 (TODO)
-      console.log('Open post modal');
-      return;
-    }
     setActiveTab(tab);
   };
 
@@ -164,46 +129,16 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    height: 56,
+    height: 58,
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: colors.white,
   },
   tabItem: {
     flex: 1,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: spacing.xs,
-  },
-  tabLabel: {
-    ...typography.caption,
-    color: colors.textTertiary,
-    fontSize: 10,
-  },
-  tabLabelActive: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  centerButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  centerButtonInner: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -16,
-    ...shadows.md,
-  },
-  centerButtonText: {
-    fontSize: 28,
-    color: colors.white,
-    fontWeight: '300',
-    lineHeight: 30,
   },
 });
 

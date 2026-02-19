@@ -163,7 +163,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   Home: undefined;
   CategoryTab: undefined;
-  Post: undefined;
+  Menu: undefined;
   Wishlist: undefined;
   MyPage: undefined;
 };

@@ -51,7 +51,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
         style={[styles.iconButton, disabled && styles.disabled, style]}
         onPress={onPress}
         disabled={disabled}
-        activeOpacity={0.7}
+        activeOpacity={1}
       >
         <View
           style={[
@@ -60,7 +60,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
             colorConfig.border ? { borderWidth: 1, borderColor: colorConfig.border } : null,
           ]}
         >
-          {React.createElement(SocialIcons[provider], { width: 24, height: 24 })}
+          {React.createElement(SocialIcons[provider], { width: 44, height: 44 })}
         </View>
         <Text style={styles.iconLabel}>{label}</Text>
       </TouchableOpacity>
@@ -115,7 +115,7 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
     >
       <View style={styles.fullButtonContent}>
         <View style={styles.fullButtonIconPlaceholder}>
-          {React.createElement(SocialIcons[provider], { width: 20, height: 20 })}
+          {React.createElement(SocialIcons[provider], { width: 24, height: 24 })}
         </View>
         <Text style={[styles.fullButtonText, getTextStyle()]}>{label}</Text>
       </View>
@@ -124,22 +124,24 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
+  /* 디자인: #SNS-login ul li a { flex-direction:column, gap:10px } */
   iconButton: {
     alignItems: 'center',
-    width: 72,
   },
-  /* [수정] 아이콘 컨테이너 - 내부 텍스트 없이 빈 원형 */
+  /* 디자인: #SNS-login ul li a img { width:44px } */
   iconContainer: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     borderRadius: borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
+  /* 디자인: font-size:14px, color:var(--G600)=#7E7E7E, gap:10px */
   iconLabel: {
-    ...typography.bodySmall,
+    fontSize: 14,
     color: colors.textSecondary,
-    marginTop: spacing.sm,
+    marginTop: 10,
     textAlign: 'center',
   },
   fullButton: {

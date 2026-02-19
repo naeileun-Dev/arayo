@@ -14,8 +14,8 @@ import {
 import EyeIcon from '../../assets/icon/eye.svg';
 import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 import { colors } from '../../styles/colors';
-import { typography, fontFamily, fontSize } from '../../styles/typography';
-import { borderRadius, componentHeight, spacing } from '../../styles/spacing';
+import { typography, fontFamily } from '../../styles/typography';
+import { spacing } from '../../styles/spacing';
 import type { InputProps } from '../../types';
 
 const Input = forwardRef<TextInput, InputProps & TextInputProps>(
@@ -162,30 +162,28 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: componentHeight.input,
-    backgroundColor: colors.backgroundGray,
-    borderRadius: borderRadius.md,
+    height: 50,
+    backgroundColor: colors.white,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: colors.transparent,
-    paddingHorizontal: spacing.base,
+    borderColor: colors.borderMedium,
+    paddingHorizontal: 12,
   },
   inputContainerFocused: {
-    borderColor: colors.primary,
-    backgroundColor: colors.white,
+    borderColor: 'rgba(0,0,0,0.65)',
   },
   inputContainerError: {
     borderColor: colors.error,
-    backgroundColor: colors.errorLight,
   },
   inputContainerDisabled: {
-    backgroundColor: colors.borderLight,
-    opacity: 0.6,
+    backgroundColor: colors.G200,
+    color: colors.G500,
   },
   input: {
     flex: 1,
     height: '100%',
-    fontFamily: fontFamily.regular,
-    fontSize: fontSize.md,
+    fontFamily: fontFamily.medium,
+    fontSize: 14,
     color: colors.textPrimary,
     padding: 0,
   },

@@ -21,8 +21,6 @@ import { Button, Input, Checkbox } from '../../components/common';
 import { SocialLoginButton } from '../../components/auth';
 import MainLogo from '../../assets/images/main_logo.svg';
 import { colors } from '../../styles/colors';
-import { typography } from '../../styles/typography';
-import { spacing, screenPadding, borderRadius } from '../../styles/spacing';
 import type { AuthStackParamList, SocialProvider } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
@@ -32,12 +30,30 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [autoLogin, setAutoLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  /* [수정] 로그인 에러 상태 추가 */
-  const [loginError, setLoginError] = useState('');
+  const [idError, setIdError] = useState('');
+  const [pwError, setPwError] = useState('');
 
   const handleLogin = async () => {
-    setLoginError('');
+    // 유효성 검사
+    let hasError = false;
+    setIdError('');
+    setPwError('');
+
+    if (!userId) {
+      setIdError('*아이디를 입력해 주세요.');
+      hasError = true;
+    } else if (userId.length < 5 || userId.length > 20) {
+      setIdError('*5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요.');
+      hasError = true;
+    }
+
+    if (!password) {
+      setPwError('*비밀번호를 입력해 주세요.');
+      hasError = true;
+    }
+
+    if (hasError) return;
+
     setIsLoading(true);
     try {
       // TODO: 실제 로그인 API 호출
@@ -51,9 +67,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         }),
       );
     } catch (error) {
-      setLoginError(
-        '아이디 또는 비밀번호가 일치하지 않습니다.\n입력하신 내용을 다시 확인해 주세요.',
-      );
+      setPwError('*아이디 또는 비밀번호가 일치하지 않습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -61,18 +75,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleSocialLogin = (provider: SocialProvider) => {
     console.log('Social login:', provider);
-  };
-
-  const handleFindId = () => {
-    navigation.navigate('AccountRecovery', { tab: 'findId' });
-  };
-
-  const handleResetPassword = () => {
-    navigation.navigate('AccountRecovery', { tab: 'resetPassword' });
-  };
-
-  const handleSignUp = () => {
-    navigation.navigate('SignUp');
   };
 
   return (
@@ -86,43 +88,50 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* 로고 */}
+          {/* 로고 영역 */}
           <View style={styles.logoContainer}>
-            <MainLogo width={180} height={60} />
+            <MainLogo width={160} height={50} />
           </View>
 
-          {/* 로그인 폼 */}
-          <View style={styles.formContainer}>
-            <Input
-              placeholder="아이디를 입력해 주세요."
-              value={userId}
-              onChangeText={(text) => {
-                setUserId(text);
-                if (loginError) setLoginError(''); /* [수정] 입력 시 에러 초기화 */
-              }}
-              autoCapitalize="none"
-              containerStyle={styles.inputContainer}
-            />
+          {/* 로그인 입력 폼 */}
+          <View style={styles.formSection}>
+            <View style={styles.formContainer}>
+              <View style={styles.formLi}>
+                <Input
+                  placeholder="아이디 입력를 입력해 주세요."
+                  value={userId}
+                  onChangeText={(text) => {
+                    setUserId(text);
+                    if (idError) setIdError('');
+                  }}
+                  autoCapitalize="none"
+                  containerStyle={styles.inputBox}
+                />
+              </View>
 
-            <Input
-              placeholder="비밀번호를 입력해 주세요."
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (loginError) setLoginError(''); /* [수정] 입력 시 에러 초기화 */
-              }}
-              secureTextEntry
-              containerStyle={styles.inputContainer}
-            />
+              <View style={styles.formLi}>
+                <Input
+                  placeholder="비밀번호를 입력해 주세요."
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    if (pwError) setPwError('');
+                  }}
+                  secureTextEntry
+                  containerStyle={styles.inputBox}
+                />
+              </View>
+            </View>
 
-            {/* [수정] 로그인 에러 메시지 표시 */}
-            {loginError ? (
+            {/* 에러 메시지 (.help-block .color-red) */}
+            {(pwError || idError) ? (
               <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{loginError}</Text>
+                {pwError ? <Text style={styles.errorText}>{pwError}</Text> : null}
+                {idError ? <Text style={styles.errorText}>{idError}</Text> : null}
               </View>
             ) : null}
 
-            {/* 옵션 링크들 */}
+            {/* 자동로그인 및 링크 (.flex .py15 .fs14 .color-G600) */}
             <View style={styles.optionsRow}>
               <Checkbox
                 checked={autoLogin}
@@ -131,33 +140,35 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 size="small"
               />
               <View style={styles.linksContainer}>
-                <TouchableOpacity onPress={handleFindId}>
+                <TouchableOpacity onPress={() => navigation.navigate('AccountRecovery', { tab: 'findId' })}>
                   <Text style={styles.linkText}>아이디 찾기</Text>
                 </TouchableOpacity>
-                <Text style={styles.linkDivider}>|</Text>
-                <TouchableOpacity onPress={handleResetPassword}>
+                <View style={styles.linkDivider} />
+                <TouchableOpacity onPress={() => navigation.navigate('AccountRecovery', { tab: 'resetPassword' })}>
                   <Text style={styles.linkText}>비밀번호 재설정</Text>
                 </TouchableOpacity>
-                <Text style={styles.linkDivider}>|</Text>
-                <TouchableOpacity onPress={handleSignUp}>
+                <View style={styles.linkDivider} />
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
                   <Text style={styles.linkText}>회원가입</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* 로그인 버튼 */}
-            <Button
-              title="로그인"
-              onPress={handleLogin}
-              loading={isLoading}
-              disabled={!userId || !password}
-              style={styles.loginButton}
-            />
+            {/* 로그인 버튼 (.formBtnSet) */}
+            <View style={styles.formBtnSet}>
+              <Button
+                title="로그인"
+                onPress={handleLogin}
+                loading={isLoading}
+              />
+            </View>
           </View>
 
-          {/* 간편 로그인 */}
-          <View style={styles.socialContainer}>
+          {/* SNS 간편 로그인 (#SNS-login) */}
+          <View style={styles.snsLoginSection}>
+            <View style={styles.divider} />
             <Text style={styles.socialTitle}>간편 로그인</Text>
+
             <View style={styles.socialButtons}>
               <SocialLoginButton
                 provider="kakao"
@@ -178,14 +189,17 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* [수정] 하단 배너  */}
-          <View style={styles.bannerContainer}>
+          {/* 하단 배너 영역 (.py35) */}
+          <View style={styles.bannerSection}>
+            <TouchableOpacity onPress={() => console.log('Banner clicked')}>
               <Image
-                source={{ uri: 'https://blog.kakaocdn.net/dna/oDWIF/btqHiNlxyqr/AAAAAAAAAAAAAAAAAAAAAOkUmQ2YFcGK7K_lkyEm5R7xoJ6T35d_RtANwBqbDjAv/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1772290799&allow_ip=&allow_referer=&signature=xBUiXqbG5HKCMjsMdf9kBm7XLfE%3D' }}
+                source={require('../../assets/images/banner02.png')}
                 style={styles.bannerImage}
                 resizeMode="cover"
               />
+            </TouchableOpacity>
           </View>
+
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -202,75 +216,99 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: screenPadding.horizontal,
+    paddingHorizontal: 20, // --padding-LR: 20px
   },
+
+  /* 로고 영역 - 더 크게, 아래 간격 줄임 */
   logoContainer: {
     alignItems: 'center',
-    paddingTop: spacing['3xl'],
-    paddingBottom: spacing['2xl'],
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 30,
+    height: 80,
+  },
+
+  /* 로그인 폼 영역 */
+  formSection: {
+    paddingTop: 0,
+    paddingBottom: 10,
   },
   formContainer: {
-    paddingVertical: spacing.base,
+    gap: 5, // .formContainer.gap5
   },
-  inputContainer: {
-    marginBottom: spacing.md,
+  formLi: {
+    // .form-li
   },
-  /* [수정] 에러 메시지 컨테이너 */
+  inputBox: {
+    width: '100%',
+    marginBottom: 0,
+  },
   errorContainer: {
-    marginBottom: spacing.md,
+    marginTop: 8,
+    gap: 4,
   },
-  /* [수정] 에러 텍스트 */
   errorText: {
-    ...typography.bodySmall,
+    fontSize: 13,
     color: colors.error,
-    lineHeight: 18,
   },
+
+  /* 옵션 링크 (.flex .py15 .fs14 .color-G600) */
   optionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: spacing.lg,
+    paddingVertical: 15,
   },
   linksContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   linkText: {
-    ...typography.bodySmall,
-    color: colors.textSecondary,
+    fontSize: 12,
+    color: colors.G600,
   },
+  /* DS-SET 구분선 */
   linkDivider: {
-    ...typography.bodySmall,
-    color: colors.borderMedium,
-    marginHorizontal: spacing.sm,
+    width: 1,
+    height: 10,
+    backgroundColor: colors.G300,
+    marginHorizontal: 8,
   },
-  loginButton: {
-    marginTop: spacing.sm,
+  formBtnSet: {
+    marginTop: 15,
   },
-  socialContainer: {
-    paddingVertical: spacing['2xl'],
-    alignItems: 'center',
+
+  /* SNS 간편 로그인 영역 (#SNS-login) */
+  snsLoginSection: {
+    marginTop: 10,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.G200,
+    marginBottom: 20,
   },
   socialTitle: {
-    ...typography.body,
-    color: colors.textSecondary,
-    marginBottom: spacing.lg,
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.G800,
+    marginBottom: 25, // .mb25
   },
   socialButtons: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: spacing.md,
+    gap: 25,
   },
-  bannerContainer: {
-    marginTop: 'auto',
-    paddingBottom: spacing.xl,
+
+  /* 하단 배너 영역 */
+  bannerSection: {
+    paddingVertical: 25,
   },
   bannerImage: {
     width: '100%',
-    height: 70,
-    borderRadius: borderRadius.lg,
+    height: 80,
+    borderRadius: 4,
   },
-
 });
 
 export default LoginScreen;

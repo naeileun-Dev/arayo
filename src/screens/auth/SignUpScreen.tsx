@@ -15,11 +15,9 @@ import {
   Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, Input, Header } from '../../components/common';
-import { AgreementItem } from '../../components/auth';
+import { Button, Input, Header, Checkbox } from '../../components/common';
 import { colors } from '../../styles/colors';
-import { typography } from '../../styles/typography';
-import { spacing, screenPadding, borderRadius } from '../../styles/spacing';
+import { fontFamily } from '../../styles/typography';
 import {
   validateUserId,
   validatePassword,
@@ -260,223 +258,281 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* 아이디 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              아이디 <Text style={styles.required}>*</Text>
-            </Text>
-            <Input
-              placeholder="5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요."
-              value={formData.userId}
-              onChangeText={(text) => updateField('userId', text)}
-              onBlur={() => validateField('userId')}
-              containerStyle={styles.inputNoMargin}
-            />
-            {renderSuccess(errors.userIdSuccess)}
-            {renderErrors(errors.userId)}
-          </View>
-
-          {/* 비밀번호 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              비밀번호 <Text style={styles.required}>*</Text>
-            </Text>
-            <Input
-              placeholder="8~20자의 영문 대·소문자, 숫자, 특수문자를 사용해 주세요."
-              value={formData.password}
-              onChangeText={(text) => updateField('password', text)}
-              onBlur={() => validateField('password')}
-              secureTextEntry
-              containerStyle={styles.inputNoMargin}
-            />
-            <Input
-              placeholder="비밀번호를 재입력해 주세요."
-              value={formData.passwordConfirm}
-              onChangeText={(text) => updateField('passwordConfirm', text)}
-              onBlur={() => validateField('passwordConfirm')}
-              secureTextEntry
-              containerStyle={styles.inputNoMargin}
-            />
-            {renderSuccess(errors.passwordSuccess)}
-            {renderErrors(errors.password)}
-            {renderErrors(errors.passwordConfirm)}
-          </View>
-
-          {/* 이름 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              이름 <Text style={styles.required}>*</Text>
-            </Text>
-            <Input
-              placeholder="이름을 입력해주세요."
-              value={formData.name}
-              onChangeText={(text) => updateField('name', text)}
-              onBlur={() => validateField('name')}
-              containerStyle={styles.inputNoMargin}
-            />
-            {renderErrors(errors.name)}
-          </View>
-
-          {/* 닉네임 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              닉네임 <Text style={styles.required}>*</Text>
-            </Text>
-            <Input
-              placeholder="닉네임을 입력 해주세요."
-              value={formData.nickname}
-              onChangeText={(text) => updateField('nickname', text)}
-              onBlur={() => {
-                validateField('nickname');
-                checkNicknameAvailability();
-              }}
-              containerStyle={styles.inputNoMargin}
-            />
-            {renderErrors(errors.nickname)}
-          </View>
-
-          {/* 휴대폰인증 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              휴대폰인증 <Text style={styles.required}>*</Text>
-            </Text>
-            <TouchableOpacity
-              style={styles.verificationButton}
-              onPress={handleVerification}
-            >
-              <Text style={styles.verificationButtonText}>PASS 본인 인증</Text>
-            </TouchableOpacity>
-            {isVerified && (
-              <Text style={styles.verifiedText}>
-                본인 인증이 완료되었습니다
+          {/* formContainer - 입력 폼 */}
+          <View style={styles.formContainer}>
+            {/* 아이디 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                아이디<Text style={styles.req}> *</Text>
               </Text>
-            )}
-            {renderErrors(errors.verification)}
-          </View>
-
-          {/* 이메일 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>
-              이메일 <Text style={styles.required}>*</Text>
-            </Text>
-            <View style={styles.emailRow}>
               <Input
-                placeholder="이메일을 입력 해주세요."
-                value={formData.email}
-                onChangeText={(text) => updateField('email', text)}
-                containerStyle={[styles.inputNoMargin, styles.emailInput]}
+                placeholder="5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요."
+                value={formData.userId}
+                onChangeText={(text) => updateField('userId', text)}
+                onBlur={() => validateField('userId')}
+                containerStyle={styles.inputNoMargin}
               />
-              <Text style={styles.atSymbol}>@</Text>
-              <Input
-                placeholder="도메인을 입력 해주세요."
-                value={formData.emailDomain}
-                onChangeText={(text) => updateField('emailDomain', text)}
-                onBlur={() => validateField('email')}
-                containerStyle={[styles.inputNoMargin, styles.emailInput]}
-              />
+              {renderSuccess(errors.userIdSuccess)}
+              {renderErrors(errors.userId)}
             </View>
-            {renderErrors(errors.email)}
-          </View>
 
-          {/* 전화번호 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>전화번호</Text>
-            <Input
-              placeholder="전화번호를 입력해 주세요."
-              value={formData.phone}
-              onChangeText={(text) => updateField('phone', text)}
-              keyboardType="phone-pad"
-              containerStyle={styles.inputNoMargin}
-            />
-          </View>
-
-          {/* 사업장 주소지 */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>사업장 주소지</Text>
-            <View style={styles.addressRow}>
+            {/* 비밀번호 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                비밀번호<Text style={styles.req}> *</Text>
+              </Text>
               <Input
-                placeholder="우편번호"
-                value={formData.zipCode}
-                disabled
-                containerStyle={[styles.inputNoMargin, styles.zipCodeInput]}
+                placeholder="8~20자의 영문 대·소문자, 숫자, 특수문자를 사용해 주세요."
+                value={formData.password}
+                onChangeText={(text) => updateField('password', text)}
+                onBlur={() => validateField('password')}
+                secureTextEntry
+                inputStyle={styles.inputFs13}
+                containerStyle={styles.inputNoMargin}
               />
+              <Input
+                placeholder="비밀번호를 재입력해 주세요."
+                value={formData.passwordConfirm}
+                onChangeText={(text) => updateField('passwordConfirm', text)}
+                onBlur={() => validateField('passwordConfirm')}
+                secureTextEntry
+                containerStyle={styles.inputNoMargin}
+              />
+              {renderSuccess(errors.passwordSuccess)}
+              {renderErrors(errors.password)}
+              {renderErrors(errors.passwordConfirm)}
+            </View>
+
+            {/* 이름 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                이름<Text style={styles.req}> *</Text>
+              </Text>
+              <Input
+                placeholder="이름을 입력해 주세요."
+                value={formData.name}
+                onChangeText={(text) => updateField('name', text)}
+                onBlur={() => validateField('name')}
+                containerStyle={styles.inputNoMargin}
+              />
+              {renderErrors(errors.name)}
+            </View>
+
+            {/* 닉네임 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                닉네임<Text style={styles.req}> *</Text>
+              </Text>
+              <Input
+                placeholder="닉네임을 입력 해주세요."
+                value={formData.nickname}
+                onChangeText={(text) => updateField('nickname', text)}
+                onBlur={() => {
+                  validateField('nickname');
+                  checkNicknameAvailability();
+                }}
+                containerStyle={styles.inputNoMargin}
+              />
+              {renderErrors(errors.nickname)}
+            </View>
+
+            {/* 휴대폰인증 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                휴대폰인증<Text style={styles.req}> *</Text>
+              </Text>
               <TouchableOpacity
-                style={styles.searchButton}
-                onPress={handleSearchZipCode}
+                style={styles.lightButton}
+                onPress={handleVerification}
               >
-                <Text style={styles.searchButtonText}>우편번호 검색</Text>
+                <Text style={styles.lightButtonText}>PASS 본인 인증</Text>
               </TouchableOpacity>
+              {isVerified && (
+                <Text style={styles.verifiedText}>
+                  본인 인증이 완료되었습니다
+                </Text>
+              )}
+              {renderErrors(errors.verification)}
             </View>
-            <Input
-              placeholder="주소"
-              value={formData.address}
-              disabled
-              containerStyle={styles.inputNoMargin}
-            />
-            <Input
-              placeholder="상세 주소"
-              value={formData.addressDetail}
-              onChangeText={(text) => updateField('addressDetail', text)}
-              containerStyle={styles.inputNoMargin}
-            />
-            <Text style={styles.addressHint}>
-              입력하신 사업장 소재지를 기준으로 가까운 거리부터 순서대로 확인
-              하실 수 있습니다.
-            </Text>
-          </View>
 
-          {/* 이용 약관 */}
-          <View style={styles.agreementContainer}>
-            <View style={styles.agreementHeader}>
-              <Text style={styles.agreementTitle}>이용 약관</Text>
-              <Text style={styles.agreementSubtitle}>
-                필수 항목에 모두 동의해 주세요.
+            {/* 이메일 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>
+                이메일<Text style={styles.req}> *</Text>
+              </Text>
+              <View style={styles.emailRow}>
+                <Input
+                  placeholder="이메일을 입력 해주세요."
+                  value={formData.email}
+                  onChangeText={(text) => updateField('email', text)}
+                  containerStyle={[styles.inputNoMargin, styles.flex1]}
+                />
+                <Text style={styles.atSymbol}>@</Text>
+                <Input
+                  placeholder="도메인을 입력 해주세요."
+                  value={formData.emailDomain}
+                  onChangeText={(text) => updateField('emailDomain', text)}
+                  onBlur={() => validateField('email')}
+                  containerStyle={[styles.inputNoMargin, styles.flex1]}
+                />
+              </View>
+              {renderErrors(errors.email)}
+            </View>
+
+            {/* 전화번호 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>전화번호</Text>
+              <Input
+                placeholder="전화번호를 입력해 주세요."
+                value={formData.phone}
+                onChangeText={(text) => updateField('phone', text)}
+                keyboardType="phone-pad"
+                containerStyle={styles.inputNoMargin}
+              />
+            </View>
+
+            {/* 사업장 주소지 */}
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>사업장 주소지</Text>
+              <View style={styles.addressRow}>
+                <Input
+                  placeholder="우편번호"
+                  value={formData.zipCode}
+                  disabled
+                  containerStyle={[styles.inputNoMargin, styles.flex1]}
+                />
+                <TouchableOpacity
+                  style={styles.searchButton}
+                  onPress={handleSearchZipCode}
+                >
+                  <Text style={styles.lightButtonText}>우편번호 검색</Text>
+                </TouchableOpacity>
+              </View>
+              <Input
+                placeholder="주소"
+                value={formData.address}
+                disabled
+                containerStyle={styles.inputNoMargin}
+              />
+              <Input
+                placeholder="상세 주소"
+                value={formData.addressDetail}
+                onChangeText={(text) => updateField('addressDetail', text)}
+                containerStyle={styles.inputNoMargin}
+              />
+              <Text style={styles.addressHint}>
+                입력하신 사업장 소재지를 기준으로 가까운 거리부터 순서대로 확인
+                하실 수 있습니다.
               </Text>
             </View>
-
-            <AgreementItem
-              checked={agreements.all}
-              onToggle={toggleAllAgreements}
-              label="전체 약관 동의"
-              isAllAgree
-            />
-
-            <AgreementItem
-              checked={agreements.terms}
-              onToggle={(checked) => toggleAgreement('terms', checked)}
-              label="이용약관"
-              required
-              onViewDetail={() => handleViewAgreement('terms')}
-            />
-
-            <AgreementItem
-              checked={agreements.privacy}
-              onToggle={(checked) => toggleAgreement('privacy', checked)}
-              label="개인정보 수집 및 이용 동의"
-              required
-              onViewDetail={() => handleViewAgreement('privacy')}
-            />
-
-            <AgreementItem
-              checked={agreements.marketing}
-              onToggle={(checked) => toggleAgreement('marketing', checked)}
-              label="마케팅 수신 동의"
-              onViewDetail={() => handleViewAgreement('marketing')}
-            />
-
-            {renderErrors(errors.agreements)}
           </View>
 
-          {/* 회원가입 버튼 */}
-          <Button
-            title="회원가입"
-            onPress={handleSubmit}
-            loading={isLoading}
-            style={styles.submitButton}
-          />
+          {/* formContainer - 약관 동의 (mt25) */}
+          <View style={styles.agreementContainer}>
+            <View style={styles.formLi}>
+              <Text style={styles.formLabel}>이용 약관</Text>
+
+              {/* 전체 약관 동의 헤더 */}
+              <View style={styles.agreementHeaderRow}>
+                <Text style={styles.agreementSubtitle}>
+                  필수 항목에 모두 동의해 주세요.
+                </Text>
+                <Checkbox
+                  checked={agreements.all}
+                  onToggle={toggleAllAgreements}
+                  label="전체 약관 동의"
+                />
+              </View>
+
+              {/* 구분선 <hr> */}
+              <View style={styles.agreementDivider} />
+
+              {/* 이용약관 (필수) */}
+              <View style={styles.agreementRow}>
+                <Checkbox
+                  checked={agreements.terms}
+                  onToggle={(c) => toggleAgreement('terms', c)}
+                />
+                <TouchableOpacity
+                  style={styles.agreementLabelArea}
+                  onPress={() => toggleAgreement('terms', !agreements.terms)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.agreementLabel}>
+                    이용약관
+                    <Text style={styles.agreementReq}> (필수)</Text>
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleViewAgreement('terms')}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Text style={styles.viewLinkText}>보기</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* 개인정보 수집 및 이용 동의 (필수) */}
+              <View style={[styles.agreementRow, styles.mt5]}>
+                <Checkbox
+                  checked={agreements.privacy}
+                  onToggle={(c) => toggleAgreement('privacy', c)}
+                />
+                <TouchableOpacity
+                  style={styles.agreementLabelArea}
+                  onPress={() => toggleAgreement('privacy', !agreements.privacy)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.agreementLabel}>
+                    개인정보 수집 및 이용 동의
+                    <Text style={styles.agreementReq}> (필수)</Text>
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleViewAgreement('privacy')}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Text style={styles.viewLinkText}>보기</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* 마케팅 수신 동의 (선택) */}
+              <View style={[styles.agreementRow, styles.mt5]}>
+                <Checkbox
+                  checked={agreements.marketing}
+                  onToggle={(c) => toggleAgreement('marketing', c)}
+                />
+                <TouchableOpacity
+                  style={styles.agreementLabelArea}
+                  onPress={() => toggleAgreement('marketing', !agreements.marketing)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.agreementLabel}>
+                    마케팅 수신 동의
+                    <Text style={styles.agreementOpt}> (선택)</Text>
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleViewAgreement('marketing')}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Text style={styles.viewLinkText}>보기</Text>
+                </TouchableOpacity>
+              </View>
+
+              {renderErrors(errors.agreements)}
+            </View>
+          </View>
+
+          {/* 회원가입 버튼 (.formBtnSet.mt30) */}
+          <View style={styles.formBtnSet}>
+            <Button
+              title="회원가입"
+              onPress={handleSubmit}
+              loading={isLoading}
+            />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
     </SafeAreaView>
   );
 };
@@ -490,109 +546,167 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: screenPadding.horizontal,
-    paddingBottom: spacing['3xl'],
+    paddingHorizontal: 20, // --padding-LR: 20px
+    paddingBottom: 40, // .pb40
   },
-  fieldContainer: {
-    marginTop: spacing.lg,
+
+  /* .formContainer { gap: 25px } */
+  formContainer: {
+    gap: 25,
   },
-  label: {
-    ...typography.label,
-    color: colors.textPrimary,
-    marginBottom: spacing.sm,
+
+  /* .form-li { gap: 6px; font-size: 13px } */
+  formLi: {
+    gap: 6,
   },
-  required: {
-    color: colors.primary,
+
+  /* .form-label { font-size: 15px; font-weight: normal; color: var(--G600) } */
+  formLabel: {
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    color: colors.G600,
   },
-  inputNoMargin: {
-    marginBottom: spacing.sm,
-  },
-  errorText: {
-    ...typography.bodySmall,
+
+  /* .form-label.req:after { content:'*'; color: var(--red) } */
+  req: {
     color: colors.error,
-    marginTop: spacing.xs,
+  },
+
+  /* Input 컨테이너 마진 제거 (gap이 간격 담당) */
+  inputNoMargin: {
+    marginBottom: 0,
+  },
+
+  /* .inp.fs13 (비밀번호 placeholder 긴 텍스트용) */
+  inputFs13: {
+    fontSize: 13,
+  },
+
+  flex1: {
+    flex: 1,
+  },
+
+  /* .help-block { font-size: 13px } */
+  errorText: {
+    fontSize: 13,
+    color: colors.error,
   },
   successText: {
-    ...typography.bodySmall,
-    color: colors.success,
-    marginTop: spacing.xs,
+    fontSize: 13,
+    color: '#53B460', // --green
   },
-  verificationButton: {
-    height: 48,
+
+  /* ._btn/light (PASS 버튼, 우편번호 검색) */
+  lightButton: {
+    height: 50, // --btn-height
     borderWidth: 1,
-    borderColor: colors.borderMedium,
-    borderRadius: borderRadius.md,
+    borderColor: colors.borderMedium, // --border-color: #CFCFCF
+    borderRadius: 4, // --btn-radius
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.white,
   },
-  verificationButtonText: {
-    ...typography.button,
-    color: colors.textPrimary,
+  lightButtonText: {
+    fontFamily: fontFamily.medium,
+    fontSize: 14, // --btn-font-size
+    color: colors.textPrimary, // --black
   },
   verifiedText: {
-    ...typography.bodySmall,
+    fontSize: 13,
     color: colors.textTertiary,
     textAlign: 'center',
-    marginTop: spacing.sm,
   },
+
+  /* .flex.flex-middle.gap5 (이메일 행) */
   emailRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  emailInput: {
-    flex: 1,
+    gap: 5,
   },
   atSymbol: {
-    ...typography.body,
-    color: colors.textSecondary,
-    marginHorizontal: spacing.sm,
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textPrimary,
   },
+
+  /* .flex.gap5 (주소 행) */
   addressRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  zipCodeInput: {
-    flex: 1,
-    marginRight: spacing.sm,
+    gap: 5,
   },
   searchButton: {
-    height: 48,
-    paddingHorizontal: spacing.base,
+    height: 50,
+    width: 120, // .w-120
     borderWidth: 1,
     borderColor: colors.borderMedium,
-    borderRadius: borderRadius.md,
+    borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  searchButtonText: {
-    ...typography.buttonSmall,
-    color: colors.textPrimary,
+    backgroundColor: colors.white,
   },
   addressHint: {
-    ...typography.caption,
-    color: colors.textTertiary,
-    marginTop: spacing.sm,
+    fontSize: 13, // .help-block
+    color: colors.G600, // .color-G600
   },
+
+  /* 약관 동의 영역 (.formContainer.mt25) */
   agreementContainer: {
-    marginTop: spacing['2xl'],
+    marginTop: 25,
   },
-  agreementHeader: {
+
+  /* 전체 약관 동의 헤더 행 */
+  agreementHeaderRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.base,
-  },
-  agreementTitle: {
-    ...typography.h4,
-    color: colors.textPrimary,
+    gap: 5,
   },
   agreementSubtitle: {
-    ...typography.bodySmall,
-    color: colors.textTertiary,
+    fontFamily: fontFamily.regular,
+    fontSize: 12, // .fs12
+    color: colors.textPrimary,
+    flex: 1, // .flex1
   },
-  submitButton: {
-    marginTop: spacing['2xl'],
+
+  /* <hr> 구분선 */
+  agreementDivider: {
+    height: 1,
+    backgroundColor: colors.G200,
+  },
+
+  /* 개별 약관 행 (.flex.gap5) */
+  agreementRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7, // checkbox-wrap gap
+  },
+  agreementLabelArea: {
+    flex: 1,
+  },
+  agreementLabel: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+  agreementReq: {
+    color: colors.error, // .color-red
+  },
+  agreementOpt: {
+    color: colors.G600, // .color-G600
+  },
+  viewLinkText: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textPrimary,
+    textDecorationLine: 'underline', // .underline
+  },
+
+  mt5: {
+    marginTop: 5,
+  },
+
+  /* .formBtnSet.mt30 */
+  formBtnSet: {
+    marginTop: 30,
   },
 });
 

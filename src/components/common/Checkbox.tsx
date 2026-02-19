@@ -7,7 +7,7 @@ import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
-import { borderRadius, spacing, iconSize } from '../../styles/spacing';
+import { borderRadius } from '../../styles/spacing';
 import type { CheckboxProps } from '../../types';
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -25,7 +25,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
     }
   };
 
-  const boxSize = size === 'small' ? iconSize.sm : iconSize.md;
+  const boxSize = size === 'small' ? 16 : 20;
 
   return (
     <TouchableOpacity
@@ -46,12 +46,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
           disabled && styles.checkboxDisabled,
         ]}
       >
-        {/* [수정] 이모지 대신 순수 View 기반 체크마크 */}
         {checked && (
-          <View style={styles.checkmarkContainer}>
-            <View style={[styles.checkmarkShort, size === 'small' && styles.checkmarkShortSmall]} />
-            <View style={[styles.checkmarkLong, size === 'small' && styles.checkmarkLongSmall]} />
-          </View>
+          <View
+            style={[
+              styles.checkmark,
+              size === 'small' && styles.checkmarkSmall,
+            ]}
+          />
         )}
       </View>
       {label && (
@@ -74,10 +75,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 7,
   },
   checkbox: {
     borderWidth: 1.5,
-    borderColor: colors.borderMedium,
+    borderColor: colors.G400,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
@@ -90,46 +92,29 @@ const styles = StyleSheet.create({
     backgroundColor: colors.borderLight,
     borderColor: colors.borderLight,
   },
-  /* [수정] View 기반 체크마크 */
-  checkmarkContainer: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkmarkShort: {
-    position: 'absolute',
-    width: 2,
-    height: 6,
-    backgroundColor: colors.white,
-    borderRadius: 1,
-    transform: [{ rotate: '-45deg' }, { translateX: -2.5 }, { translateY: 1 }],
-  },
-  checkmarkShortSmall: {
-    height: 5,
-    width: 1.5,
-    transform: [{ rotate: '-45deg' }, { translateX: -2 }, { translateY: 0.5 }],
-  },
-  checkmarkLong: {
-    position: 'absolute',
-    width: 2,
+  /* border 기반 체크마크 (L자 회전) */
+  checkmark: {
+    width: 5,
     height: 10,
-    backgroundColor: colors.white,
-    borderRadius: 1,
-    transform: [{ rotate: '45deg' }, { translateX: 1.5 }, { translateY: -0.5 }],
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: colors.white,
+    transform: [{ rotate: '45deg' }, { translateY: -1 }],
   },
-  checkmarkLongSmall: {
-    height: 8,
-    width: 1.5,
-    transform: [{ rotate: '45deg' }, { translateX: 1 }, { translateY: -0.5 }],
+  checkmarkSmall: {
+    width: 4,
+    height: 7,
+    borderBottomWidth: 1.5,
+    borderRightWidth: 1.5,
+    transform: [{ rotate: '45deg' }, { translateY: -1 }],
   },
   label: {
     ...typography.body,
     color: colors.textPrimary,
-    marginLeft: spacing.sm,
+    marginLeft: 0,
   },
   labelSmall: {
-    ...typography.bodySmall,
+    fontSize: 12,
   },
   labelDisabled: {
     color: colors.textTertiary,

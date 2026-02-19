@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: borderRadius.md,
+    borderRadius: 4,
   },
   fullWidth: {
     width: '100%',
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   primaryDisabled: {
-    backgroundColor: colors.borderLight,
+    backgroundColor: colors.G100,
   },
   primaryDisabledText: {
-    color: colors.textTertiary,
+    color: colors.G500,
   },
 
   secondary: {
@@ -176,11 +176,12 @@ const styles = StyleSheet.create({
   },
 
   medium: {
-    height: componentHeight.button,
-    paddingHorizontal: spacing.lg,
+    height: 50,
+    paddingHorizontal: 15,
   },
   mediumText: {
     ...typography.button,
+    fontSize: 15,
   },
 
   large: {
