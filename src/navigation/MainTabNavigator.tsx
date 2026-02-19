@@ -13,8 +13,8 @@ import {
 import {
   HomeScreen,
   WishlistScreen,
-  MyPageScreen,
 } from '../screens/main';
+import { MyPageScreen } from '../screens/mypage';   
 import { CategoryScreen } from '../screens/category';
 import HomeIcon from '../assets/icon/bottom_navigator/home.svg';
 import HomeActiveIcon from '../assets/icon/bottom_navigator/home_active.svg';

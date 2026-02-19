@@ -4,5 +4,4 @@
 
 export { default as HomeScreen } from './HomeScreen';
 export { default as WishlistScreen } from './WishlistScreen';
-export { default as MyPageScreen } from './MyPageScreen';
 export * from './SearchScreen';
