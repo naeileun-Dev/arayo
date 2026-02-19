@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import {
   HomeScreen,
-  CategoryScreen,
   WishlistScreen,
   MyPageScreen,
 } from '../screens/main';
+import { CategoryScreen } from '../screens/category';
 import HomeIcon from '../assets/icon/bottom_navigator/home.svg';
 import HomeActiveIcon from '../assets/icon/bottom_navigator/home_active.svg';
 import CategoryIcon from '../assets/icon/bottom_navigator/category.svg';
