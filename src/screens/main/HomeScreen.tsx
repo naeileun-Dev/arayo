@@ -16,6 +16,7 @@ import {
   Easing,
   Alert,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../styles/colors';
 import MainLogo from '../../assets/images/main_logo.svg';
 import SearchIcon from '../../assets/icon/Search.svg';
@@ -102,6 +103,8 @@ const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
 };
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+  const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState('전체');
   const [bannerIndex, setBannerIndex] = useState(0);
   const [allProducts, setAllProducts] = useState(POPULAR_PRODUCTS);
@@ -147,6 +150,14 @@ export default function HomeScreen() {
     }
   }, [loadMoreProducts]);
 
+  const handleSearch = () => {
+    if (searchText.trim().length >= 2) {
+      (navigation as any).navigate('Search');
+    } else {
+      Alert.alert('알림', '검색어는 두글자 이상 입력하십시오.');
+    }
+  };
+
   // 모바일 헤더
   const renderHeader = () => (
     <View style={styles.headerContainer}>
@@ -158,8 +169,12 @@ export default function HomeScreen() {
           style={styles.searchInput}
           placeholder="어떤 설비를 찾으세요?"
           placeholderTextColor={COLORS.G500}
+          value={searchText}
+          onChangeText={setSearchText}
+          onSubmitEditing={handleSearch}
+          returnKeyType="search"
         />
-        <TouchableOpacity style={styles.searchIcon}>
+        <TouchableOpacity style={styles.searchIcon} onPress={handleSearch}>
           <SearchIcon width={20} height={20} />
         </TouchableOpacity>
       </View>

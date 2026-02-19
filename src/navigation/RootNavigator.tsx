@@ -3,9 +3,10 @@
  * Auth (로그인/회원가입) ↔ Main (홈/탭) 전환
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './AuthNavigator';
+import { SearchScreen } from '../screens/main';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -29,7 +30,13 @@ const RootNavigator: React.FC = () => {
         component={MainTabNavigator}
         options={{ gestureEnabled: false }}
       />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
+
   );
 };
 

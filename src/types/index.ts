@@ -182,6 +182,7 @@ export type MainStackParamList = {
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
+  Search: undefined;
 };
 
 // ============================================================
