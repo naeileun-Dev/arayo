@@ -179,7 +179,11 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
   // 약관 상세 보기
   const handleViewAgreement = (type: string) => {
-    console.log('View agreement:', type);
+    if (type === 'terms') {
+      (navigation as any).navigate('Terms');
+    } else if (type === 'privacy') {
+      (navigation as any).navigate('Privacy');
+    }
   };
 
   // 회원가입 제출
@@ -523,7 +527,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 회원가입 버튼 (.formBtnSet.mt30) */}
+          {/* 회원가입 버튼 */}
           <View style={styles.formBtnSet}>
             <Button
               title="회원가입"
@@ -546,38 +550,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20, // --padding-LR: 20px
-    paddingBottom: 40, // .pb40
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 
-  /* .formContainer { gap: 25px } */
   formContainer: {
     gap: 25,
   },
 
-  /* .form-li { gap: 6px; font-size: 13px } */
   formLi: {
     gap: 6,
   },
 
-  /* .form-label { font-size: 15px; font-weight: normal; color: var(--G600) } */
   formLabel: {
     fontFamily: fontFamily.regular,
     fontSize: 15,
     color: colors.G600,
   },
 
-  /* .form-label.req:after { content:'*'; color: var(--red) } */
   req: {
     color: colors.error,
   },
 
-  /* Input 컨테이너 마진 제거 (gap이 간격 담당) */
   inputNoMargin: {
     marginBottom: 0,
   },
 
-  /* .inp.fs13 (비밀번호 placeholder 긴 텍스트용) */
   inputFs13: {
     fontSize: 13,
   },
@@ -586,30 +584,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  /* .help-block { font-size: 13px } */
   errorText: {
     fontSize: 13,
     color: colors.error,
   },
   successText: {
     fontSize: 13,
-    color: '#53B460', // --green
+    color: '#53B460',
   },
 
-  /* ._btn/light (PASS 버튼, 우편번호 검색) */
   lightButton: {
-    height: 50, // --btn-height
+    height: 50,
     borderWidth: 1,
-    borderColor: colors.borderMedium, // --border-color: #CFCFCF
-    borderRadius: 4, // --btn-radius
+    borderColor: colors.borderMedium,
+    borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.white,
   },
   lightButtonText: {
     fontFamily: fontFamily.medium,
-    fontSize: 14, // --btn-font-size
-    color: colors.textPrimary, // --black
+    fontSize: 14,
+    color: colors.textPrimary,
   },
   verifiedText: {
     fontSize: 13,
@@ -617,7 +613,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  /* .flex.flex-middle.gap5 (이메일 행) */
   emailRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -629,14 +624,13 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
 
-  /* .flex.gap5 (주소 행) */
   addressRow: {
     flexDirection: 'row',
     gap: 5,
   },
   searchButton: {
     height: 50,
-    width: 120, // .w-120
+    width: 120,
     borderWidth: 1,
     borderColor: colors.borderMedium,
     borderRadius: 4,
@@ -645,16 +639,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   addressHint: {
-    fontSize: 13, // .help-block
-    color: colors.G600, // .color-G600
+    fontSize: 13,
+    color: colors.G600,
   },
 
-  /* 약관 동의 영역 (.formContainer.mt25) */
   agreementContainer: {
     marginTop: 25,
   },
 
-  /* 전체 약관 동의 헤더 행 */
   agreementHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -662,22 +654,20 @@ const styles = StyleSheet.create({
   },
   agreementSubtitle: {
     fontFamily: fontFamily.regular,
-    fontSize: 12, // .fs12
+    fontSize: 12,
     color: colors.textPrimary,
-    flex: 1, // .flex1
+    flex: 1,
   },
 
-  /* <hr> 구분선 */
   agreementDivider: {
     height: 1,
     backgroundColor: colors.G200,
   },
 
-  /* 개별 약관 행 (.flex.gap5) */
   agreementRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 7, // checkbox-wrap gap
+    gap: 7,
   },
   agreementLabelArea: {
     flex: 1,
@@ -688,23 +678,22 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   agreementReq: {
-    color: colors.error, // .color-red
+    color: colors.error,
   },
   agreementOpt: {
-    color: colors.G600, // .color-G600
+    color: colors.G600,
   },
   viewLinkText: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
     color: colors.textPrimary,
-    textDecorationLine: 'underline', // .underline
+    textDecorationLine: 'underline',
   },
 
   mt5: {
     marginTop: 5,
   },
 
-  /* .formBtnSet.mt30 */
   formBtnSet: {
     marginTop: 30,
   },

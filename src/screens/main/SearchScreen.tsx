@@ -38,7 +38,6 @@ export const SearchScreen: React.FC = () => {
       return;
     }
     console.log('검색 실행:', searchText);
-    // TODO: 검색 결과 화면으로 이동 로직 추가
   };
 
   // 최근 검색어 모두 삭제

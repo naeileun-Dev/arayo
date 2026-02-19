@@ -8,13 +8,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './AuthNavigator';
 import { SearchScreen } from '../screens/main';
 import { NotificationScreen } from '../screens/main/NotificationScreen';
+import { TermsScreen } from '../screens/terms/TermsScreen';
+import { PrivacyScreen } from '../screens/terms/PrivacyScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
-  // TODO: 실제 인증 상태 관리로 변경
   const isLoggedIn = false;
 
   return (
@@ -39,6 +40,16 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="Notification"
         component={NotificationScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Terms"
+        component={TermsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Privacy"
+        component={PrivacyScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

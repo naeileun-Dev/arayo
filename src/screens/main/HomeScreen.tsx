@@ -184,7 +184,7 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 메인 서비스 그리드 버튼 (#main_service_btn)
+  // 메인 서비스 그리드 버튼
   const renderServiceGrid = () => (
     <View style={styles.serviceGridSection}>
       <View style={styles.gridTopRow}>
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   searchIcon: { marginLeft: 8 },
   alarmIcon: { width: 34, alignItems: 'flex-end', justifyContent: 'center', marginLeft: 10 },
 
-  // Service Grid (#main_service_btn)
+  // Service Grid
   serviceGridSection: {
     paddingVertical: 25,
     paddingTop: 15,
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
   middleBannerWrapper: { paddingVertical: 15, paddingHorizontal: 20 },
   middleBannerImage: { width: '100%', height: 138, borderRadius: 4 },
 
-  // 탭 메뉴 (.tabMenu[data-tab-style="chip"])
+  // 탭 메뉴
   tabScrollContainer: { paddingHorizontal: 20, gap: 5 },
   tabChip: {
     height: 40,

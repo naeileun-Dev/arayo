@@ -184,6 +184,8 @@ export type RootStackParamList = {
   Main: undefined;
   Search: undefined;
   Notification: undefined;
+  Terms: undefined;
+  Privacy: undefined;
 };
 
 // ============================================================

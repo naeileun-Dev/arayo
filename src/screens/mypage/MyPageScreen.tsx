@@ -7,7 +7,6 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -181,11 +180,11 @@ export const MyPageScreen: React.FC = () => {
           {isBusinessInfoOpen && (
             <View style={styles.businessInfo}>
               <View style={styles.linkRow}>
-                <TouchableOpacity onPress={() => Alert.alert('이용약관')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
                   <Text style={styles.linkText}>이용약관</Text>
                 </TouchableOpacity>
                 <Text style={styles.linkDivider}>|</Text>
-                <TouchableOpacity onPress={() => Alert.alert('개인정보처리방침')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
                   <Text style={styles.linkText}>개인정보처리방침</Text>
                 </TouchableOpacity>
               </View>

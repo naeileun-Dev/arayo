@@ -1,6 +1,5 @@
 /**
  * PASS 본인인증 모달 컴포넌트
- * [신규] 디자인에 맞춰 다크 오버레이 + 흰색 카드 팝업 추가
  */
 
 import React from 'react';
@@ -48,7 +47,6 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                 <Text style={styles.nicknameText}>
                   {nickname || '닉네임'}
                 </Text>
-                {/* [아이콘 자리] 편집 아이콘 - 직접 추가 */}
                 <TouchableOpacity style={styles.editButton} activeOpacity={0.7}>
                   <View style={styles.editIconPlaceholder} />
                 </TouchableOpacity>
@@ -102,7 +100,6 @@ const styles = StyleSheet.create({
   editButton: {
     padding: spacing.xs,
   },
-  /* [아이콘 자리] 편집 아이콘 플레이스홀더 */
   editIconPlaceholder: {
     width: 20,
     height: 20,

@@ -56,10 +56,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
     setIsLoading(true);
     try {
-      // TODO: 실제 로그인 API 호출
       console.log('Login attempt:', { userId, password, autoLogin });
 
-      // 로그인 성공 → Main 화면으로 이동 (Auth 스택을 리셋)
+      // 로그인 성공 시 Main 화면으로 이동
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -123,7 +122,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               </View>
             </View>
 
-            {/* 에러 메시지 (.help-block .color-red) */}
+            {/* 에러 메시지 */}
             {(pwError || idError) ? (
               <View style={styles.errorContainer}>
                 {pwError ? <Text style={styles.errorText}>{pwError}</Text> : null}
@@ -131,7 +130,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               </View>
             ) : null}
 
-            {/* 자동로그인 및 링크 (.flex .py15 .fs14 .color-G600) */}
+            {/* 자동로그인 및 링크 */}
             <View style={styles.optionsRow}>
               <Checkbox
                 checked={autoLogin}
@@ -154,7 +153,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               </View>
             </View>
 
-            {/* 로그인 버튼 (.formBtnSet) */}
+            {/* 로그인 버튼 */}
             <View style={styles.formBtnSet}>
               <Button
                 title="로그인"
@@ -164,7 +163,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* SNS 간편 로그인 (#SNS-login) */}
+          {/* SNS 간편 로그인 */}
           <View style={styles.snsLoginSection}>
             <View style={styles.divider} />
             <Text style={styles.socialTitle}>간편 로그인</Text>
@@ -189,7 +188,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 하단 배너 영역 (.py35) */}
+          {/* 하단 배너 영역 */}
           <View style={styles.bannerSection}>
             <TouchableOpacity onPress={() => console.log('Banner clicked')}>
               <Image
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 20, // --padding-LR: 20px
+    paddingHorizontal: 20,
   },
 
   /* 로고 영역 - 더 크게, 아래 간격 줄임 */
@@ -234,11 +233,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   formContainer: {
-    gap: 5, // .formContainer.gap5
+    gap: 5,
   },
-  formLi: {
-    // .form-li
-  },
+  formLi: {},
   inputBox: {
     width: '100%',
     marginBottom: 0,
@@ -252,7 +249,6 @@ const styles = StyleSheet.create({
     color: colors.error,
   },
 
-  /* 옵션 링크 (.flex .py15 .fs14 .color-G600) */
   optionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -267,7 +263,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.G600,
   },
-  /* DS-SET 구분선 */
   linkDivider: {
     width: 1,
     height: 10,
@@ -278,7 +273,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 
-  /* SNS 간편 로그인 영역 (#SNS-login) */
   snsLoginSection: {
     marginTop: 10,
   },
@@ -292,7 +286,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: colors.G800,
-    marginBottom: 25, // .mb25
+    marginBottom: 25,
   },
   socialButtons: {
     flexDirection: 'row',

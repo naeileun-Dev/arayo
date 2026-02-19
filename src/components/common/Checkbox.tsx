@@ -1,6 +1,5 @@
 /**
  * 공통 Checkbox 컴포넌트
- * [수정] 이모지 체크마크 제거 → 순수 View 기반 체크마크
  */
 
 import React from 'react';

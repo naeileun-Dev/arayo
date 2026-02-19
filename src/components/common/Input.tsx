@@ -84,8 +84,8 @@ const Input = forwardRef<TextInput, InputProps & TextInputProps>(
             ref={ref}
             style={[
               styles.input,
-              leftIcon && styles.inputWithLeftIcon,
-              (rightIcon || secureTextEntry) && styles.inputWithRightIcon,
+              !!leftIcon && styles.inputWithLeftIcon,
+              !!(rightIcon || secureTextEntry) && styles.inputWithRightIcon,
               multiline && styles.inputMultiline,
               inputStyle,
             ]}

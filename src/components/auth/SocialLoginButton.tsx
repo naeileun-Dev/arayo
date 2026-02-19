@@ -1,6 +1,5 @@
 /**
  * 소셜 로그인 버튼 컴포넌트
- * [수정] 이모지 아이콘 전부 제거 → 빈 원형 플레이스홀더
  */
 
 import React from 'react';
@@ -124,11 +123,9 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-  /* 디자인: #SNS-login ul li a { flex-direction:column, gap:10px } */
   iconButton: {
     alignItems: 'center',
   },
-  /* 디자인: #SNS-login ul li a img { width:44px } */
   iconContainer: {
     width: 44,
     height: 44,
@@ -137,7 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  /* 디자인: font-size:14px, color:var(--G600)=#7E7E7E, gap:10px */
   iconLabel: {
     fontSize: 14,
     color: colors.textSecondary,

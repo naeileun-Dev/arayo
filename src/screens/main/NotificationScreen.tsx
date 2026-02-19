@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   
-  // 개별 리스트 아이템 (HTML의 .item과 동일)
+  // 개별 리스트 아이템
   item: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   
-  // 체크박스 (HTML의 .checkbox-wrap)
+  // 체크박스
   checkboxWrap: {
     width: 22,
     height: 22,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   
-  // 썸네일 (HTML의 .thumb)
+  // 썸네일
   thumb: {
     width: 50,
     height: 50,
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   thumbImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 12, // HTML의 data-radius="12" 반영
+    borderRadius: 12,
   },
   thumbPlaceholder: {
     width: '100%',
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGray,
   },
   
-  // 내용 (HTML의 .con)
+  // 내용
   con: {
     flex: 1,
     justifyContent: 'center',

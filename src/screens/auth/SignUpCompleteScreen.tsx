@@ -1,7 +1,6 @@
 /**
  * 회원가입 완료 화면
  * UI-MMBR-105
- * [수정] 이모지 아이콘 전부 제거
  */
 
 import React from 'react';

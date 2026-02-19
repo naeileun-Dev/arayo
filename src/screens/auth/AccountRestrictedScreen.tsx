@@ -1,7 +1,6 @@
 /**
  * 계정 제한 안내 화면
  * UI-MMBR-102
- * [수정] 이모지 아이콘 제거
  */
 
 import React from 'react';
@@ -23,10 +22,8 @@ const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* [수정] 경고 아이콘 - 이모지 제거 */}
         <View style={styles.iconContainer}>
           <View style={styles.warningIcon}>
-            {/* [아이콘 자리] 경고 아이콘 - 직접 추가 */}
             <View style={styles.warningIconPlaceholder} />
           </View>
         </View>
@@ -69,7 +66,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  /* [수정] 경고 아이콘 플레이스홀더 */
   warningIconPlaceholder: {
     width: 32,
     height: 32,

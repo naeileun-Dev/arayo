@@ -37,7 +37,7 @@ export const colors = {
   textError: '#FF0000',
   textSuccess: '#4CAF50',
 
-  // Border (--border-color: var(--G300))
+  // Border
   borderLight: '#EEEEEE',
   borderMedium: '#CFCFCF',
   borderDark: '#9E9E9E',

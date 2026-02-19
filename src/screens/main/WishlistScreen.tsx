@@ -1,5 +1,4 @@
 /**
- * 찜 목록 화면 (플레이스홀더)
  */
 
 import React from 'react';
@@ -11,9 +10,6 @@ const WishlistScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.icon}>❤️</Text>
-        <Text style={styles.title}>찜 목록</Text>
-        <Text style={styles.description}>찜 목록 화면 준비 중입니다.</Text>
       </View>
     </SafeAreaView>
   );
