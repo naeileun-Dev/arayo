@@ -1,15 +1,9 @@
-/**
- * 아라요 기계장터 색상 팔레트
- */
-
 export const colors = {
-  // Primary (--mainColor: #DB0025)
   primary: '#DB0025',
   primary200: '#DB0025',
   primaryDark: '#B0001E',
   primaryLight: '#FF1744',
 
-  // Secondary
   secondary: '#1B1B1B',
   secondaryLight: '#424242',
 

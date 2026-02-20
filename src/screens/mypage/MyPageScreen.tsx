@@ -15,7 +15,6 @@ import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
 import RefreshCwIcon from '../../assets/icon/refresh-cw.svg';
 
-// 마이페이지 메뉴 아이콘
 import SalesIcon from '../../assets/icon/mypage/sales.svg';
 import OrdersIcon from '../../assets/icon/mypage/orders.svg';
 import WishlistIcon from '../../assets/icon/mypage/wishlist.svg';
@@ -35,14 +34,12 @@ import MyinfoIcon from '../../assets/icon/mypage/myinfo.svg';
 
 import { colors } from '../../styles/colors';
 
-// --- 더미 데이터 ---
 const userInfo = {
   name: '홍길동',
   email: 'honggildong@gmail.com',
   memberClass: '일반회원',
 };
 
-// 아이콘 매핑
 const MENU_ICONS: Record<string, React.FC<any>> = {
   '판매내역': SalesIcon,
   '구매내역': OrdersIcon,
@@ -62,7 +59,6 @@ const MENU_ICONS: Record<string, React.FC<any>> = {
   '내 정보 확인/수정': MyinfoIcon,
 };
 
-// 메뉴 데이터
 const MENU_SECTIONS = [
   {
     label: 'MY 거래',
@@ -96,7 +92,6 @@ export const MyPageScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* 헤더 */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>마이페이지</Text>
       </View>
@@ -106,7 +101,6 @@ export const MyPageScreen: React.FC = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* 프로필 카드 */}
         <View style={styles.profileCard}>
           <View style={styles.profileRow}>
             <Image
@@ -122,13 +116,12 @@ export const MyPageScreen: React.FC = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.upgradeBtn} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.upgradeBtn} activeOpacity={0.8} onPress={() => navigation.navigate('BusinessUpgrade')}>
             <RefreshCwIcon width={16} height={16} color={colors.white} />
             <Text style={styles.upgradeBtnText}>기업회원 전환하기</Text>
           </TouchableOpacity>
         </View>
 
-        {/* 메뉴 섹션 */}
         {MENU_SECTIONS.map((section, sectionIndex) => (
           <View key={section.label} style={styles.menuSection}>
             {sectionIndex > 0 && (
@@ -159,7 +152,6 @@ export const MyPageScreen: React.FC = () => {
           </View>
         ))}
 
-        {/* 푸터 */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.footerToggle}
@@ -241,8 +233,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 40,
   },
-
-  // 프로필 카드
   profileCard: {
     margin: 16,
     padding: 20,
@@ -301,8 +291,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.white,
   },
-
-  // 메뉴 섹션
   menuSection: {
     marginTop: 0,
   },
@@ -341,8 +329,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.black,
   },
-
-  // 푸터
   footer: {
     marginTop: 30,
     paddingHorizontal: 20,

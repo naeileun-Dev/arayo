@@ -1,10 +1,5 @@
-/**
- * 아라요 기계장터 스페이싱 & 레이아웃
- */
-
 import { ViewStyle } from 'react-native';
 
-// 기본 간격 단위 (4px 기반)
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -18,13 +13,11 @@ export const spacing = {
   '5xl': 64,
 } as const;
 
-// 화면 패딩
 export const screenPadding = {
   horizontal: spacing.lg,
   vertical: spacing.base,
 } as const;
 
-// 보더 반경
 export const borderRadius = {
   none: 0,
   sm: 4,
@@ -35,13 +28,11 @@ export const borderRadius = {
   full: 9999,
 } as const;
 
-// 그림자 타입
 type ShadowStyle = Pick<
   ViewStyle,
   'shadowColor' | 'shadowOffset' | 'shadowOpacity' | 'shadowRadius' | 'elevation'
 >;
 
-// 그림자
 export const shadows: Record<string, ShadowStyle> = {
   none: {
     shadowColor: 'transparent',
@@ -80,7 +71,6 @@ export const shadows: Record<string, ShadowStyle> = {
   },
 };
 
-// 컴포넌트 높이
 export const componentHeight = {
   inputSmall: 40,
   input: 48,
@@ -92,7 +82,6 @@ export const componentHeight = {
   tabBar: 48,
 } as const;
 
-// 아이콘 사이즈
 export const iconSize = {
   xs: 16,
   sm: 20,

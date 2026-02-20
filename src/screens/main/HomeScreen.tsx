@@ -33,9 +33,6 @@ import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
 
 const { width } = Dimensions.get('window');
 
-const COLORS = colors;
-
-// --- Mock Data ---
 const RECOMMENDED_COMPANIES = [
   { id: '1', name: '마키나허브', desc: '중고 산업기계를 쉽고 정확하게 연결합니다.', tags: '정밀 선반 · 고출력 모델' },
   { id: '2', name: '툴마켓', desc: '산업기계 유통의 신뢰를 구축하는 중고거래 플..', tags: '고강성 머시닝센터 · 점검 완료' },
@@ -61,7 +58,6 @@ const COMPANY_BG_IMAGES = [
 
 const TABS = ['전체', '공작기계', '금형/사출기', '판금/용접', '목공기계', '운반/중장비'];
 
-// 커스텀 스피너 (회색 끊긴 원이 돌아가는 로딩)
 const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
   const spinValue = useRef(new Animated.Value(0)).current;
 
@@ -91,10 +87,10 @@ const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
           height: size,
           borderRadius: size / 2,
           borderWidth: 4,
-          borderBottomColor: COLORS.G400,
-          borderLeftColor: COLORS.G300,
-          borderRightColor: COLORS.G200,
-          borderTopColor: COLORS.G100,
+          borderBottomColor: colors.G400,
+          borderLeftColor: colors.G300,
+          borderRightColor: colors.G200,
+          borderTopColor: colors.G100,
         },
         { transform: [{ rotate }] },
       ]}
@@ -134,7 +130,6 @@ export default function HomeScreen() {
     }, 500);
   }, [isLoadingMore, hasMore, page]);
 
-  // 탭 변경 시 리셋
   const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab);
     setAllProducts(POPULAR_PRODUCTS);
@@ -158,7 +153,6 @@ export default function HomeScreen() {
     }
   };
 
-  // 모바일 헤더
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       <TouchableOpacity style={styles.logoBox}>
@@ -168,7 +162,7 @@ export default function HomeScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="어떤 설비를 찾으세요?"
-          placeholderTextColor={COLORS.G500}
+          placeholderTextColor={colors.G500}
           value={searchText}
           onChangeText={setSearchText}
           onSubmitEditing={handleSearch}
@@ -184,7 +178,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 메인 서비스 그리드 버튼
   const renderServiceGrid = () => (
     <View style={styles.serviceGridSection}>
       <View style={styles.gridTopRow}>
@@ -193,11 +186,11 @@ export default function HomeScreen() {
         </TouchableOpacity>
         <View style={styles.gridTopRightCol}>
           <TouchableOpacity style={styles.gridItemSmall} onPress={() => Alert.alert('견적문의')}>
-            <HeadsetIcon width={20} height={20} color={COLORS.primary200} />
+            <HeadsetIcon width={20} height={20} color={colors.primary200} />
             <Text style={styles.gridItemSmallText}>견적문의</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.gridItemSmall} onPress={() => Alert.alert('브랜드 관')}>
-            <BuildingIcon width={20} height={20} color={COLORS.primary200} />
+            <BuildingIcon width={20} height={20} color={colors.primary200} />
             <Text style={styles.gridItemSmallText}>브랜드 관</Text>
           </TouchableOpacity>
         </View>
@@ -226,7 +219,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 상단 풀 배너 (좌우 스크롤)
   const renderBanner = () => (
     <View style={styles.bannerContainer}>
       <FlatList
@@ -248,7 +240,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 섹션 헤더 (전체보기 + 화살표)
   const renderSectionHeader = (title: string, showViewAll: boolean = true) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -261,14 +252,13 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 추천 기업 (갤러리 프레임 스타일)
   const renderRecommendedCompanies = () => (
     <View style={styles.sectionContainer}>
       {renderSectionHeader('추천 기업')}
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20 }}
+        contentContainerStyle={styles.px20}
         data={RECOMMENDED_COMPANIES}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
@@ -295,9 +285,8 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 인기 상품 & 전체 상품 공통 렌더러 (매거진 스타일)
   const renderMagazineProduct = (item: any) => (
-    <TouchableOpacity style={styles.magazineCard} key={item.id}>
+    <TouchableOpacity style={styles.magazineCard} key={item.id} onPress={() => (navigation as any).navigate('ProductView', { productId: item.id })}>
       <Image
         source={require('../../assets/images/img03.png')}
         style={styles.magazineThumb}
@@ -325,7 +314,6 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
-  // 인기 상품
   const renderPopularProducts = () => (
     <View style={styles.sectionContainer}>
       {renderSectionHeader('가장 인기있는 상품')}
@@ -335,7 +323,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 중간 띠 배너
   const renderMiddleBanner = () => (
     <View style={styles.middleBannerWrapper}>
       <Image
@@ -346,7 +333,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  // 탭 메뉴 및 전체 상품
   const renderAllProducts = () => (
     <View style={styles.sectionContainer}>
       {renderSectionHeader('전체 상품 한눈에 보기')}
@@ -363,7 +349,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={[styles.magazineList, { paddingTop: 12 }]}>
+      <View style={[styles.magazineList, styles.pt12]}>
         {allProducts.map(item => renderMagazineProduct(item))}
       </View>
       {isLoadingMore && (
@@ -385,7 +371,7 @@ export default function HomeScreen() {
       {renderHeader()}
       <ScrollView
         style={styles.container}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={styles.contentContainer}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
@@ -396,23 +382,30 @@ export default function HomeScreen() {
         {renderMiddleBanner()}
         {renderAllProducts()}
       </ScrollView>
+
+      <TouchableOpacity style={styles.fab} activeOpacity={0.85}>
+        <Text style={styles.fabIcon}>+</Text>
+        <Text style={styles.fabText}> 상품등록</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.white },
-  container: { flex: 1, backgroundColor: COLORS.white },
+  safeArea: { flex: 1, backgroundColor: colors.white },
+  container: { flex: 1, backgroundColor: colors.white },
+  px20: { paddingHorizontal: 20 },
+  contentContainer: { paddingBottom: 100 },
+  pt12: { paddingTop: 12 },
 
-  // Header
   headerContainer: {
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.G200,
+    borderBottomColor: colors.G200,
   },
   logoBox: { width: 90, marginRight: 12, justifyContent: 'center' },
   searchBox: {
@@ -421,16 +414,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     borderRadius: 4,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: COLORS.black,
+    borderColor: colors.black,
     paddingHorizontal: 12,
   },
-  searchInput: { flex: 1, fontSize: 14, color: COLORS.black, padding: 0 },
+  searchInput: { flex: 1, fontSize: 14, color: colors.black, padding: 0 },
   searchIcon: { marginLeft: 8 },
   alarmIcon: { width: 34, alignItems: 'flex-end', justifyContent: 'center', marginLeft: 10 },
 
-  // Service Grid
   serviceGridSection: {
     paddingVertical: 25,
     paddingTop: 15,
@@ -444,12 +436,12 @@ const styles = StyleSheet.create({
   gridItemLarge: {
     flex: 1,
     height: 124,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  gridItemLargeText: { fontSize: 18, fontWeight: '600', color: COLORS.white },
+  gridItemLargeText: { fontSize: 18, fontWeight: '600', color: colors.white },
   gridTopRightCol: {
     flex: 1,
     gap: 8,
@@ -457,26 +449,25 @@ const styles = StyleSheet.create({
   gridItemSmall: {
     flex: 1,
     borderWidth: 1,
-    borderColor: COLORS.G200,
+    borderColor: colors.G200,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 10,
   },
-  gridItemSmallText: { fontSize: 16, fontWeight: '600', color: COLORS.black },
+  gridItemSmallText: { fontSize: 16, fontWeight: '600', color: colors.black },
   gridBottomBox: {
     padding: 12,
     borderWidth: 1,
-    borderColor: COLORS.G200,
+    borderColor: colors.G200,
     borderRadius: 8,
   },
-  gridBottomTitle: { fontSize: 16, fontWeight: '600', marginBottom: 20, color: COLORS.black },
+  gridBottomTitle: { fontSize: 16, fontWeight: '600', marginBottom: 20, color: colors.black },
   gridBottomMenu: { flexDirection: 'row', justifyContent: 'space-between' },
   bottomMenuItem: { flex: 1, alignItems: 'center', gap: 8 },
-  bottomMenuText: { fontSize: 12, color: COLORS.G600, fontWeight: '500' },
+  bottomMenuText: { fontSize: 12, color: colors.G600, fontWeight: '500' },
 
-  // Banner (좌우 스크롤)
   bannerContainer: { height: 222, position: 'relative' },
   bannerImage: { width, height: 222 },
   paginationBox: {
@@ -489,9 +480,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
   },
-  paginationText: { color: COLORS.white, fontSize: 12 },
+  paginationText: { color: colors.white, fontSize: 12 },
 
-  // Section 공통
   sectionContainer: { paddingVertical: 25 },
   sectionHeader: {
     flexDirection: 'row',
@@ -499,21 +489,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 15,
   },
-  sectionTitle: { fontSize: 18, fontWeight: '600', color: COLORS.black },
+  sectionTitle: { fontSize: 18, fontWeight: '600', color: colors.black },
   viewAllBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 'auto',
     gap: 2,
   },
-  viewAllText: { fontSize: 13, color: COLORS.black, lineHeight: 16 },
+  viewAllText: { fontSize: 13, color: colors.black, lineHeight: 16 },
 
-  // 추천 기업 (갤러리 프레임)
   companyCard: {
     width: 204,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: COLORS.G200,
+    borderColor: colors.G200,
     borderRadius: 5,
     overflow: 'visible',
   },
@@ -532,65 +521,87 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: COLORS.white,
+    borderColor: colors.white,
     zIndex: 5,
   },
   companyCon: { padding: 15, paddingTop: 20, gap: 8 },
-  companyName: { fontSize: 15, fontWeight: '600', color: COLORS.black },
-  companyDesc: { fontSize: 13, color: COLORS.black, lineHeight: 18 },
-  companyTags: { fontSize: 12, color: COLORS.G600 },
+  companyName: { fontSize: 15, fontWeight: '600', color: colors.black },
+  companyDesc: { fontSize: 13, color: colors.black, lineHeight: 18 },
+  companyTags: { fontSize: 12, color: colors.G600 },
 
-  // 매거진 스타일 상품 리스트
   magazineList: { paddingHorizontal: 20, gap: 8 },
   magazineCard: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: COLORS.G200,
+    borderColor: colors.G200,
     borderRadius: 4,
     overflow: 'hidden',
   },
   magazineThumb: { width: 120, height: 120 },
   magazineCon: { flex: 1, paddingVertical: 12, paddingHorizontal: 15, gap: 5 },
-  bestBadge: { fontSize: 10, fontWeight: '500', color: COLORS.error },
-  magazineTitle: { fontSize: 14, fontWeight: '600', color: COLORS.black, lineHeight: 18 },
-  magazineTags: { fontSize: 12, color: COLORS.G600 },
+  bestBadge: { fontSize: 10, fontWeight: '500', color: colors.error },
+  magazineTitle: { fontSize: 14, fontWeight: '600', color: colors.black, lineHeight: 18 },
+  magazineTags: { fontSize: 12, color: colors.G600 },
   magazineFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
-  magazinePrice: { fontSize: 14, fontWeight: 'bold', color: COLORS.black },
+  magazinePrice: { fontSize: 14, fontWeight: 'bold', color: colors.black },
   magazineMeta: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  magazineMetaText: { fontSize: 11, color: COLORS.G600 },
+  magazineMetaText: { fontSize: 11, color: colors.G600 },
   iconWithText: { flexDirection: 'row', alignItems: 'center', gap: 3 },
 
-  // 띠 배너
   middleBannerWrapper: { paddingVertical: 15, paddingHorizontal: 20 },
   middleBannerImage: { width: '100%', height: 138, borderRadius: 4 },
 
-  // 탭 메뉴
   tabScrollContainer: { paddingHorizontal: 20, gap: 5 },
   tabChip: {
     height: 40,
     paddingHorizontal: 15,
     minWidth: 65,
     borderRadius: 20,
-    backgroundColor: COLORS.G100,
+    backgroundColor: colors.G100,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabChipActive: { backgroundColor: COLORS.primary },
-  tabChipText: { fontSize: 14, fontWeight: '500', color: COLORS.G700 },
-  tabChipTextActive: { color: COLORS.white },
+  tabChipActive: { backgroundColor: colors.primary },
+  tabChipText: { fontSize: 14, fontWeight: '500', color: colors.G700 },
+  tabChipTextActive: { color: colors.white },
 
-  // 자동 페이지네이션
   loadingMore: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 24,
     gap: 10,
   },
-  loadingMoreText: { fontSize: 13, color: COLORS.G500 },
+  loadingMoreText: { fontSize: 13, color: colors.G500 },
   endOfList: {
     alignItems: 'center',
     paddingVertical: 16,
     marginTop: 12,
   },
-  endOfListText: { fontSize: 13, color: COLORS.G500 },
+  endOfListText: { fontSize: 13, color: colors.G500 },
+
+  fab: {
+    position: 'absolute',
+    bottom: 54,
+    right: 16,
+    width: 101,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.primary200,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  fabIcon: {
+    fontSize: 24,
+    fontWeight: '300',
+    color: colors.white,
+    includeFontPadding: false,
+  },
+  fabText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.white,
+    includeFontPadding: false,
+  },
 });

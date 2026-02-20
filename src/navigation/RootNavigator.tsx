@@ -1,8 +1,3 @@
-/**
- * 루트 네비게이터
- * Auth (로그인/회원가입) ↔ Main (홈/탭) 전환
- */
-
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './AuthNavigator';
@@ -10,6 +5,8 @@ import { SearchScreen } from '../screens/main';
 import { NotificationScreen } from '../screens/main/NotificationScreen';
 import { TermsScreen } from '../screens/terms/TermsScreen';
 import { PrivacyScreen } from '../screens/terms/PrivacyScreen';
+import BusinessUpgradeScreen from '../screens/mypage/BusinessUpgradeScreen';
+import ProductViewScreen from '../screens/product/ProductViewScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -50,6 +47,16 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="Privacy"
         component={PrivacyScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BusinessUpgrade"
+        component={BusinessUpgradeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProductView"
+        component={ProductViewScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
