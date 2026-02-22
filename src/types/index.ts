@@ -149,6 +149,8 @@ export type RootStackParamList = {
   Privacy: undefined;
   BusinessUpgrade: undefined;
   ProductView: { productId: string };
+  ProductUpload: undefined;
+  CategoryList: { category: string; subCategory: string };
 };
 
 export interface Banner {

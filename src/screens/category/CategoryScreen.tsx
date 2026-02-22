@@ -174,7 +174,7 @@ export const CategoryScreen: React.FC = () => {
               key={`${CATEGORY_DATA[activeIndex].id}-${subIndex}`}
               style={styles.subItem}
               onPress={() => {
-                console.log('선택된 카테고리:', CATEGORY_DATA[activeIndex].title, '>', subItem);
+                (navigation as any).navigate('CategoryList', { category: CATEGORY_DATA[activeIndex].title, subCategory: subItem });
               }}
             >
               <Text style={styles.subItemText}>{subItem}</Text>

@@ -383,7 +383,7 @@ export default function HomeScreen() {
         {renderAllProducts()}
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85}>
+      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => (navigation as any).navigate('ProductUpload')}>
         <Text style={styles.fabIcon}>+</Text>
         <Text style={styles.fabText}> 상품등록</Text>
       </TouchableOpacity>
@@ -593,15 +593,17 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   fabIcon: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '300',
     color: colors.white,
     includeFontPadding: false,
+    lineHeight: 24,
   },
   fabText: {
     fontSize: 13,
     fontWeight: '700',
     color: colors.white,
     includeFontPadding: false,
+    lineHeight: 17,
   },
 });
