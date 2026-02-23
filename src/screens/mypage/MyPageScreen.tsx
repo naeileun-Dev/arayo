@@ -138,7 +138,13 @@ export const MyPageScreen: React.FC = () => {
                 <TouchableOpacity
                   key={item}
                   style={styles.menuItem}
-                  onPress={() => console.log(item)}
+                  onPress={() => {
+                    if (item === '자주 묻는 질문') {
+                      navigation.navigate('FAQ');
+                    } else {
+                      console.log(item);
+                    }
+                  }}
                   activeOpacity={0.7}
                 >
                   <View style={styles.menuItemLeft}>

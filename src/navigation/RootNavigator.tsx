@@ -9,6 +9,7 @@ import BusinessUpgradeScreen from '../screens/mypage/BusinessUpgradeScreen';
 import ProductViewScreen from '../screens/product/ProductViewScreen';
 import ProductUploadScreen from '../screens/product/ProductUploadScreen';
 import CategoryListScreen from '../screens/category/CategoryListScreen';
+import FAQScreen from '../screens/terms/FAQScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -69,6 +70,11 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="CategoryList"
         component={CategoryListScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FAQ"
+        component={FAQScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

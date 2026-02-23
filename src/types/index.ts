@@ -151,6 +151,7 @@ export type RootStackParamList = {
   ProductView: { productId: string };
   ProductUpload: undefined;
   CategoryList: { category: string; subCategory: string };
+  FAQ: undefined;
 };
 
 export interface Banner {
