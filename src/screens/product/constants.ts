@@ -7,21 +7,7 @@ import ScrollIcon from '../../assets/icon/product/scroll.svg';
 import CreditCardIcon from '../../assets/icon/product/credit-card.svg';
 import BasketIcon from '../../assets/icon/product/shopping-basket.svg';
 
-// 상품 상세 전용 색상 (글로벌 colors와 값이 다름)
-export const colors = {
-  black: '#1b1b1b',
-  white: '#FFFFFF',
-  primary: '#DB0025',
-  blue: '#3B82F6',
-  red: '#DC3545',
-  G100: '#F3F4F7',
-  G200: '#E7EAEE',
-  G300: '#DBDFE6',
-  G400: '#CFD4DE',
-  G500: '#A1AAB9',
-  G600: '#6D7D9C',
-  star: '#FFB800',
-};
+export { colors } from '../../styles/colors';
 
 // 이미지
 export const PRODUCT_IMGS = [

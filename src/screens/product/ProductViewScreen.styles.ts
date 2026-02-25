@@ -12,8 +12,8 @@ export const styles = StyleSheet.create({
   pt20: { paddingTop: 20 },
   bold: { fontWeight: 'bold' },
   textG600: { color: colors.G600 },
-  textBlue: { color: colors.blue },
-  textLink: { color: colors.blue },
+  textBlue: { color: colors.system100 },
+  textLink: { color: colors.system100 },
   thinDivider: { height: 1, backgroundColor: colors.G200, marginVertical: 20 },
   sectionGap: { height: 8, backgroundColor: colors.white },
 
@@ -125,7 +125,7 @@ export const styles = StyleSheet.create({
   recommendGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   recommendCard: { width: '48%', marginBottom: 16 },
   recommendImg: { width: '100%', aspectRatio: 1.3, borderRadius: 8, marginBottom: 8, position: 'relative', overflow: 'hidden' },
-  bestTag: { fontSize: 11, fontWeight: 'bold', color: colors.red, marginBottom: 4 },
+  bestTag: { fontSize: 11, fontWeight: 'bold', color: colors.redDark, marginBottom: 4 },
 
   // 리뷰 섹션
   reviewHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 15 },

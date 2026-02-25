@@ -10,6 +10,8 @@ import ProductViewScreen from '../screens/product/ProductViewScreen';
 import ProductUploadScreen from '../screens/product/ProductUploadScreen';
 import CategoryListScreen from '../screens/category/CategoryListScreen';
 import FAQScreen from '../screens/terms/FAQScreen';
+import BuyListScreen from '../screens/mypage/PurchasListScreen';
+import OrderDetailScreen from '../screens/mypage/OrderDetailScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -75,6 +77,16 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="FAQ"
         component={FAQScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PurchaseList"
+        component={BuyListScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OrderDetail"
+        component={OrderDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

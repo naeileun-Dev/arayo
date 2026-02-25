@@ -26,19 +26,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const COLORS = {
-  black: '#1b1b1b',
-  white: '#FFFFFF',
-  primary: '#DB0025',
-  blue: '#3B82F6',
-  G100: '#F3F4F7',
-  G200: '#E7EAEE',
-  G300: '#DBDFE6',
-  G400: '#CFD4DE',
-  G500: '#A1AAB9',
-  G600: '#6D7D9C',
-  border: '#E5E5E5',
-};
+import { colors as COLORS } from '../../styles/colors';
 
 const FAQ_CATEGORIES = ['전체', '계정/인증/로그인', '주문/결제', '판매/거래', '견적/문의'];
 
@@ -222,7 +210,7 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: COLORS.G200,
   },
   headerTitle: {
     fontSize: 18,
@@ -337,7 +325,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: COLORS.G200,
   },
   tabScroll: {
     paddingHorizontal: 16,
@@ -365,7 +353,7 @@ const styles = StyleSheet.create({
   },
   faqItem: {
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: COLORS.G200,
   },
   faqHeader: {
     flexDirection: 'row',

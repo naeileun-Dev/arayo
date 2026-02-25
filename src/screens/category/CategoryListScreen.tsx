@@ -85,32 +85,13 @@ interface FilterState {
   dateToMonth: string;
 }
 
-// ─────────────────────────────────────────────────
-// 색상 팔레트
-// ─────────────────────────────────────────────────
-const C = {
-  primary: '#DB0025',
-  black:   '#1B1B1B',
-  white:   '#FFFFFF',
-  blue:    '#4381ff',
-  green:   '#2ecc71',
-  orange:  '#E67E22',
-  G100: '#F7F7F7',
-  G200: '#EEEEEE',
-  G300: '#CFCFCF',
-  G400: '#B1B1B1',
-  G500: '#9E9E9E',
-  G600: '#7E7E7E',
-  G700: '#333333',
-  G800: '#515151',
-  border: '#EEEEEE',
-} as const;
+import { colors as C } from '../../styles/colors';
 
 const BADGE_CONFIG: Record<ItemState, { bg: string; text: string; label: string }> = {
-  hold:   { bg: '#2ecc71',      text: C.white, label: '예약중'  },
-  used:   { bg: '#FF8C00',      text: C.white, label: '중고'    },
+  hold:   { bg: C.green100,      text: C.white, label: '예약중'  },
+  used:   { bg: C.orangeDark,      text: C.white, label: '중고'    },
   sold:   { bg: C.white,        text: C.black, label: '판매완료' },
-  new:    { bg: '#4381ff',      text: C.white, label: '신품'    },
+  new:    { bg: C.system100,      text: C.white, label: '신품'    },
   normal: { bg: 'transparent',  text: 'transparent', label: '' },
 };
 
@@ -278,7 +259,7 @@ const CompareResultItem = ({ product }: { product: Product }) => {
           <Image source={PROFILE_IMG} style={rStyles.storeProfileImg} />
           <Text style={rStyles.storeName}>{MOCK_COMPARE_DETAIL.storeName}</Text>
         </View>
-        <View style={[rStyles.stateBadge, { backgroundColor: '#2ecc71' }]}>
+        <View style={[rStyles.stateBadge, { backgroundColor: C.green100 }]}>
           <Text style={[rStyles.stateBadgeText, { color: C.white }]}>예약중</Text>
         </View>
       </View>
@@ -1293,7 +1274,7 @@ const rStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: C.border,
+    borderBottomColor: C.G200,
   },
   sheetHandle: {
     width: 40,
@@ -1503,7 +1484,7 @@ const rStyles = StyleSheet.create({
     fontWeight: '500',
   },
   serviceTagTextOn: {
-    color: C.blue,
+    color: C.system100,
     fontWeight: '600',
   },
   // 더보기 버튼
@@ -1577,13 +1558,13 @@ const fStyles = StyleSheet.create({
   panelHead: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 14,
-    borderBottomWidth: 1, borderBottomColor: C.border,
+    borderBottomWidth: 1, borderBottomColor: C.G200,
   },
   panelTitle: { fontSize: 17, fontWeight: '700', color: C.black },
   closeBtn: { width: 36, height: 36, justifyContent: 'center', alignItems: 'center' },
   closeBtnText: { fontSize: 18, color: C.G600 },
   scrollArea: { flex: 1 },
-  searchSection: { padding: 16, borderBottomWidth: 1, borderBottomColor: C.border },
+  searchSection: { padding: 16, borderBottomWidth: 1, borderBottomColor: C.G200 },
   searchWrap: {
     flexDirection: 'row', alignItems: 'center', height: 44,
     borderWidth: 1, borderColor: C.G300, borderRadius: 6,
@@ -1591,7 +1572,7 @@ const fStyles = StyleSheet.create({
   },
   searchInput: { flex: 1, fontSize: 14, color: C.black, padding: 0 },
   searchClear: { fontSize: 14, color: C.G400, padding: 4 },
-  section: { borderBottomWidth: 1, borderBottomColor: C.border },
+  section: { borderBottomWidth: 1, borderBottomColor: C.G200 },
   accordionHead: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 16, paddingVertical: 15, gap: 8,
@@ -1651,7 +1632,7 @@ const fStyles = StyleSheet.create({
   },
   selectBoxHead: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: C.border,
+    paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: C.G200,
   },
   selectBoxTitle: { fontSize: 16, fontWeight: '700', color: C.black },
   selectBoxClose: { fontSize: 18, color: C.G600, padding: 4 },
@@ -1673,7 +1654,7 @@ const fStyles = StyleSheet.create({
   bottomBtns: {
     flexDirection: 'row', gap: 10, paddingHorizontal: 16, paddingTop: 12,
     paddingBottom: Platform.OS === 'ios' ? 28 : 16,
-    borderTopWidth: 1, borderTopColor: C.border, backgroundColor: C.white,
+    borderTopWidth: 1, borderTopColor: C.G200, backgroundColor: C.white,
   },
   resetBtn: {
     flex: 1, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -1689,7 +1670,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: C.white },
   header: {
     flexDirection: 'row', alignItems: 'center', height: 52,
-    paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: C.border, backgroundColor: C.white,
+    paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: C.G200, backgroundColor: C.white,
   },
   headerIconBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { flex: 1, textAlign: 'center', fontSize: 17, fontWeight: '600', color: C.black, letterSpacing: -0.3 },
@@ -1698,7 +1679,7 @@ const styles = StyleSheet.create({
   filterBar: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 16, paddingVertical: 10,
-    borderBottomWidth: 1, borderBottomColor: C.border, backgroundColor: C.white, gap: 10,
+    borderBottomWidth: 1, borderBottomColor: C.G200, backgroundColor: C.white, gap: 10,
   },
   filterBtn: {
     width: 48, height: 40, backgroundColor: C.white,
@@ -1720,7 +1701,7 @@ const styles = StyleSheet.create({
   productHead: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 16, paddingVertical: 14,
-    borderBottomWidth: 1, borderBottomColor: C.border,
+    borderBottomWidth: 1, borderBottomColor: C.G200,
   },
   categoryPath: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   categoryDep1: { fontSize: 15, fontWeight: '600', color: C.black },
@@ -1740,7 +1721,7 @@ const styles = StyleSheet.create({
   listContent: { paddingBottom: 40 },
   productItem: {
     flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 16,
-    borderBottomWidth: 1, borderBottomColor: C.border, backgroundColor: C.white,
+    borderBottomWidth: 1, borderBottomColor: C.G200, backgroundColor: C.white,
   },
   thumbWrap: {
     width: 120, height: 120, borderRadius: 6, overflow: 'hidden',
@@ -1816,12 +1797,12 @@ const styles = StyleSheet.create({
   panelCloseText: { fontSize: 16, color: C.G500, padding: 4 },
   panelSlotsGrid: { maxHeight: SCREEN_HEIGHT * 0.45, marginBottom: 14 },
   panelGridRow: { flexDirection: 'row', gap: 10, marginBottom: 10 },
-  panelCard: { width: COMPARE_CARD_WIDTH, backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
+  panelCard: { width: COMPARE_CARD_WIDTH, backgroundColor: C.white, borderWidth: 1, borderColor: C.G200, borderRadius: 8, overflow: 'hidden' },
   panelCardThumbWrap: { width: '100%', aspectRatio: 1, backgroundColor: C.G100, position: 'relative' },
   panelCardThumbImage: { width: '100%', height: '100%' },
   panelCardCon: { padding: 8 },
   panelCardTitle: { fontSize: 12, fontWeight: '500', color: C.black, lineHeight: 17 },
-  panelCardTags: { fontSize: 10, color: C.blue, marginTop: 2 },
+  panelCardTags: { fontSize: 10, color: C.system100, marginTop: 2 },
   panelCardPrice: { fontSize: 14, fontWeight: '700', color: C.black, marginTop: 4 },
   panelCardMetaRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
   panelCardMeta: { fontSize: 10, color: C.G500 },
@@ -1861,7 +1842,7 @@ const styles = StyleSheet.create({
   compareBarClose: { fontSize: 16, color: C.G500, padding: 4 },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
   sortDropdown: {
-    backgroundColor: C.white, borderRadius: 8, borderWidth: 1, borderColor: C.border, overflow: 'hidden',
+    backgroundColor: C.white, borderRadius: 8, borderWidth: 1, borderColor: C.G200, overflow: 'hidden',
     ...Platform.select({
       ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8 },
       android: { elevation: 8 },

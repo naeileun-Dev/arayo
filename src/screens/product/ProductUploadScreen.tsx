@@ -17,11 +17,7 @@ import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import { CATEGORY_DATA, CATEGORY_LIST, YEARS, MONTHS } from '../../constants/categoryData';
 import { REGION_DATA, CITIES } from '../../constants/regionData';
 
-// 색상 시스템
-const colors = {
-  black: '#1b1b1b', white: '#FFFFFF', primary: '#DB0025', blue: '#3B82F6', red: '#DC3545',
-  G100: '#F3F4F7', G200: '#E7EAEE', G300: '#DBDFE6', G400: '#CFD4DE', G500: '#A1AAB9', G600: '#6D7D9C', G700: '#474D57', border: '#E5E5E5',
-};
+import { colors } from '../../styles/colors';
 
 // 재사용 가능한 Checkbox 컴포넌트
 const CustomCheckbox = ({ label, isChecked, onPress, isRadioStyle = false }: any) => {
@@ -160,7 +156,7 @@ export default function ProductUploadScreen() {
         <View style={styles.formLi}>
           <Text style={styles.formLabel}>상품 이미지 등록 <Text style={styles.fileCount}>({images.length}/{MAX_IMAGES})</Text> <Text style={styles.req}>*</Text></Text>
           <View style={styles.blueBox}>
-            <Text style={styles.blueBoxText}>• 첫 번째로 등록한 이미지가 대표 이미지로 설정되며,{'\n'}  <Text style={{ color: colors.blue }}>이미지를 클릭하면 대표 이미지를 변경</Text>할 수 있습니다.</Text>
+            <Text style={styles.blueBoxText}>• 첫 번째로 등록한 이미지가 대표 이미지로 설정되며,{'\n'}  <Text style={{ color: colors.system100 }}>이미지를 클릭하면 대표 이미지를 변경</Text>할 수 있습니다.</Text>
           </View>
           {images.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageListWrap} contentContainerStyle={{ gap: 10 }}>
@@ -394,7 +390,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 20 },
   contentContainer: { paddingTop: 25, paddingBottom: 100 },
 
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, height: 56, borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.white },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, height: 56, borderBottomWidth: 1, borderBottomColor: colors.G200, backgroundColor: colors.white },
   headerIconBtn: { padding: 8, minWidth: 40, alignItems: 'center' },
   headerTitle: { fontSize: 16, fontWeight: 'bold', color: colors.black },
 
@@ -402,20 +398,20 @@ const styles = StyleSheet.create({
   formHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   formLabel: { fontSize: 14, fontWeight: 'bold', color: colors.black, marginBottom: 10 },
   formLabelMargin0: { fontSize: 14, fontWeight: 'bold', color: colors.black },
-  req: { color: colors.red },
+  req: { color: colors.redDark },
   mt40: { marginTop: 40 },
 
-  input: { height: 48, borderWidth: 1, borderColor: colors.border, borderRadius: 6, paddingHorizontal: 12, fontSize: 14, color: colors.black },
+  input: { height: 48, borderWidth: 1, borderColor: colors.G200, borderRadius: 6, paddingHorizontal: 12, fontSize: 14, color: colors.black },
   inpSet: { position: 'relative' },
   textCount: { position: 'absolute', right: 12, top: 15, fontSize: 12, color: colors.G400 },
-  textArea: { height: 150, borderWidth: 1, borderColor: colors.border, borderRadius: 6, padding: 12, fontSize: 14, color: colors.black },
+  textArea: { height: 150, borderWidth: 1, borderColor: colors.G200, borderRadius: 6, padding: 12, fontSize: 14, color: colors.black },
 
-  priceInputWrap: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.border, borderRadius: 6, paddingRight: 12 },
+  priceInputWrap: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.G200, borderRadius: 6, paddingRight: 12 },
   priceInput: { flex: 1, height: 48, paddingHorizontal: 12, fontSize: 14, color: colors.black },
   priceUnit: { fontSize: 14, color: colors.black },
 
   /* --- Picker(드롭다운) 대체용 버튼 UI --- */
-  selectBtn: { height: 48, borderWidth: 1, borderColor: colors.border, borderRadius: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, marginBottom: 10 },
+  selectBtn: { height: 48, borderWidth: 1, borderColor: colors.G200, borderRadius: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, marginBottom: 10 },
   selectBtnText: { fontSize: 14, color: colors.black },
   selectCaret: { fontSize: 10, color: colors.G400 },
 
@@ -429,32 +425,32 @@ const styles = StyleSheet.create({
   representBadgeText: { fontSize: 11, fontWeight: 'bold', color: colors.white },
   imageRemoveBtn: { position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: 11, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
   imageRemoveBtnText: { fontSize: 12, color: colors.white, fontWeight: 'bold' },
-  uploadBtn: { height: 48, backgroundColor: colors.white, borderRadius: 6, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.border, flexDirection: 'row' },
+  uploadBtn: { height: 48, backgroundColor: colors.white, borderRadius: 6, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.G200, flexDirection: 'row' },
   uploadBtnText: { fontSize: 14, color: colors.black, fontWeight: '500' },
 
   flexRow: { flexDirection: 'row', gap: 10 },
-  radioBtn: { flex: 1, height: 48, borderWidth: 1, borderColor: colors.border, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
+  radioBtn: { flex: 1, height: 48, borderWidth: 1, borderColor: colors.G200, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
   radioBtnActive: { borderColor: colors.primary, backgroundColor: colors.primary },
   radioBtnText: { fontSize: 14, color: colors.G600 },
   radioBtnTextActive: { color: colors.white, fontWeight: 'bold' },
 
   checkboxSet: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  tagCheckbox: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white },
+  tagCheckbox: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: colors.G200, backgroundColor: colors.white },
   tagCheckboxActive: { borderColor: colors.primary, backgroundColor: '#FFEBEB' },
   tagCheckboxText: { fontSize: 13, color: colors.G600 },
   tagCheckboxTextActive: { color: colors.primary, fontWeight: 'bold' },
 
   checkboxWrap: { flexDirection: 'row', alignItems: 'center' },
-  checkBox: { width: 20, height: 20, borderWidth: 1, borderColor: colors.border, borderRadius: 4, marginRight: 8, alignItems: 'center', justifyContent: 'center' },
+  checkBox: { width: 20, height: 20, borderWidth: 1, borderColor: colors.G200, borderRadius: 4, marginRight: 8, alignItems: 'center', justifyContent: 'center' },
   checkBoxActive: { backgroundColor: colors.black, borderColor: colors.black },
   checkIcon: { color: colors.white, fontSize: 12, fontWeight: 'bold' },
-  radioBox: { width: 20, height: 20, borderWidth: 1, borderColor: colors.border, borderRadius: 10, marginRight: 8, alignItems: 'center', justifyContent: 'center' },
+  radioBox: { width: 20, height: 20, borderWidth: 1, borderColor: colors.G200, borderRadius: 10, marginRight: 8, alignItems: 'center', justifyContent: 'center' },
   radioInner: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.black },
   checkboxLabel: { fontSize: 14, color: colors.black },
 
   hr: { height: 1, backgroundColor: colors.G200, marginVertical: 15 },
   agreeRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  reqText: { fontSize: 12, color: colors.red, marginLeft: 4 },
+  reqText: { fontSize: 12, color: colors.redDark, marginLeft: 4 },
   viewLink: { fontSize: 13, color: colors.G600, textDecorationLine: 'underline' },
 
   bottomFloating: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 16, paddingBottom: Platform.OS === 'ios' ? 34 : 16, backgroundColor: colors.white, borderTopWidth: 1, borderTopColor: colors.G200 },

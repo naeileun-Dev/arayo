@@ -141,6 +141,8 @@ export const MyPageScreen: React.FC = () => {
                   onPress={() => {
                     if (item === '자주 묻는 질문') {
                       navigation.navigate('FAQ');
+                    } else if (item === '구매내역') {
+                      navigation.navigate('PurchaseList');
                     } else {
                       console.log(item);
                     }

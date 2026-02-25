@@ -1,13 +1,15 @@
 export const colors = {
+  // Primary
   primary: '#DB0025',
   primary200: '#DB0025',
   primaryDark: '#B0001E',
   primaryLight: '#FF1744',
 
+  // Secondary
   secondary: '#1B1B1B',
   secondaryLight: '#424242',
 
-  // Gray Scale (웹 CSS 변수 기준)
+  // Gray Scale
   G100: '#F7F7F7',
   G200: '#EEEEEE',
   G300: '#CFCFCF',
@@ -35,6 +37,26 @@ export const colors = {
   borderLight: '#EEEEEE',
   borderMedium: '#CFCFCF',
   borderDark: '#9E9E9E',
+
+  // System
+  system100: '#0F53FF',
+
+  // Semantic
+  red: '#FF0000',
+  redDark: '#DC3545',
+  green: '#53B460',
+  green100: '#2ecc71',
+  orange: '#FB8C14',
+  orange100: '#E67E22',
+  orangeDark: '#FF8C00',
+  star: '#FFB800',
+
+  // Order State
+  state1: '#BD9648',
+  state2: '#BF8244',
+  state3: '#BB6359',
+  state4: '#587DC3',
+  state5: '#7E7C78',
 
   // Status
   success: '#4CAF50',
