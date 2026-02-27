@@ -66,16 +66,6 @@ export const styles = StyleSheet.create({
   // 서비스 태그 그리드
   serviceGrid: { flexDirection: 'row', marginBottom: 20, gap: 12 },
   serviceCol: { flex: 1, gap: 10 },
-  serviceItem: { flexDirection: 'row', alignItems: 'center' },
-  serviceIconWrap: {
-    width: 28, height: 28, borderRadius: 14,
-    backgroundColor: colors.white,
-    borderWidth: 1, borderColor: colors.G200,
-    alignItems: 'center', justifyContent: 'center', marginRight: 8,
-  },
-  serviceIconWrapOn: { backgroundColor: colors.primary, borderColor: colors.primary },
-  serviceText: { fontSize: 13, color: colors.G500 },
-  serviceTextOn: { color: colors.primary, fontWeight: 'bold' },
 
   // 별점/지역 정보 박스
   infoBoxRow: { flexDirection: 'row', borderWidth: 1, borderColor: colors.G200, borderRadius: 6, marginBottom: 10, overflow: 'hidden' },
@@ -97,8 +87,6 @@ export const styles = StyleSheet.create({
   // 섹션 헤더
   secTitle: { fontSize: 18, fontWeight: 'bold', color: colors.black, marginBottom: 15 },
   secTitleFlat: { fontSize: 18, fontWeight: 'bold', color: colors.black },
-  secHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
-  viewAll: { fontSize: 13, color: colors.G600 },
 
   // 상품소개 탭
   hashTagRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },

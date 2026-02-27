@@ -42,6 +42,9 @@ export interface CheckboxProps {
   label?: string;
   disabled?: boolean;
   size?: 'small' | 'medium';
+  variant?: 'checkbox' | 'radio';
+  activeColor?: string;
+  labelColor?: string;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
 }
@@ -153,6 +156,7 @@ export type RootStackParamList = {
   CategoryList: { category: string; subCategory: string };
   FAQ: undefined;
   PurchaseList: undefined;
+  SalesList: undefined;
   OrderDetail: undefined;
 };
 
@@ -202,4 +206,22 @@ export interface QuickMenu {
   label: string;
   icon: string;
   route?: string;
+}
+
+export type TradeState = 1 | 2 | 3 | 4 | 5;
+
+export interface TradeItem {
+  id: string;
+  state: TradeState;
+  stateLabel: string;
+  helpText?: string;
+  image: string;
+  title: string;
+  price: string;
+  buttons: Array<{
+    label: string;
+    type: 'primary' | 'light' | 'blue';
+    action: string;
+  }>;
+  moreButtons?: Array<{ label: string; action: string }>;
 }

@@ -35,28 +35,9 @@ import {
 import { styles } from './ProductViewScreen.styles';
 import ReviewItem from './components/ReviewItem';
 import ProductCard from './components/ProductCard';
+import SectionHeader from '../../components/common/SectionHeader';
+import ServiceTag from '../../components/common/ServiceTag';
 
-/** 서비스 제공 항목 태그 */
-const ServiceTag = ({ name, on, Icon }: { name: string; on: boolean; Icon: React.FC<any> }) => (
-  <View style={styles.serviceItem}>
-    <View style={[styles.serviceIconWrap, on && styles.serviceIconWrapOn]}>
-      <Icon width={16} height={16} color={on ? colors.white : colors.G500} />
-    </View>
-    <Text style={[styles.serviceText, on && styles.serviceTextOn]}>{name}</Text>
-  </View>
-);
-
-/** 섹션 헤더 (제목 + 전체보기) */
-const SectionHeader = ({ title, onViewAll }: { title: string; onViewAll?: () => void }) => (
-  <View style={styles.secHead}>
-    <Text style={styles.secTitleFlat}>{title}</Text>
-    {onViewAll && (
-      <TouchableOpacity onPress={onViewAll}>
-        <Text style={styles.viewAll}>전체보기</Text>
-      </TouchableOpacity>
-    )}
-  </View>
-);
 
 export default function ProductViewScreen() {
   const navigation = useNavigation();
@@ -285,10 +266,7 @@ export default function ProductViewScreen() {
 
           {/* 판매자 다른 상품 */}
           <View style={styles.pt20}>
-            <View style={[styles.secHead, styles.px20]}>
-              <Text style={styles.secTitleFlat}>이 판매자의 다른 상품</Text>
-              <TouchableOpacity><Text style={styles.viewAll}>전체보기</Text></TouchableOpacity>
-            </View>
+            <SectionHeader title="이 판매자의 다른 상품" onViewAll={() => {}} style={styles.px20} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.px20}>
               {[1, 2, 3, 4, 5].map((item) => (
                 <ProductCard
@@ -335,10 +313,7 @@ export default function ProductViewScreen() {
 
           {/* 비교 상품 */}
           <View style={styles.pt20}>
-            <View style={[styles.secHead, styles.px20]}>
-              <Text style={styles.secTitleFlat}>가장 많이 비교된 상품</Text>
-              <TouchableOpacity><Text style={styles.viewAll}>전체보기</Text></TouchableOpacity>
-            </View>
+            <SectionHeader title="가장 많이 비교된 상품" onViewAll={() => {}} style={styles.px20} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.px20}>
               {[1, 2, 3, 4, 5].map((item) => (
                 <ProductCard

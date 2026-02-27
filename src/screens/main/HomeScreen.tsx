@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,6 @@ import {
   Image,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Animated,
-  Easing,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -27,76 +25,20 @@ import AboutIcon from '../../assets/icon/about.svg';
 import GearsIcon from '../../assets/icon/gears.svg';
 import NewsIcon from '../../assets/icon/news.svg';
 import ProcessIcon from '../../assets/icon/process.svg';
-import HeartIcon from '../../assets/icon/heart.svg';
-import CommentIcon from '../../assets/icon/comment.svg';
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
+import SectionHeader from '../../components/common/SectionHeader';
+import Spinner from '../../components/common/Spinner';
+import ProductMagazineCard from './home/ProductMagazineCard';
+import {
+  RECOMMENDED_COMPANIES,
+  POPULAR_PRODUCTS,
+  BANNER_IMAGES,
+  COMPANY_BG_IMAGES,
+  CATEGORY_TABS,
+} from './home/constants';
 
 const { width } = Dimensions.get('window');
 
-const RECOMMENDED_COMPANIES = [
-  { id: '1', name: '마키나허브', desc: '중고 산업기계를 쉽고 정확하게 연결합니다.', tags: '정밀 선반 · 고출력 모델' },
-  { id: '2', name: '툴마켓', desc: '산업기계 유통의 신뢰를 구축하는 중고거래 플..', tags: '고강성 머시닝센터 · 점검 완료' },
-  { id: '3', name: '마키나허브', desc: '중고 산업기계를 쉽고 정확하게 연결합니다.', tags: '정밀 선반 · 고출력 모델' },
-];
-
-const POPULAR_PRODUCTS = [
-  { id: '1', title: '온도조절 안정적 · 장시간 운전 가능온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: '12,300,000원', date: '9분전', likes: 21, comments: 5 },
-  { id: '2', title: '온도조절 안정적 · 장시간 운전 가능온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: '12,300,000원', date: '9분전', likes: 21, comments: 5 },
-  { id: '3', title: '온도조절 안정적 · 장시간 운전 가능온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: '12,300,000원', date: '9분전', likes: 21, comments: 5 },
-];
-
-const BANNER_IMAGES = [
-  require('../../assets/images/tmp_video01.png'),
-  require('../../assets/images/banner02.png'),
-  require('../../assets/images/banner01.png'),
-];
-
-const COMPANY_BG_IMAGES = [
-  require('../../assets/images/img01.png'),
-  require('../../assets/images/img02.png'),
-];
-
-const TABS = ['전체', '공작기계', '금형/사출기', '판금/용접', '목공기계', '운반/중장비'];
-
-const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
-  const spinValue = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const animation = Animated.loop(
-      Animated.timing(spinValue, {
-        toValue: 1,
-        duration: 800,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    );
-    animation.start();
-    return () => animation.stop();
-  }, [spinValue]);
-
-  const rotate = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  return (
-    <Animated.View
-      style={[
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          borderWidth: 4,
-          borderBottomColor: colors.G400,
-          borderLeftColor: colors.G300,
-          borderRightColor: colors.G200,
-          borderTopColor: colors.G100,
-        },
-        { transform: [{ rotate }] },
-      ]}
-    />
-  );
-};
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -241,15 +183,17 @@ export default function HomeScreen() {
   );
 
   const renderSectionHeader = (title: string, showViewAll: boolean = true) => (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {showViewAll && (
+    <SectionHeader
+      title={title}
+      style={styles.sectionHeader}
+      onViewAll={showViewAll ? () => {} : undefined}
+      rightComponent={showViewAll ? (
         <TouchableOpacity style={styles.viewAllBtn}>
           <Text style={styles.viewAllText}>전체보기</Text>
           <ChevronRightIcon width={16} height={16} />
         </TouchableOpacity>
-      )}
-    </View>
+      ) : undefined}
+    />
   );
 
   const renderRecommendedCompanies = () => (
@@ -285,40 +229,17 @@ export default function HomeScreen() {
     </View>
   );
 
-  const renderMagazineProduct = (item: any) => (
-    <TouchableOpacity style={styles.magazineCard} key={item.id} onPress={() => (navigation as any).navigate('ProductView', { productId: item.id })}>
-      <Image
-        source={require('../../assets/images/img03.png')}
-        style={styles.magazineThumb}
-        resizeMode="cover"
-      />
-      <View style={styles.magazineCon}>
-        <Text style={styles.bestBadge}>BEST</Text>
-        <Text style={styles.magazineTitle} numberOfLines={2}>{item.title}</Text>
-        <Text style={styles.magazineTags}>{item.tags}</Text>
-        <View style={styles.magazineFooter}>
-          <Text style={styles.magazinePrice}>{item.price}</Text>
-          <View style={styles.magazineMeta}>
-            <Text style={styles.magazineMetaText}>{item.date}</Text>
-            <View style={styles.iconWithText}>
-              <HeartIcon width={14} height={14} />
-              <Text style={styles.magazineMetaText}>{item.likes}</Text>
-            </View>
-            <View style={styles.iconWithText}>
-              <CommentIcon width={14} height={14} />
-              <Text style={styles.magazineMetaText}>{item.comments}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+  const handleProductPress = useCallback((id: string) => {
+    (navigation as any).navigate('ProductView', { productId: id });
+  }, [navigation]);
 
   const renderPopularProducts = () => (
     <View style={styles.sectionContainer}>
       {renderSectionHeader('가장 인기있는 상품')}
       <View style={styles.magazineList}>
-        {POPULAR_PRODUCTS.map(item => renderMagazineProduct(item))}
+        {POPULAR_PRODUCTS.map(item => (
+          <ProductMagazineCard key={item.id} item={item} onPress={handleProductPress} />
+        ))}
       </View>
     </View>
   );
@@ -337,7 +258,7 @@ export default function HomeScreen() {
     <View style={styles.sectionContainer}>
       {renderSectionHeader('전체 상품 한눈에 보기')}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabScrollContainer}>
-        {TABS.map((tab) => (
+        {CATEGORY_TABS.map((tab) => (
           <TouchableOpacity
             key={tab}
             style={[styles.tabChip, activeTab === tab && styles.tabChipActive]}
@@ -350,7 +271,9 @@ export default function HomeScreen() {
         ))}
       </ScrollView>
       <View style={[styles.magazineList, styles.pt12]}>
-        {allProducts.map(item => renderMagazineProduct(item))}
+        {allProducts.map(item => (
+          <ProductMagazineCard key={item.id} item={item} onPress={handleProductPress} />
+        ))}
       </View>
       {isLoadingMore && (
         <View style={styles.loadingMore}>
@@ -484,12 +407,8 @@ const styles = StyleSheet.create({
 
   sectionContainer: { paddingVertical: 25 },
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 15,
   },
-  sectionTitle: { fontSize: 18, fontWeight: '600', color: colors.black },
   viewAllBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -530,23 +449,6 @@ const styles = StyleSheet.create({
   companyTags: { fontSize: 12, color: colors.G600 },
 
   magazineList: { paddingHorizontal: 20, gap: 8 },
-  magazineCard: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: colors.G200,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  magazineThumb: { width: 120, height: 120 },
-  magazineCon: { flex: 1, paddingVertical: 12, paddingHorizontal: 15, gap: 5 },
-  bestBadge: { fontSize: 10, fontWeight: '500', color: colors.error },
-  magazineTitle: { fontSize: 14, fontWeight: '600', color: colors.black, lineHeight: 18 },
-  magazineTags: { fontSize: 12, color: colors.G600 },
-  magazineFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
-  magazinePrice: { fontSize: 14, fontWeight: 'bold', color: colors.black },
-  magazineMeta: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  magazineMetaText: { fontSize: 11, color: colors.G600 },
-  iconWithText: { flexDirection: 'row', alignItems: 'center', gap: 3 },
 
   middleBannerWrapper: { paddingVertical: 15, paddingHorizontal: 20 },
   middleBannerImage: { width: '100%', height: 138, borderRadius: 4 },

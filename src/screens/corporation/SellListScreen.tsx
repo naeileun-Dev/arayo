@@ -2,7 +2,7 @@ import React from 'react';
 import TradeListScreen from '../../components/trade/TradeListScreen';
 import type { TradeItem } from '../../types';
 
-const PURCHASE_ITEMS: TradeItem[] = [
+const SELL_ITEMS: TradeItem[] = [
   {
     id: '1',
     state: 1,
@@ -89,13 +89,12 @@ const PURCHASE_ITEMS: TradeItem[] = [
     price: '10,000,000원',
     buttons: [
       { label: '후기 보내기/받은 후기 보기/보낸 후기 보기', type: 'blue', action: 'review_send' },
-      { label: '주문상세', type: 'light', action: 'detail' },
     ],
   },
 ];
 
-const BuyListScreen: React.FC = () => {
-  return <TradeListScreen title="구매내역" items={PURCHASE_ITEMS} />;
+const SellListScreen: React.FC = () => {
+  return <TradeListScreen title="판매내역" items={SELL_ITEMS} />;
 };
 
-export default BuyListScreen;
+export default SellListScreen;

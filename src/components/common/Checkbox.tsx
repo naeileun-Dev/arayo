@@ -1,7 +1,3 @@
-/**
- * 공통 Checkbox 컴포넌트
- */
-
 import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
@@ -15,6 +11,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   label,
   disabled = false,
   size = 'medium',
+  variant = 'checkbox',
+  activeColor,
+  labelColor,
   style,
   labelStyle,
 }) => {
@@ -25,6 +24,10 @@ const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const boxSize = size === 'small' ? 16 : 20;
+  const isRadio = variant === 'radio';
+
+  const checkedBg = activeColor || colors.primary;
+  const checkedBorder = activeColor || colors.primary;
 
   return (
     <TouchableOpacity
@@ -35,24 +38,15 @@ const Checkbox: React.FC<CheckboxProps> = ({
     >
       <View
         style={[
-          styles.checkbox,
-          {
-            width: boxSize,
-            height: boxSize,
-            borderRadius: borderRadius.sm,
-          },
-          checked && styles.checkboxChecked,
+          isRadio ? [styles.radioBox, { width: boxSize, height: boxSize }] : [styles.checkbox, { width: boxSize, height: boxSize, borderRadius: borderRadius.sm }],
+          checked && { backgroundColor: checkedBg, borderColor: checkedBorder },
           disabled && styles.checkboxDisabled,
         ]}
       >
-        {checked && (
-          <View
-            style={[
-              styles.checkmark,
-              size === 'small' && styles.checkmarkSmall,
-            ]}
-          />
+        {checked && !isRadio && (
+          <View style={[styles.checkmark, size === 'small' && styles.checkmarkSmall]} />
         )}
+        {checked && isRadio && <View style={styles.radioInner} />}
       </View>
       {label && (
         <Text
@@ -60,6 +54,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
             styles.label,
             size === 'small' && styles.labelSmall,
             disabled && styles.labelDisabled,
+            labelColor ? { color: labelColor } : null,
             labelStyle,
           ]}
         >
@@ -83,15 +78,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkboxChecked: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+  radioBox: {
+    borderWidth: 1,
+    borderColor: colors.G200,
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   checkboxDisabled: {
     backgroundColor: colors.borderLight,
     borderColor: colors.borderLight,
   },
-  /* border 기반 체크마크 (L자 회전) */
   checkmark: {
     width: 5,
     height: 10,
@@ -106,6 +104,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderRightWidth: 1.5,
     transform: [{ rotate: '45deg' }, { translateY: -1 }],
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.white,
   },
   label: {
     ...typography.body,

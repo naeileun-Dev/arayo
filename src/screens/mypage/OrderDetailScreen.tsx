@@ -14,29 +14,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import { colors as COLORS } from '../../styles/colors';
 import ReviewModal, { ReviewModalType } from '../../components/common/ReviewModal';
+import SectionTitle from './components/SectionTitle';
+import TableRow from './components/TableRow';
 
 const PRODUCT_IMG = require('../../assets/images/img03.png');
-
-// ─── 섹션 타이틀 컴포넌트 ────────────────────────────────
-const SectionTitle = ({ title }: { title: string }) => (
-  <View style={styles.secTitleWrap}>
-    <Text style={styles.secTitle}>{title}</Text>
-  </View>
-);
-
-// ─── 테이블 행 컴포넌트 ──────────────────────────────────
-const TableRow = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
-  <View style={styles.tableRow}>
-    <View style={styles.tableThWrap}>
-      <Text style={[styles.tableTh, bold && styles.tableBold]}>{label}</Text>
-    </View>
-    <View style={styles.tableTdWrap}>
-      <Text style={styles.tableTd}>{value}</Text>
-    </View>
-  </View>
-);
-
-// ─── 메인 주문상세 화면 ──────────────────────────────────
 export default function OrderDetailScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [reviewModal, setReviewModal] = useState<{ visible: boolean; type: ReviewModalType }>({
@@ -229,62 +210,12 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     marginTop: 20,
   },
-  secTitleWrap: {
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-  },
-  secTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.black,
-    letterSpacing: -0.3,
-  },
-
   // ── 테이블 (주문자 정보) ──
   tableWrap: {
     marginHorizontal: 15,
     borderTopWidth: 1,
     borderTopColor: COLORS.G200,
   },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.G200,
-    minHeight: 44,
-  },
-  tableThWrap: {
-    width: 110,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    backgroundColor: COLORS.G100,
-    justifyContent: 'center',
-    borderRightWidth: 1,
-    borderRightColor: COLORS.G200,
-  },
-  tableTh: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: COLORS.G700,
-    letterSpacing: -0.2,
-  },
-  tableBold: {
-    fontWeight: '600',
-    color: COLORS.black,
-  },
-  tableTdWrap: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    justifyContent: 'center',
-  },
-  tableTd: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: COLORS.black,
-    letterSpacing: -0.2,
-    lineHeight: 19,
-  },
-
   // ── 주문상품 정보 ──
   productInfoWrap: {
     marginHorizontal: 15,
