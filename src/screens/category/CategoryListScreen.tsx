@@ -28,10 +28,8 @@ import {
   INITIAL_FILTER,
   countActiveFilters,
 } from './types';
-import { ProductItemMagazine, ProductItemGrid } from './components/ProductItems';
-import SortModal from './components/SortModal';
-import ComparePanel from './components/ComparePanel';
-import FilterPanel from './components/FilterPanel';
+import { ProductItemMagazine, ProductItemGrid, SortModal, ComparePanel } from '../../components/product';
+import FilterPanel, { SelectedCategoryItem } from './components/FilterPanel';
 import CompareResultModal from './components/CompareResultModal';
 
 const IMG_01 = require('../../assets/images/img01.png');
@@ -42,8 +40,9 @@ export default function ProductListScreen() {
   const initialCategory = route.params?.category ?? '공작기계';
   const initialSubCategory = route.params?.subCategory ?? 'CNC 선반';
 
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [selectedSubCategory, setSelectedSubCategory] = useState(initialSubCategory);
+  const [selectedCategories, setSelectedCategories] = useState<SelectedCategoryItem[]>([
+    { category: initialCategory, sub: initialSubCategory },
+  ]);
   const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
   const [viewType, setViewType] = useState<ViewType>('magazine');
   const [sortVisible, setSortVisible] = useState(false);
@@ -119,6 +118,23 @@ export default function ProductListScreen() {
           <Image source={IMG_01} style={styles.bannerImage} resizeMode="cover" />
         </TouchableOpacity>
       </View>
+      <View style={styles.productHead}>
+        <View style={styles.categoryPath}>
+          {selectedCategories.length > 0 ? (
+            <>
+              <Text style={styles.categoryDep1}>{selectedCategories[0].category}</Text>
+              <Text style={styles.categoryArrow}> › </Text>
+              <Text style={styles.categoryDep2}>
+                {selectedCategories[0].sub}
+                {selectedCategories.length > 1 ? ` 외 ${selectedCategories.length - 1}` : ''}
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.categoryDep1}>전체</Text>
+          )}
+        </View>
+        <Text style={styles.itemCount}>123개</Text>
+      </View>
       <View style={styles.filterBar}>
         <TouchableOpacity
           style={[styles.filterBtn, activeFilterCount > 0 && styles.filterBtnActive]}
@@ -136,14 +152,6 @@ export default function ProductListScreen() {
           <Text style={styles.sortBtnText}>{selectedSort}</Text>
           <ChevronDownIcon width={16} height={16} color={C.G500} />
         </TouchableOpacity>
-      </View>
-      <View style={styles.productHead}>
-        <View style={styles.categoryPath}>
-          <Text style={styles.categoryDep1}>{selectedCategory}</Text>
-          <Text style={styles.categoryArrow}> › </Text>
-          <Text style={styles.categoryDep2}>{selectedSubCategory}</Text>
-        </View>
-        <Text style={styles.itemCount}>123개</Text>
         <View style={styles.viewToggle}>
           <TouchableOpacity
             style={[styles.viewToggleBtn, viewType === 'magazine' && styles.viewToggleBtnActive]}
@@ -168,7 +176,7 @@ export default function ProductListScreen() {
         </View>
       </View>
     </>
-  ), [viewType, activeFilterCount, selectedSort, openFilter, openSortModal, selectedCategory, selectedSubCategory]);
+  ), [viewType, activeFilterCount, selectedSort, openFilter, openSortModal, selectedCategories]);
 
   const renderItem = useCallback(
     ({ item }: { item: Product | (Product | null)[] }) => {
@@ -215,9 +223,9 @@ export default function ProductListScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.headerIconBtn} onPress={() => navigation.goBack()} activeOpacity={0.7}>
-          <ChevronLeftIcon width={28} height={28} color={C.black} />
+          <ChevronLeftIcon width={24} height={24} color={C.black} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{selectedCategory}</Text>
+        <Text style={styles.headerTitle}>{selectedCategories.length > 0 ? selectedCategories[0].category : '전체'}</Text>
         <TouchableOpacity style={styles.headerIconBtn} onPress={() => navigation.navigate('Search')} activeOpacity={0.7}>
           <SearchIcon width={22} height={22} color={C.black} />
         </TouchableOpacity>
@@ -279,9 +287,14 @@ export default function ProductListScreen() {
         onFilterChange={(f) => { setFilter(f); setAppliedFilter(f); }}
         onClose={() => setFilterVisible(false)}
         onReset={() => { resetFilter(); setAppliedFilter(INITIAL_FILTER); }}
-        selectedCategory={selectedCategory}
-        selectedSubCategory={selectedSubCategory}
-        onCategorySelect={(cat, sub) => { setSelectedCategory(cat); setSelectedSubCategory(sub); }}
+        selectedCategories={selectedCategories}
+        onCategoryToggle={(cat, sub) => {
+          setSelectedCategories(prev => {
+            const exists = prev.some(s => s.category === cat && s.sub === sub);
+            if (exists) return prev.filter(s => !(s.category === cat && s.sub === sub));
+            return [...prev, { category: cat, sub }];
+          });
+        }}
       />
 
       {/* 비교 결과 모달 */}

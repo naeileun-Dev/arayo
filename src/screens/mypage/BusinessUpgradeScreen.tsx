@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,31 +7,19 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import UploadIcon from '../../assets/icon/upload.svg';
-import ShieldIcon from '../../assets/icon/shield.svg';
+import BoxIcon from '../../assets/icon/box.svg';
 import HomeIcon from '../../assets/icon/home.svg';
 import BuildingIcon from '../../assets/icon/building.svg';
 import CrownIcon from '../../assets/icon/crown.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
+import Header from '../../components/common/Header';
 
 export default function BusinessUpgradeScreen({ navigation }: any) {
-  const [selectedPlan, setSelectedPlan] = useState<'biz_normal' | 'biz_gold'>('biz_normal');
-
-  const handleSubmit = () => {
-    console.log('선택된 플랜:', selectedPlan);
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <ChevronLeftIcon width={24} height={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>판매내역</Text>
-        <View style={styles.headerRight} />
-      </View>
+      <Header title="기업회원 전환" onBack={() => navigation.goBack()} />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.introText}>
@@ -41,66 +29,41 @@ export default function BusinessUpgradeScreen({ navigation }: any) {
         </Text>
 
         <View style={styles.planContainer}>
-          <TouchableOpacity
-            style={[
-              styles.box,
-              selectedPlan === 'biz_normal' && styles.boxActive,
-            ]}
-            onPress={() => setSelectedPlan('biz_normal')}
-            activeOpacity={0.9}
-          >
+          <View style={styles.box}>
             <Text style={styles.title}>일반기업회원</Text>
 
             <View style={styles.benefitList}>
               <View style={styles.benefitRow}>
                 <UploadIcon width={14} height={14} color="#fff" />
-                <Text style={styles.benefitText}>상품 등록 가능 (최대 3개)</Text>
+                <Text style={styles.benefitText}>상품 등록 가능</Text>
               </View>
               <View style={styles.benefitRow}>
-                <ShieldIcon width={14} height={14} color="#fff" />
-                <Text style={styles.benefitText}>안심번호 제공</Text>
+                <BoxIcon width={14} height={14} color="#fff" />
+                <Text style={styles.benefitText}>판매 상품 수 최대 3개</Text>
               </View>
             </View>
 
-            <View style={styles.priceRow}>
-              <Text style={styles.priceFreeText}>무료 </Text>
-              <Text style={styles.priceSubText}>/연간</Text>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusBadgeText}>이용중</Text>
             </View>
-          </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity
-            style={[
-              styles.box,
-              selectedPlan === 'biz_gold' && styles.boxActive,
-            ]}
-            onPress={() => setSelectedPlan('biz_gold')}
-            activeOpacity={0.9}
-          >
-            <View style={[
-              styles.tag,
-              selectedPlan === 'biz_gold' && styles.tagActive,
-            ]}>
+          <View style={[styles.box, styles.boxActive]}>
+            <View style={[styles.tag, styles.tagActive]}>
+              <CrownIcon width={20} height={20} color="#fff" />
               <Text style={styles.tagText}>6개월 무료체험</Text>
             </View>
 
-            <View style={styles.goldTitleRow}>
-              <Text style={[styles.title, { marginBottom: 0 }]}>골드기업회원</Text>
-              <CrownIcon
-                width={40}
-                height={40}
-                color="#fff"
-                style={styles.crownMark}
-              />
-            </View>
+            <Text style={styles.title}>골드기업회원</Text>
 
             <View style={styles.benefitList}>
               <View style={styles.benefitRow}>
                 <UploadIcon width={14} height={14} color="#fff" />
-                <Text style={styles.benefitText}>상품 등록 가능 (무제한)</Text>
+                <Text style={styles.benefitText}>상품 등록 가능</Text>
               </View>
               <View style={styles.benefitRow}>
-                <ShieldIcon width={14} height={14} color="#fff" />
-                <Text style={styles.benefitText}>안심번호 제공</Text>
+                <BoxIcon width={14} height={14} color="#fff" />
+                <Text style={styles.benefitText}>판매 상품 수 최대 3개</Text>
               </View>
               <View style={styles.benefitRow}>
                 <HomeIcon width={14} height={14} color="#fff" />
@@ -120,15 +83,11 @@ export default function BusinessUpgradeScreen({ navigation }: any) {
               <Text style={styles.priceArrow}>→</Text>
               <Text style={styles.priceFreeGoldText}>무료</Text>
             </View>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.formBtnSet}>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>
-              {selectedPlan === 'biz_normal' ? '전환하기' : '6개월 무료체험 시작하기'}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.goldButton} activeOpacity={0.8}>
+              <Text style={styles.goldButtonText}>₩ 990,000 /연간 -&gt; 무료</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -139,27 +98,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.black,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    height: 60,
-    backgroundColor: colors.white,
-  },
-  backButton: {
-    width: 40,
-    height: 50,
-    justifyContent: 'center',
-  },
-  headerRight: {
-    width: 40,
-  },
-  headerTitle: {
-    ...typography.h4,
-    fontWeight: '800',
-    color: colors.black,
   },
   container: {
     paddingBottom: 40,
@@ -192,12 +130,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -11,
     left: 15,
-    height: 22,
+    height: 28,
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: colors.G600,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 4,
   },
   tagActive: {
     backgroundColor: colors.primary,
@@ -205,18 +145,6 @@ const styles = StyleSheet.create({
   tagText: {
     color: colors.white,
     fontSize: 12,
-  },
-  goldTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    width: '100%',
-    position: 'relative',
-  },
-  crownMark: {
-    position: 'absolute',
-    right: -8,
   },
   title: {
     fontSize: 16,
@@ -242,10 +170,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
   },
-  priceFreeText: {
-    ...typography.h4,
-    color: colors.white,
-  },
   priceSubText: {
     fontSize: 12,
     color: colors.G600,
@@ -270,19 +194,32 @@ const styles = StyleSheet.create({
     ...typography.h3,
     color: '#FBBC04',
   },
-  formBtnSet: {
-    marginTop: 25,
-    paddingHorizontal: 20,
+  statusBadge: {
+    marginTop: 14,
+    width: '100%',
+    height: 46,
+    borderRadius: 4,
+    backgroundColor: colors.G100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  submitButton: {
-    height: 50,
+  statusBadgeText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.G400,
+  },
+  goldButton: {
+    marginTop: 14,
+    width: '100%',
+    height: 46,
     backgroundColor: colors.primary,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  submitButtonText: {
-    ...typography.button,
+  goldButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
     color: colors.white,
   },
 });

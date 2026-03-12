@@ -139,7 +139,7 @@ export type MainTabParamList = {
   Home: undefined;
   CategoryTab: undefined;
   Menu: undefined;
-  Wishlist: undefined;
+  Chat: undefined;
   MyPage: undefined;
 };
 
@@ -158,6 +158,12 @@ export type RootStackParamList = {
   PurchaseList: undefined;
   SalesList: undefined;
   OrderDetail: undefined;
+  ChatRoom: { chatId: string };
+  FavoriteList: undefined;
+  Profile: undefined;
+  ProfileEdit: undefined;
+  PasswordReset: undefined;
+  TradeReview: undefined;
 };
 
 export interface Banner {
@@ -208,19 +214,22 @@ export interface QuickMenu {
   route?: string;
 }
 
-export type TradeState = 1 | 2 | 3 | 4 | 5;
+export type TradeState = 0 | 1 | 2 | 3 | 4 | 5;
 
 export interface TradeItem {
   id: string;
   state: TradeState;
   stateLabel: string;
   helpText?: string;
+  timeAgo?: string;
   image: string;
   title: string;
   price: string;
+  likes?: number;
+  comments?: number;
   buttons: Array<{
     label: string;
-    type: 'primary' | 'light' | 'blue';
+    type: 'primary' | 'light' | 'blue' | 'schedule';
     action: string;
   }>;
   moreButtons?: Array<{ label: string; action: string }>;

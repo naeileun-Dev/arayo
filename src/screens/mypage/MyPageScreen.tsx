@@ -76,6 +76,12 @@ export const MyPageScreen: React.FC = () => {
                       navigation.navigate('PurchaseList');
                     } else if (item === '판매내역') {
                       navigation.navigate('SalesList');
+                    } else if (item === '관심목록') {
+                      navigation.navigate('FavoriteList');
+                    } else if (item === '거래후기') {
+                      navigation.navigate('TradeReview');
+                    } else if (item === '내 정보 확인/수정') {
+                      navigation.navigate('Profile');
                     } else {
                       console.log(item);
                     }
@@ -158,8 +164,6 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.G200,
     backgroundColor: colors.white,
   },
   headerTitle: {

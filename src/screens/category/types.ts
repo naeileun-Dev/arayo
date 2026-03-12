@@ -1,24 +1,28 @@
 import { Dimensions } from 'react-native';
-import { colors as C } from '../../styles/colors';
 
-export type ItemState = 'hold' | 'used' | 'sold' | 'new' | 'normal';
-export type ViewType = 'magazine' | 'grid';
-export type SortType = '최신순' | '가격 낮은순' | '가격 높은순' | '조회수순' | '관심 많은순' | '거리순';
+// 공통 타입 re-export (하위 호환)
+export type {
+  ItemState,
+  ViewType,
+  SortType,
+  ProductListItem,
+} from '../../types/product';
+export {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  GRID_ITEM_WIDTH,
+  COMPARE_CARD_WIDTH,
+  BADGE_CONFIG,
+  SORT_OPTIONS,
+} from '../../types/product';
 
-export interface Product {
-  id: string;
-  state: ItemState;
-  isAd?: boolean;
-  isLiked?: boolean;
-  image: any;
-  title: string;
-  tags: string;
-  price: number;
-  timeAgo: string;
-  likes: number;
-  reviews: number;
-}
+// ProductListItem을 기존 코드에서 Product으로도 쓸 수 있도록 alias
+import type { ProductListItem } from '../../types/product';
+export type Product = ProductListItem;
 
+// ─────────────────────────────────────────────────────────────────
+// 화면 전용 타입 & 상수
+// ─────────────────────────────────────────────────────────────────
 export interface FilterState {
   searchText: string;
   productType: '전체' | '신품' | '중고';
@@ -35,22 +39,8 @@ export interface FilterState {
   dateToMonth: string;
 }
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-export { SCREEN_WIDTH, SCREEN_HEIGHT };
-
-export const BADGE_CONFIG: Record<ItemState, { bg: string; text: string; label: string }> = {
-  hold:   { bg: C.green100,     text: C.white, label: '예약중'  },
-  used:   { bg: C.orangeDark,   text: C.white, label: '중고'    },
-  sold:   { bg: C.white,        text: C.black, label: '판매완료' },
-  new:    { bg: C.system100,    text: C.white, label: '신품'    },
-  normal: { bg: 'transparent',  text: 'transparent', label: '' },
-};
-
-export const SORT_OPTIONS: SortType[] = ['최신순', '가격 낮은순', '가격 높은순', '조회수순', '관심 많은순', '거리순'];
 export const PRICE_RANGES = ['전체', '10만원 이하', '10~100만원', '100~1000만원', '1000~2000만원', '2000만원 이상'];
-export const DRAWER_WIDTH = SCREEN_WIDTH * 0.8;
-export const GRID_ITEM_WIDTH = (SCREEN_WIDTH - 32 - 12) / 2;
-export const COMPARE_CARD_WIDTH = (SCREEN_WIDTH - 32 - 10) / 2;
+export const DRAWER_WIDTH = Dimensions.get('window').width * 0.8;
 
 export const MANUFACTURERS = [
   '화천기계', 'DN솔루션즈(구두산)', 'SMEC(스맥)', '하스(Haas)', '마작(Mazak)',
@@ -79,7 +69,7 @@ const IMG_02 = require('../../assets/images/img02.png');
 const IMG_03 = require('../../assets/images/img03.png');
 export const PROFILE_IMG = require('../../assets/images/profileImg.png');
 
-export const MOCK_PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS: ProductListItem[] = [
   { id: '1',  state: 'hold',   isAd: true,  isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
   { id: '2',  state: 'used',   isAd: true,  isLiked: false, image: IMG_02, title: '화천기계 범용선반 CS-3020H 온도조절 안정적 · 장시간 운전 가능',        tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
   { id: '3',  state: 'sold',   isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },

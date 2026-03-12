@@ -8,8 +8,8 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
-import { colors as C } from '../../../styles/colors';
-import { SortType, SORT_OPTIONS } from '../types';
+import { colors as C } from '../../styles/colors';
+import { SortType, SORT_OPTIONS } from '../../types/product';
 
 interface SortModalProps {
   visible: boolean;

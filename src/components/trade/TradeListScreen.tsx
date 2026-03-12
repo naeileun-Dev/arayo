@@ -8,12 +8,13 @@ import {
   Image,
   Modal,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import CalendarIcon from '../../assets/icon/calendar.svg';
+import Header from '../common/Header';
+import HeartIcon from '../../assets/icon/heart.svg';
+import CommentIcon from '../../assets/icon/comment.svg';
 import { colors as C } from '../../styles/colors';
 import ReviewModal, { ReviewModalType } from '../common/ReviewModal';
 import type { TradeItem, TradeState } from '../../types';
@@ -23,9 +24,20 @@ const HORIZONTAL_PAD = 15;
 const PRODUCT_IMG = require('../../assets/images/img03.png');
 const PERIOD_OPTIONS = ['1개월', '3개월', '6개월', '12개월', '직접입력'];
 
+interface TopTabConfig {
+  label: string;
+  count: number;
+}
+
 interface TradeListScreenProps {
   title: string;
   items: TradeItem[];
+  topTabs?: TopTabConfig[];
+  subTabs?: string[];
+  stateFilters?: TopTabConfig[];
+  stateFilterLabel?: string;
+  periodLabel?: string;
+  showDateHeader?: boolean;
 }
 
 interface MoreMenuState {
@@ -36,6 +48,7 @@ interface MoreMenuState {
 
 function getStateColor(state: TradeState): string {
   const map: Record<TradeState, string> = {
+    0: '#689372',
     1: C.state1,
     2: C.state2,
     3: C.state3,
@@ -47,7 +60,7 @@ function getStateColor(state: TradeState): string {
 
 interface BtnProps {
   label: string;
-  type?: 'primary' | 'light' | 'blue' | 'gray';
+  type?: 'primary' | 'light' | 'blue' | 'gray' | 'schedule';
   flex?: number;
   onPress?: () => void;
   style?: object;
@@ -60,6 +73,7 @@ const Btn: React.FC<BtnProps> = ({ label, type = 'primary', flex, onPress, style
     type === 'light' && styles.btnLight,
     type === 'blue' && styles.btnBlue,
     type === 'gray' && styles.btnGray,
+    type === 'schedule' && styles.btnSchedule,
     flex ? { flex } : null,
     style,
   ];
@@ -68,6 +82,7 @@ const Btn: React.FC<BtnProps> = ({ label, type = 'primary', flex, onPress, style
     type === 'light' && styles.btnTextLight,
     type === 'blue' && styles.btnTextBlue,
     type === 'gray' && styles.btnTextGray,
+    type === 'schedule' && styles.btnTextSchedule,
   ];
   return (
     <TouchableOpacity style={btnStyle} onPress={onPress} activeOpacity={0.75}>
@@ -90,21 +105,23 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
 
   const renderButtons = () => {
     if (hasReviewBtn) {
+      const reviewBtn = item.buttons.find((b) => b.action === 'review_send');
       const hasDetail = item.buttons.some((b) => b.action === 'detail');
       return (
         <View style={styles.itemBtnSet}>
           <Btn
-            label="후기 보내기/받은 후기 보기/보낸 후기 보기"
+            label={reviewBtn?.label || '후기 보내기'}
             type="blue"
             flex={1}
             onPress={() => onAction('review_send', item)}
+            style={{ paddingHorizontal: 6 }}
           />
           {hasDetail && (
             <Btn
               label="주문상세"
               type="light"
               onPress={() => onAction('detail', item)}
-              style={{ paddingHorizontal: 10 }}
+              style={{ paddingHorizontal: 26 }}
             />
           )}
         </View>
@@ -117,7 +134,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
           <Btn
             key={idx}
             label={btn.label}
-            type={btn.type === 'blue' ? 'blue' : 'light'}
+            type={btn.type === 'blue' ? 'blue' : btn.type === 'schedule' ? 'schedule' : 'light'}
             flex={1}
             onPress={() => onAction(btn.action, item)}
           />
@@ -144,7 +161,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
   return (
     <View style={styles.itemCard}>
       <View style={styles.itemHead}>
-        <Text style={[styles.itemStateText, { color: stateColor }]}>{item.stateLabel}</Text>
+        <View style={styles.itemHeadRow}>
+          <Text style={[styles.itemStateText, { color: stateColor }]}>{item.stateLabel}</Text>
+          {item.timeAgo && <Text style={styles.itemTimeAgo}>{item.timeAgo}</Text>}
+        </View>
         {item.helpText && <Text style={styles.itemHelpText}>{item.helpText}</Text>}
       </View>
 
@@ -154,10 +174,27 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
         </View>
         <View style={styles.itemCon}>
           <Text style={styles.itemTitle} numberOfLines={2}>{item.title}</Text>
-          <View style={styles.itemInfoSet}>
-            <Text style={styles.itemPrice}>{item.price}</Text>
-          </View>
         </View>
+      </View>
+
+      <View style={styles.itemInfoSet}>
+        <Text style={styles.itemPrice}>{item.price}</Text>
+        {(item.likes !== undefined || item.comments !== undefined) && (
+          <View style={styles.itemStats}>
+            {item.likes !== undefined && (
+              <View style={styles.itemStatItem}>
+                <HeartIcon width={20} height={20} color={C.G800} />
+                <Text style={styles.itemStatText}>{item.likes}</Text>
+              </View>
+            )}
+            {item.comments !== undefined && (
+              <View style={styles.itemStatItem}>
+                <CommentIcon width={20} height={20} color={C.G800} />
+                <Text style={styles.itemStatText}>{item.comments}</Text>
+              </View>
+            )}
+          </View>
+        )}
       </View>
 
       <View style={styles.itemBtnArea}>{renderButtons()}</View>
@@ -165,8 +202,11 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
   );
 };
 
-const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items }) => {
+const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, topTabs, subTabs, stateFilters, stateFilterLabel, periodLabel, showDateHeader = true }) => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const [activeTab, setActiveTab] = useState(0);
+  const [activeSubTab, setActiveSubTab] = useState(0);
+  const [activeStateFilter, setActiveStateFilter] = useState(0);
   const [selectedPeriod, setSelectedPeriod] = useState('직접입력');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -223,17 +263,77 @@ const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <Header title={title} onBack={() => navigation.goBack()} />
 
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBack} activeOpacity={0.7} onPress={() => navigation.goBack()}>
-          <ChevronLeftIcon width={24} height={24} color={C.black} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{title}</Text>
-        <View style={styles.headerRight} />
-      </View>
+      {topTabs && (
+        <View style={styles.topTabsContainer}>
+          {topTabs.map((tab, index) => {
+            const isActive = index === activeTab;
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[styles.topTab, isActive && styles.topTabActive]}
+                onPress={() => setActiveTab(index)}
+                activeOpacity={0.75}
+              >
+                <Text style={[styles.topTabText, isActive && styles.topTabTextActive]}>
+                  {tab.label}({tab.count})
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {subTabs && (
+          <View style={styles.subTabsContainer}>
+            {subTabs.map((tab, index) => {
+              const isActive = index === activeSubTab;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.subTab, isActive && styles.subTabActive]}
+                  onPress={() => setActiveSubTab(index)}
+                  activeOpacity={0.75}
+                >
+                  <Text style={[styles.subTabText, isActive && styles.subTabTextActive]}>
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {stateFilterLabel && (
+          <Text style={styles.sectionLabel}>{stateFilterLabel}</Text>
+        )}
+
+        {stateFilters && (
+          <View style={styles.stateFilterRow}>
+            {stateFilters.map((filter, index) => {
+              const isActive = index === activeStateFilter;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.stateFilterBtn, isActive && styles.stateFilterBtnActive]}
+                  onPress={() => setActiveStateFilter(index)}
+                  activeOpacity={0.75}
+                >
+                  <Text style={[styles.stateFilterText, isActive && styles.stateFilterTextActive]}>
+                    {filter.label}({filter.count})
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {periodLabel && (
+          <Text style={styles.sectionLabel}>{periodLabel}</Text>
+        )}
+
         <View style={styles.filterContainer}>
           <View style={styles.filterRow}>
             {PERIOD_OPTIONS.map((opt) => {
@@ -270,9 +370,11 @@ const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items }) => {
           </View>
         </View>
 
-        <View style={styles.productHead}>
-          <Text style={styles.productHeadText}>25. 07. 21</Text>
-        </View>
+        {showDateHeader && (
+          <View style={styles.productHead}>
+            <Text style={styles.productHeadText}>25. 07. 21</Text>
+          </View>
+        )}
 
         {items.map((item) => (
           <ItemCard
@@ -397,30 +499,91 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    height: 50,
+  topTabsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: HORIZONTAL_PAD,
     borderBottomWidth: 1,
     borderBottomColor: C.G200,
     backgroundColor: '#fff',
   },
-  headerBack: {
-    width: 36,
-    height: 36,
+  topTab: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
   },
-  headerTitle: {
+  topTabActive: {
+    borderBottomColor: C.primary,
+  },
+  topTabText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: C.G500,
+  },
+  topTabTextActive: {
+    color: C.primary,
+    fontWeight: '700',
+  },
+  subTabsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: HORIZONTAL_PAD,
+    paddingTop: 12,
+    gap: 8,
+  },
+  subTab: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: C.G200,
+    backgroundColor: '#fff',
+  },
+  subTabActive: {
+    backgroundColor: C.primary,
+    borderColor: C.primary,
+  },
+  subTabText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: C.G600,
+  },
+  subTabTextActive: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: C.G600,
+    marginTop: 12,
+  },
+  stateFilterRow: {
+    flexDirection: 'row',
+    marginTop: 10,
+    gap: 6,
+  },
+  stateFilterBtn: {
     flex: 1,
-    textAlign: 'center',
-    fontSize: 16,
+    paddingVertical: 8,
+    borderRadius: BORDER_RADIUS,
+    borderWidth: 1,
+    borderColor: C.G200,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  stateFilterBtnActive: {
+    backgroundColor: C.primary,
+    borderColor: C.primary,
+  },
+  stateFilterText: {
+    fontSize: 12,
     fontWeight: '600',
     color: C.black,
   },
-  headerRight: {
-    width: 36,
+  stateFilterTextActive: {
+    color: '#fff',
+    fontWeight: '700',
   },
   scrollView: {
     flex: 1,
@@ -457,7 +620,7 @@ const styles = StyleSheet.create({
   periodBtnText: {
     fontSize: 12,
     fontWeight: '500',
-    color: C.G600,
+    color: C.black,
   },
   periodBtnTextChecked: {
     color: '#fff',
@@ -476,6 +639,7 @@ const styles = StyleSheet.create({
   dateInput: {
     flex: 1,
     fontSize: 13,
+    fontWeight: '600',
     color: C.black,
   },
   dateSeparator: {
@@ -488,6 +652,7 @@ const styles = StyleSheet.create({
   },
   productHeadText: {
     fontSize: 16,
+    fontWeight: '700',
     color: C.black,
   },
   itemCard: {
@@ -504,9 +669,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 4,
   },
+  itemHeadRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   itemStateText: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  itemTimeAgo: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: C.G400,
   },
   itemHelpText: {
     fontSize: 12,
@@ -542,6 +717,7 @@ const styles = StyleSheet.create({
   itemInfoSet: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 'auto',
   },
   itemPrice: {
@@ -549,12 +725,28 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: C.black,
   },
+  itemStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  itemStatItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  itemStatText: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: C.G800,
+  },
   itemBtnArea: {
     width: '100%',
   },
   itemBtnSet: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     gap: 5,
   },
   moreOverlay: {
@@ -573,7 +765,7 @@ const styles = StyleSheet.create({
   },
   moreToggleIcon: {
     fontSize: 16,
-    color: C.G600,
+    color: C.black,
     fontWeight: '800' as const,
     letterSpacing: 2,
   },
@@ -622,6 +814,11 @@ const styles = StyleSheet.create({
   btnGray: {
     backgroundColor: C.G100,
   },
+  btnSchedule: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: C.G200,
+  },
   btnText: {
     fontSize: 13,
     fontWeight: '600',
@@ -635,6 +832,9 @@ const styles = StyleSheet.create({
   },
   btnTextGray: {
     color: C.G800,
+  },
+  btnTextSchedule: {
+    color: C.G400,
   },
   pickerOverlay: {
     flex: 1,

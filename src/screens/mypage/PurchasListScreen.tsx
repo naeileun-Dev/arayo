@@ -11,7 +11,7 @@ const PURCHASE_ITEMS: TradeItem[] = [
     title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
     price: '10,000,000원',
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
+      { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '판매자와 채팅하기', type: 'blue', action: 'chat' },
     ],
   },
@@ -23,7 +23,7 @@ const PURCHASE_ITEMS: TradeItem[] = [
     title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
     price: '10,000,000원',
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
+      { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '판매자와 채팅하기', type: 'blue', action: 'chat' },
     ],
   },
@@ -50,7 +50,7 @@ const PURCHASE_ITEMS: TradeItem[] = [
     title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
     price: '10,000,000원',
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
+      { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
     moreButtons: [{ label: '판매자와 채팅하기', action: 'chat' }],

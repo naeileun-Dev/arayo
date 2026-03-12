@@ -43,11 +43,11 @@ export interface ReviewModalProps {
 // 상수
 // ─────────────────────────────────────────
 const SCORE_ITEMS = [
-  { label: '별로에요', stars: 1 },
-  { label: '그저그래요', stars: 2 },
-  { label: '괜찮아요', stars: 3 },
-  { label: '좋아요', stars: 4 },
   { label: '최고에요', stars: 5 },
+  { label: '좋아요', stars: 4 },
+  { label: '괜찮아요', stars: 3 },
+  { label: '그저그래요', stars: 2 },
+  { label: '별로에요', stars: 1 },
 ];
 
 // ─────────────────────────────────────────

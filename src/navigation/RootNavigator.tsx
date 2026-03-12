@@ -13,6 +13,12 @@ import FAQScreen from '../screens/terms/FAQScreen';
 import BuyListScreen from '../screens/mypage/PurchasListScreen';
 import OrderDetailScreen from '../screens/mypage/OrderDetailScreen';
 import SellListScreen from '../screens/corporation/SellListScreen';
+import ChatRoomScreen from '../screens/chat/ChatRoomScreen';
+import FavoriteListScreen from '../screens/mypage/FavoriteListScreen';
+import ProfileScreen from '../screens/mypage/ProfileScreen';
+import ProfileEditScreen from '../screens/mypage/ProfileEditScreen';
+import PasswordResetScreen from '../screens/mypage/PasswordResetScreen';
+import TradeReviewScreen from '../screens/mypage/TradeReviewScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -93,6 +99,36 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetailScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoomScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FavoriteList"
+        component={FavoriteListScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEditScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PasswordReset"
+        component={PasswordResetScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TradeReview"
+        component={TradeReviewScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

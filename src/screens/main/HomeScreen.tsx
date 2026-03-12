@@ -15,6 +15,8 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
+import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
 import { colors } from '../../styles/colors';
 import MainLogo from '../../assets/images/main_logo.svg';
 import SearchIcon from '../../assets/icon/Search.svg';
@@ -49,6 +51,7 @@ export default function HomeScreen() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isBusinessInfoOpen, setIsBusinessInfoOpen] = useState(false);
   const bannerRef = useRef<FlatList>(null);
 
   const onBannerScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -56,6 +59,8 @@ export default function HomeScreen() {
     const index = Math.round(offsetX / width);
     setBannerIndex(index);
   }, []);
+
+  const MAX_PAGES = 3;
 
   const loadMoreProducts = useCallback(() => {
     if (isLoadingMore || !hasMore) return;
@@ -69,6 +74,9 @@ export default function HomeScreen() {
       setAllProducts(prev => [...prev, ...newItems]);
       setPage(nextPage);
       setIsLoadingMore(false);
+      if (nextPage >= MAX_PAGES) {
+        setHasMore(false);
+      }
     }, 500);
   }, [isLoadingMore, hasMore, page]);
 
@@ -283,9 +291,69 @@ export default function HomeScreen() {
       )}
       {!hasMore && (
         <View style={styles.endOfList}>
-          <Text style={styles.endOfListText}>모든 상품을 확인했습니다</Text>
+          <TouchableOpacity
+            style={styles.viewAllListBtn}
+            onPress={() => (navigation as any).navigate('CategoryList', { category: '공작기계', subCategory: 'CNC 선반' })}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.viewAllListBtnText}>전체목록 보기</Text>
+          </TouchableOpacity>
         </View>
       )}
+    </View>
+  );
+
+  const renderFooter = () => (
+    <View style={styles.footer}>
+      <TouchableOpacity
+        style={styles.footerToggle}
+        onPress={() => setIsBusinessInfoOpen(!isBusinessInfoOpen)}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.footerCompany}>
+          (주) 수성코리아 (아라요 기계장터) 사업자 정보
+        </Text>
+        {isBusinessInfoOpen ? (
+          <ChevronUpIcon width={14} height={14} color={colors.G500} />
+        ) : (
+          <ChevronDownIcon width={14} height={14} color={colors.G500} />
+        )}
+      </TouchableOpacity>
+      <View style={styles.footerDivider} />
+
+      {isBusinessInfoOpen && (
+        <View style={styles.businessInfo}>
+          <View style={styles.footerLinkRow}>
+            <TouchableOpacity onPress={() => (navigation as any).navigate('Terms')}>
+              <Text style={styles.footerLinkText}>이용약관</Text>
+            </TouchableOpacity>
+            <Text style={styles.footerLinkDivider}>|</Text>
+            <TouchableOpacity onPress={() => (navigation as any).navigate('Privacy')}>
+              <Text style={styles.footerLinkText}>개인정보처리방침</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.footerInfoText}>대표 : 백승화</Text>
+          <Text style={styles.footerInfoText}>회사명 : 주식회사 수성코리아</Text>
+          <Text style={styles.footerInfoText}>사업자등록번호 : 386-86-03185</Text>
+          <Text style={styles.footerInfoText}>통신판매업신고번호 : 2024-서울강서-2690</Text>
+          <Text style={styles.footerInfoText}>
+            주소 : 서울특별시 강서구 양천로 532, 더리브아너비즈타워{'\n'}
+            {'        '}1105호, 1106호, 1107호
+          </Text>
+          <Text style={styles.footerInfoText}>전화번호 : 010-9383-3094 / 02-2668-3094</Text>
+          <Text style={styles.footerInfoText}>호스팅서비스 제공자 : (주)스마일서브</Text>
+        </View>
+      )}
+
+      <Text style={styles.footerDesc}>
+        아라요 기계장터는 통신판매중개자이며, 통신판매의 당사자가 아닙니다.
+      </Text>
+      <Text style={styles.footerDesc}>
+        따라서 상품/거래정보/거래에 대한 책임은 각 판매자에게 있습니다.
+      </Text>
+      <Text style={styles.footerCopyright}>
+        Copyright 2026 (주)수성코리아. All Rights Reserved.
+      </Text>
     </View>
   );
 
@@ -304,6 +372,7 @@ export default function HomeScreen() {
         {renderPopularProducts()}
         {renderMiddleBanner()}
         {renderAllProducts()}
+        {!hasMore && renderFooter()}
       </ScrollView>
 
       <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => (navigation as any).navigate('ProductUpload')}>
@@ -327,8 +396,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.G200,
   },
   logoBox: { width: 90, marginRight: 12, justifyContent: 'center' },
   searchBox: {
@@ -475,11 +542,79 @@ const styles = StyleSheet.create({
   },
   loadingMoreText: { fontSize: 13, color: colors.G500 },
   endOfList: {
-    alignItems: 'center',
+    paddingHorizontal: 20,
     paddingVertical: 16,
     marginTop: 12,
   },
-  endOfListText: { fontSize: 13, color: colors.G500 },
+  viewAllListBtn: {
+    paddingVertical: 14,
+    backgroundColor: colors.primary200,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  viewAllListBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.white,
+  },
+
+  // Footer
+  footer: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 16,
+  },
+  footerToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  footerCompany: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: colors.G500,
+  },
+  footerDivider: {
+    height: 1,
+    backgroundColor: colors.G200,
+    marginBottom: 8,
+  },
+  businessInfo: {
+    marginBottom: 10,
+  },
+  footerLinkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+  },
+  footerLinkText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: colors.G600,
+    textDecorationLine: 'underline',
+  },
+  footerLinkDivider: {
+    fontSize: 10,
+    color: colors.G400,
+  },
+  footerInfoText: {
+    fontSize: 10,
+    color: colors.G500,
+    lineHeight: 16,
+  },
+  footerDesc: {
+    fontSize: 10,
+    color: colors.G500,
+    lineHeight: 15,
+  },
+  footerCopyright: {
+    fontSize: 10,
+    color: colors.G400,
+    marginTop: 8,
+  },
 
   fab: {
     position: 'absolute',

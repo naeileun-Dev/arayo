@@ -4,66 +4,97 @@ import type { TradeItem } from '../../types';
 
 const SELL_ITEMS: TradeItem[] = [
   {
+    id: '0',
+    state: 0,
+    stateLabel: '판매중',
+    timeAgo: '9분전 등록',
+    image: 'img03',
+    title: '[머시닝센터6호 ECOMILL-65V 수직머시닝센타6.5호 평면연삭기,평면연마기,연마기,오까모도,700-1500,연삭기,OKAMOTO] 급하게 처분합니다. 채팅 주세요.',
+    price: '10,000,000원',
+    likes: 3,
+    comments: 5,
+    buttons: [
+      { label: '끌어올리기', type: 'blue', action: 'bump' },
+      { label: '대화중인 채팅창', type: 'light', action: 'chat_list' },
+    ],
+    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+  },
+  {
     id: '1',
     state: 1,
     stateLabel: '예약중(직거래)',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
-      { label: '판매자와 채팅하기', type: 'blue', action: 'chat' },
+      { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
+      { label: '거래완료(직거래)로 변경', type: 'blue', action: 'complete_direct' },
     ],
+    moreButtons: [{ label: '거래 취소', action: 'cancel' }],
   },
   {
     id: '2',
     state: 1,
     stateLabel: '예약중(안전결제)',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
-      { label: '판매자와 채팅하기', type: 'blue', action: 'chat' },
+      { label: '배송 예약일 : 20.02.25', type: 'schedule', action: 'schedule' },
+      { label: '거래완료(안전거래)로 변경', type: 'blue', action: 'complete_safe' },
     ],
+    moreButtons: [{ label: '거래 취소', action: 'cancel' }],
   },
   {
     id: '3',
     state: 2,
     stateLabel: '입금대기',
-    helpText: '입금을 진행해 주세요.',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '판매자와 채팅하기', type: 'blue', action: 'chat' },
+      { label: '구매자와 채팅하기', type: 'blue', action: 'chat' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
-    moreButtons: [{ label: '거래 취소', action: 'cancel' }],
+    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
   },
   {
     id: '4',
     state: 3,
     stateLabel: '입금완료',
-    helpText: '입금 확인이 완료되었습니다. 판매자가 상품을 출고할 예정입니다.',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '배송 예약일 표시', type: 'blue', action: 'schedule' },
+      { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
-    moreButtons: [{ label: '판매자와 채팅하기', action: 'chat' }],
+    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
   },
   {
     id: '5',
     state: 4,
     stateLabel: '설치완료',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '구매확정', type: 'blue', action: 'confirm' },
+      { label: '구매자와 채팅하기', type: 'blue', action: 'chat' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
     moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
@@ -72,29 +103,58 @@ const SELL_ITEMS: TradeItem[] = [
     id: '6',
     state: 5,
     stateLabel: '거래완료(안전결제)',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '후기 보내기/받은 후기 보기/보낸 후기 보기', type: 'blue', action: 'review_send' },
-      { label: '주문상세', type: 'light', action: 'detail' },
+      { label: '후기 보내기/보낸 후기 보기/받은 후기 보기', type: 'blue', action: 'review_send' },
     ],
+    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
   },
   {
     id: '7',
     state: 5,
     stateLabel: '거래완료(직거래)',
+    timeAgo: '9분전 등록',
     image: 'img03',
-    title: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H',
+    title: '(마니)(사)나노포토닉스 ECOMILL-65V 수직머시닝센터 6.5호 황민석(카기) 황민석(카기)오토파',
     price: '10,000,000원',
+    likes: 3,
+    comments: 5,
     buttons: [
-      { label: '후기 보내기/받은 후기 보기/보낸 후기 보기', type: 'blue', action: 'review_send' },
+      { label: '후기 보내기/보낸 후기 보기/받은 후기 보기', type: 'blue', action: 'review_send' },
     ],
+    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
   },
 ];
 
+const TOP_TABS = [
+  { label: '판매중', count: 5 },
+  { label: '거래완료', count: 5 },
+  { label: '숨김', count: 5 },
+];
+
+const STATE_FILTERS = [
+  { label: '전체', count: 15 },
+  { label: '입금대기', count: 5 },
+  { label: '입금완료', count: 5 },
+];
+
 const SellListScreen: React.FC = () => {
-  return <TradeListScreen title="판매내역" items={SELL_ITEMS} />;
+  return (
+    <TradeListScreen
+      title="판매내역"
+      items={SELL_ITEMS}
+      topTabs={TOP_TABS}
+      stateFilterLabel="안전결제"
+      stateFilters={STATE_FILTERS}
+      periodLabel="기간선택"
+      showDateHeader={false}
+    />
+  );
 };
 
 export default SellListScreen;

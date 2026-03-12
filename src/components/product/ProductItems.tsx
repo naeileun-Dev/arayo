@@ -6,32 +6,39 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import HeartIcon from '../../../assets/icon/heart.svg';
-import ComparisonIcon from '../../../assets/icon/comparison.svg';
-import CommentIcon from '../../../assets/icon/comment.svg';
-import CheckIcon from '../../../assets/icon/check.svg';
-import { colors as C } from '../../../styles/colors';
-import { Product, BADGE_CONFIG, GRID_ITEM_WIDTH } from '../types';
+import HeartIcon from '../../assets/icon/heart.svg';
+import ComparisonIcon from '../../assets/icon/comparison.svg';
+import CommentIcon from '../../assets/icon/comment.svg';
+import CheckIcon from '../../assets/icon/check.svg';
+import { colors as C } from '../../styles/colors';
+import { ProductListItem, BADGE_CONFIG, GRID_ITEM_WIDTH } from '../../types/product';
 
 export interface ProductItemProps {
-  item: Product;
+  item: ProductListItem;
   isCompared: boolean;
   onCompareToggle: (id: string) => void;
   onLikeToggle: (id: string) => void;
   onPress: (id: string) => void;
   isSoldOpacity: boolean;
+  /** 매거진 하단에 추가 콘텐츠를 렌더링 (예: DlInfo 스펙) */
+  bottomContent?: React.ReactNode;
 }
 
 export const ProductItemMagazine = React.memo(({
-  item, isCompared, onCompareToggle, onLikeToggle, onPress,
+  item, isCompared, onCompareToggle, onLikeToggle, onPress, bottomContent,
 }: ProductItemProps) => {
   const badgeCfg = BADGE_CONFIG[item.state];
   const isHold = item.state === 'hold';
 
   return (
     <TouchableOpacity style={styles.productItem} onPress={() => onPress(item.id)} activeOpacity={0.8}>
+      <View style={styles.mainRow}>
       <View style={styles.thumbWrap}>
-        <Image source={item.image} style={styles.thumbImage} resizeMode="cover" />
+        {item.image != null ? (
+          <Image source={item.image} style={styles.thumbImage} resizeMode="cover" />
+        ) : (
+          <View style={[styles.thumbImage, styles.thumbPlaceholder]} />
+        )}
         {isHold && (
           <View style={styles.holdOverlay}>
             <Text style={styles.holdOverlayText}>{'예약중인\n상품입니다.'}</Text>
@@ -62,16 +69,24 @@ export const ProductItemMagazine = React.memo(({
           <Text style={styles.productTags} numberOfLines={1}>{item.tags}</Text>
         </View>
         <View style={styles.priceRow}>
-          <Text style={styles.price}>{item.price.toLocaleString()}원</Text>
+          <Text style={styles.price}>
+            {item.priceLabel ?? `${item.price.toLocaleString()}원`}
+          </Text>
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>{item.timeAgo}</Text>
             <HeartIcon width={14} height={14} color={C.black} />
             <Text style={styles.metaText}>{item.likes}</Text>
-            <CommentIcon width={14} height={14} color={C.black} />
-            <Text style={styles.metaText}>{item.reviews}</Text>
+            {item.reviews != null && (
+              <>
+                <CommentIcon width={14} height={14} color={C.black} />
+                <Text style={styles.metaText}>{item.reviews}</Text>
+              </>
+            )}
           </View>
         </View>
       </View>
+      </View>
+      {bottomContent}
     </TouchableOpacity>
   );
 });
@@ -85,7 +100,11 @@ export const ProductItemGrid = React.memo(({
   return (
     <TouchableOpacity style={styles.gridItem} onPress={() => onPress(item.id)} activeOpacity={0.8}>
       <View style={styles.gridThumbWrap}>
-        <Image source={item.image} style={styles.gridThumbImage} resizeMode="cover" />
+        {item.image != null ? (
+          <Image source={item.image} style={styles.gridThumbImage} resizeMode="cover" />
+        ) : (
+          <View style={[styles.gridThumbImage, styles.thumbPlaceholder]} />
+        )}
         {isHold && (
           <View style={styles.holdOverlay}>
             <Text style={styles.holdOverlayText}>{'예약중인\n상품입니다.'}</Text>
@@ -104,7 +123,9 @@ export const ProductItemGrid = React.memo(({
         <Text style={styles.gridTitle} numberOfLines={2}>{item.title}</Text>
         <Text style={styles.gridTags} numberOfLines={1}>{item.tags}</Text>
         <View style={styles.gridPriceRow}>
-          <Text style={styles.gridPrice}>{item.price.toLocaleString()}원</Text>
+          <Text style={styles.gridPrice}>
+            {item.priceLabel ?? `${item.price.toLocaleString()}원`}
+          </Text>
           <Text style={styles.gridMeta}>{item.timeAgo}</Text>
         </View>
         <TouchableOpacity
@@ -123,14 +144,18 @@ export const ProductItemGrid = React.memo(({
 const styles = StyleSheet.create({
   // Magazine item
   productItem: {
-    flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 16,
+    paddingHorizontal: 16, paddingVertical: 16,
     borderBottomWidth: 1, borderBottomColor: C.G200, backgroundColor: C.white,
+  },
+  mainRow: {
+    flexDirection: 'row',
   },
   thumbWrap: {
     width: 120, height: 120, borderRadius: 6, overflow: 'hidden',
     backgroundColor: C.G100, position: 'relative', flexShrink: 0,
   },
   thumbImage: { width: '100%', height: '100%' },
+  thumbPlaceholder: { backgroundColor: C.G200 },
   holdOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', alignItems: 'center', zIndex: 1 },
   holdOverlayText: { color: C.white, fontSize: 14, fontWeight: '700', textAlign: 'center', lineHeight: 20 },
   stateBadge: { position: 'absolute', top: 0, left: 0, paddingHorizontal: 7, paddingVertical: 4, borderBottomRightRadius: 6 },

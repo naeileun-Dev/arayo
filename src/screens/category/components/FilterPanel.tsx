@@ -57,20 +57,24 @@ const CheckboxRow = ({ label, checked, onPress }: { label: string; checked: bool
   </TouchableOpacity>
 );
 
+export interface SelectedCategoryItem {
+  category: string;
+  sub: string;
+}
+
 interface FilterPanelProps {
   visible: boolean;
   filter: FilterState;
   onFilterChange: (f: FilterState) => void;
   onClose: () => void;
   onReset: () => void;
-  selectedCategory: string;
-  selectedSubCategory: string;
-  onCategorySelect: (category: string, sub: string) => void;
+  selectedCategories: SelectedCategoryItem[];
+  onCategoryToggle: (category: string, sub: string) => void;
 }
 
 const FilterPanel = ({
   visible, filter, onFilterChange, onClose, onReset,
-  selectedCategory, selectedSubCategory, onCategorySelect,
+  selectedCategories, onCategoryToggle,
 }: FilterPanelProps) => {
   const slideAnim = useRef(new Animated.Value(DRAWER_WIDTH)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
@@ -178,7 +182,15 @@ const FilterPanel = ({
                 </View>
               </View>
               <View style={fStyles.section}>
-                <AccordionHeader title="카테고리" expanded={expanded.category} onToggle={() => toggle('category')} />
+                <AccordionHeader
+                  title="카테고리"
+                  currentVal={selectedCategories.length > 0
+                    ? selectedCategories[0].sub + (selectedCategories.length > 1 ? ` 외 ${selectedCategories.length - 1}` : '')
+                    : undefined}
+                  isActive={selectedCategories.length > 0}
+                  expanded={expanded.category}
+                  onToggle={() => toggle('category')}
+                />
                 {expanded.category && (
                   <View style={fStyles.body}>
                     {CATEGORY_LIST.map(cat => (
@@ -187,15 +199,18 @@ const FilterPanel = ({
                           <Text style={fStyles.catGroupTitle}>{cat.title}</Text>
                         </View>
                         {cat.sub.map(sub => {
-                          const isSelected = selectedCategory === cat.title && selectedSubCategory === sub;
+                          const isSelected = selectedCategories.some(s => s.category === cat.title && s.sub === sub);
                           return (
                             <TouchableOpacity
                               key={sub}
-                              style={[fStyles.catSubRow, isSelected && fStyles.catSubRowOn]}
-                              onPress={() => onCategorySelect(cat.title, sub)}
+                              style={fStyles.catSubRow}
+                              onPress={() => onCategoryToggle(cat.title, sub)}
                               activeOpacity={0.7}
                             >
                               <Text style={[fStyles.catSubText, isSelected && fStyles.catSubTextOn]}>{sub}</Text>
+                              <View style={[fStyles.catCheckbox, isSelected && fStyles.catCheckboxOn]}>
+                                {isSelected && <CheckIcon width={12} height={12} color={C.white} />}
+                              </View>
                             </TouchableOpacity>
                           );
                         })}
@@ -375,17 +390,25 @@ const fStyles = StyleSheet.create({
   },
   accordionTitle: { flex: 1, fontSize: 15, fontWeight: '600', color: C.black },
   accordionVal: { fontSize: 13, color: C.G500 },
-  accordionValActive: { color: C.primary, fontWeight: '600' },
+  accordionValActive: { color: C.primary200, fontWeight: '600' },
   body: { paddingHorizontal: 16, paddingBottom: 16, backgroundColor: C.G100 },
   catGroupHeader: { backgroundColor: C.G200, paddingHorizontal: 12, paddingVertical: 8 },
   catGroupTitle: { fontSize: 13, fontWeight: '700', color: C.G700 },
   catSubRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,
     borderBottomWidth: 1, borderBottomColor: C.G200, backgroundColor: C.white,
   },
-  catSubRowOn: { backgroundColor: '#fff5f7' },
-  catSubText: { fontSize: 14, color: C.black },
+  catSubText: { flex: 1, fontSize: 14, color: C.black },
   catSubTextOn: { color: C.primary, fontWeight: '600' },
+  catCheckbox: {
+    width: 22, height: 22, borderRadius: 4,
+    borderWidth: 1.5, borderColor: C.G300,
+    justifyContent: 'center', alignItems: 'center', backgroundColor: C.white,
+  },
+  catCheckboxOn: {
+    backgroundColor: C.primary, borderColor: C.primary,
+  },
   radioRow: {
     flexDirection: 'row', alignItems: 'center', paddingVertical: 11, gap: 10,
     borderBottomWidth: 1, borderBottomColor: C.G200,

@@ -8,13 +8,13 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import RefreshIcon from '../../../assets/icon/refresh-cw.svg';
-import TrashIcon from '../../../assets/icon/trash.svg';
-import { colors as C } from '../../../styles/colors';
-import { Product, BADGE_CONFIG, COMPARE_CARD_WIDTH, SCREEN_HEIGHT } from '../types';
+import RefreshIcon from '../../assets/icon/refresh-cw.svg';
+import TrashIcon from '../../assets/icon/trash.svg';
+import { colors as C } from '../../styles/colors';
+import { ProductListItem, BADGE_CONFIG, COMPARE_CARD_WIDTH, SCREEN_HEIGHT } from '../../types/product';
 
 interface ComparePanelProps {
-  products: Product[];
+  products: ProductListItem[];
   onRemove: (id: string) => void;
   onReset: () => void;
   onViewResult: () => void;
@@ -22,9 +22,9 @@ interface ComparePanelProps {
 }
 
 const ComparePanel = ({ products, onRemove, onReset, onViewResult, onClose }: ComparePanelProps) => {
-  const slots: (Product | null)[] = [...products];
+  const slots: (ProductListItem | null)[] = [...products];
   while (slots.length < 6) slots.push(null);
-  const rows: (Product | null)[][] = [];
+  const rows: (ProductListItem | null)[][] = [];
   for (let i = 0; i < slots.length; i += 2) rows.push([slots[i], slots[i + 1]]);
 
   return (
@@ -48,7 +48,11 @@ const ComparePanel = ({ products, onRemove, onReset, onViewResult, onClose }: Co
                 product ? (
                   <View key={product.id} style={styles.panelCard}>
                     <View style={styles.panelCardThumbWrap}>
-                      <Image source={product.image} style={styles.panelCardThumbImage} resizeMode="cover" />
+                      {product.image != null ? (
+                        <Image source={product.image} style={styles.panelCardThumbImage} resizeMode="cover" />
+                      ) : (
+                        <View style={[styles.panelCardThumbImage, styles.thumbPlaceholder]} />
+                      )}
                       <TouchableOpacity style={styles.panelCardTrashBtn} onPress={() => onRemove(product.id)} activeOpacity={0.7}>
                         <TrashIcon width={20} height={20} color={C.G600} />
                       </TouchableOpacity>
@@ -61,13 +65,19 @@ const ComparePanel = ({ products, onRemove, onReset, onViewResult, onClose }: Co
                     <View style={styles.panelCardCon}>
                       <Text style={styles.panelCardTitle} numberOfLines={2}>{product.title}</Text>
                       <Text style={styles.panelCardTags} numberOfLines={1}>{product.tags}</Text>
-                      <Text style={styles.panelCardPrice}>{product.price.toLocaleString()}원</Text>
+                      <Text style={styles.panelCardPrice}>
+                        {product.priceLabel ?? `${product.price.toLocaleString()}원`}
+                      </Text>
                       <View style={styles.panelCardMetaRow}>
                         <Text style={styles.panelCardMeta}>{product.timeAgo}</Text>
                         <View style={styles.metaDot} />
                         <Text style={styles.panelCardMeta}>관심 {product.likes}</Text>
-                        <View style={styles.metaDot} />
-                        <Text style={styles.panelCardMeta}>후기 {product.reviews}</Text>
+                        {product.reviews != null && (
+                          <>
+                            <View style={styles.metaDot} />
+                            <Text style={styles.panelCardMeta}>후기 {product.reviews}</Text>
+                          </>
+                        )}
                       </View>
                     </View>
                   </View>
@@ -122,6 +132,7 @@ const styles = StyleSheet.create({
   panelCard: { width: COMPARE_CARD_WIDTH, backgroundColor: C.white, borderWidth: 1, borderColor: C.G200, borderRadius: 8, overflow: 'hidden' },
   panelCardThumbWrap: { width: '100%', aspectRatio: 1, backgroundColor: C.G100, position: 'relative' },
   panelCardThumbImage: { width: '100%', height: '100%' },
+  thumbPlaceholder: { backgroundColor: C.G200 },
   panelCardTrashBtn: {
     position: 'absolute', top: 0, right: 0, width: 40, height: 40,
     backgroundColor: C.white, borderRadius: 10, justifyContent: 'center', alignItems: 'center', zIndex: 2,

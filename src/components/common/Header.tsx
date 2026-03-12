@@ -13,7 +13,6 @@ import {
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import XIcon from '../../assets/icon/X.svg';
 import { colors } from '../../styles/colors';
-import { typography } from '../../styles/typography';
 import { spacing, componentHeight, iconSize } from '../../styles/spacing';
 import type { HeaderProps } from '../../types';
 
@@ -52,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({
             onPress={onBack}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <ChevronLeftIcon width={24} height={24} color={colors.textPrimary} />
+            <ChevronLeftIcon width={24} height={24} color={colors.black} />
           </TouchableOpacity>
         ) : (
           <View style={styles.placeholder} />
@@ -99,10 +98,7 @@ const styles = StyleSheet.create({
   transparent: {
     backgroundColor: 'transparent',
   },
-  border: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
+  border: {},
   leftContainer: {
     width: 48,
     alignItems: 'flex-start',
@@ -117,8 +113,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   title: {
-    ...typography.h4,
-    color: colors.textPrimary,
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.black,
   },
   iconButton: {
     width: iconSize.xl,

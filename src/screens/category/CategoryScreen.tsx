@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const LEFT_SIDEBAR_WIDTH = Math.round(SCREEN_WIDTH * 0.25);
+const LEFT_SIDEBAR_WIDTH = 100;
 import { useNavigation } from '@react-navigation/native';
 
 // 프로젝트 아이콘
-import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import SearchIcon from '../../assets/icon/Search.svg';
 
 // 카테고리 아이콘
@@ -114,13 +113,7 @@ export const CategoryScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       {/* --- 헤더 영역 --- */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.headerButton} 
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-        >
-          <ChevronLeftIcon width={24} height={24} color={colors.textPrimary} />
-        </TouchableOpacity>
+        <View style={styles.headerButton} />
         <Text style={styles.headerTitle}>카테고리</Text>
         <TouchableOpacity 
           style={styles.headerButton} 
@@ -224,8 +217,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   leftMenuItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 2,
+    width: 100,
+    height: 100,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,

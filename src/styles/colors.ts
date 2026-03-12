@@ -39,6 +39,7 @@ export const colors = {
   borderDark: '#9E9E9E',
 
   // System
+  blue: '#4381FF',
   system100: '#0F53FF',
 
   // Semantic

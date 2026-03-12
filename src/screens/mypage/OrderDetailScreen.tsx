@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  StatusBar,
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
+import CheckIcon from '../../assets/icon/check.svg';
 import { colors as COLORS } from '../../styles/colors';
+import Header from '../../components/common/Header';
 import ReviewModal, { ReviewModalType } from '../../components/common/ReviewModal';
 import SectionTitle from './components/SectionTitle';
 import TableRow from './components/TableRow';
@@ -27,20 +27,7 @@ export default function OrderDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
-
-      {/* ── 헤더 ── */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.headerBackBtn}
-          onPress={() => navigation.goBack()}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <ChevronLeftIcon width={24} height={24} color={COLORS.black} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>주문 상세</Text>
-        <View style={styles.headerRight} />
-      </View>
+      <Header title="주문 상세" onBack={() => navigation.goBack()} />
 
       {/* ── 본문 ── */}
       <ScrollView
@@ -98,51 +85,46 @@ export default function OrderDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* ── 입금 계좌 정보 ── */}
+        {/* ── 안전결제 입금 안내 ── */}
         <View style={styles.section}>
-          <SectionTitle title="입금 계좌 정보" />
-          <View style={styles.bbox}>
-            <View style={styles.bboxRow}>
-              <Text style={styles.bboxDt}>입금계좌</Text>
-              <Text style={styles.bboxDd}>주식회사 수성코리아</Text>
-            </View>
-            <View style={styles.bboxRow}>
-              <Text style={styles.bboxDt}>은행명</Text>
-              <Text style={styles.bboxDd}>국민은행</Text>
-            </View>
-            <View style={styles.bboxRow}>
-              <Text style={styles.bboxDt}>계좌번호</Text>
-              <Text style={styles.bboxDd}>110-123-456789</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* ── 가격 ── */}
-        <View style={styles.section}>
-          <SectionTitle title="가격" />
-          <View style={styles.priceWrap}>
-            {/* 총 결제금액 (파란 배경) */}
-            <View style={styles.priceTotalRow}>
-              <Text style={styles.priceTotalLabel}>총 결제금액</Text>
-              <Text style={styles.priceTotalValue}>2,400,000 원</Text>
-            </View>
-            {/* 상세 내역 */}
-            <View style={styles.priceDetailWrap}>
-              <View style={styles.priceDetailRow}>
-                <Text style={styles.priceDetailLabel}>상품금액</Text>
-                <Text style={styles.priceDetailValue}>0 원</Text>
+          <SectionTitle title="안전결제 입금 안내" />
+          <View style={styles.depositTable}>
+            <View style={styles.depositRow}>
+              <View style={styles.depositLabelWrap}>
+                <CheckIcon width={16} height={16} color={COLORS.green} />
+                <Text style={styles.depositLabel}>은행명</Text>
               </View>
-              <View style={styles.priceDetailRow}>
-                <Text style={styles.priceDetailLabel}>
-                  서비스 수수료{' '}
-                  <Text style={styles.lineThrough}>(3.5%)</Text>
-                  {' '}무료(오픈 이벤트)
-                </Text>
-                <Text style={styles.priceDetailValue}>-0 원</Text>
+              <Text style={styles.depositValue}>국민은행</Text>
+            </View>
+            <View style={styles.depositRow}>
+              <View style={styles.depositLabelWrap}>
+                <CheckIcon width={16} height={16} color={COLORS.green} />
+                <Text style={styles.depositLabel}>예금주</Text>
               </View>
-              <View style={styles.priceDetailRow}>
-                <Text style={styles.priceDetailLabel}>부가가치세 (10%)</Text>
-                <Text style={styles.priceDetailValue}>-0 원</Text>
+              <Text style={styles.depositValue}>주식회사 수성코리아</Text>
+            </View>
+            <View style={styles.depositRow}>
+              <View style={styles.depositLabelWrap}>
+                <CheckIcon width={16} height={16} color={COLORS.green} />
+                <Text style={styles.depositLabel}>계좌번호</Text>
+              </View>
+              <Text style={styles.depositValue}>110-123-456789</Text>
+            </View>
+            <View style={styles.depositRow}>
+              <View style={styles.depositLabelWrap}>
+                <CheckIcon width={16} height={16} color={COLORS.green} />
+                <Text style={styles.depositLabel}>결제금액</Text>
+              </View>
+              <Text style={styles.depositValue}>2,640,000</Text>
+            </View>
+            <View style={styles.depositFeeWrap}>
+              <View style={styles.depositFeeRow}>
+                <Text style={styles.depositFeeLabel}>안전결제 수수료 (3.5%) → 무료</Text>
+                <Text style={styles.depositFeeValue}>72,000 원</Text>
+              </View>
+              <View style={styles.depositFeeRow}>
+                <Text style={styles.depositFeeLabel}>부가가치세(10%)</Text>
+                <Text style={styles.depositFeeValue}>2,400,000 원</Text>
               </View>
             </View>
           </View>
@@ -167,32 +149,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.white,
-  },
-
-  // ── 헤더 ──
-  header: {
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    paddingHorizontal: 10,
-  },
-  headerBackBtn: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.black,
-    letterSpacing: -0.3,
-  },
-  headerRight: {
-    width: 36,
   },
 
   // ── 스크롤 ──
@@ -291,88 +247,68 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // ── bbox (입금계좌) ──
-  bbox: {
-    marginHorizontal: 15,
-    marginTop: 12,
-    padding: 16,
-    borderRadius: 4,
-    backgroundColor: COLORS.black,
-  },
-  bboxRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-  },
-  bboxDt: {
-    fontSize: 13,
-    color: COLORS.G300,
-    letterSpacing: -0.2,
-  },
-  bboxDd: {
-    fontSize: 13,
-    color: COLORS.white,
-    fontWeight: '600',
-    letterSpacing: -0.2,
-  },
-  // ── 가격 섹션 ──
-  priceWrap: {
+  // ── 안전결제 입금 안내 (테이블) ──
+  depositTable: {
     marginHorizontal: 15,
     borderWidth: 1,
     borderColor: COLORS.G200,
-    borderRadius: 4,
+    borderRadius: 8,
     overflow: 'hidden',
   },
-  priceTotalRow: {
+  depositRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.G100,
+    paddingVertical: 12,
     paddingHorizontal: 14,
-    paddingVertical: 14,
+    marginHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.G200,
   },
-  priceTotalLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: COLORS.black,
-    letterSpacing: -0.3,
+  depositLabelWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 110,
+    gap: 6,
   },
-  priceTotalValue: {
-    fontSize: 15,
+  depositLabel: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: COLORS.G600,
+    letterSpacing: -0.2,
+  },
+  depositValue: {
+    fontSize: 14,
     fontWeight: '700',
     color: COLORS.black,
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
   },
-  priceDetailWrap: {
+  // ── 수수료 영역 ──
+  depositFeeWrap: {
+    backgroundColor: COLORS.G100,
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 6,
     paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 4,
+    paddingVertical: 12,
+    gap: 8,
   },
-  priceDetailRow: {
+  depositFeeRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingVertical: 5,
+    alignItems: 'center',
   },
-  priceDetailLabel: {
-    flex: 1,
-    fontSize: 13,
+  depositFeeLabel: {
+    fontSize: 14,
+    fontWeight: '400',
     color: COLORS.G600,
     letterSpacing: -0.2,
-    lineHeight: 18,
-    paddingRight: 8,
   },
-  priceDetailValue: {
-    fontSize: 13,
+  depositFeeValue: {
+    fontSize: 14,
+    fontWeight: '400',
     color: COLORS.G600,
     letterSpacing: -0.2,
-    fontWeight: '500',
-  },
-  lineThrough: {
-    textDecorationLine: 'line-through',
-    color: COLORS.G400,
   },
 
   bottomPad: {

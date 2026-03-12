@@ -19,6 +19,7 @@ import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, screenPadding } from '../../styles/spacing';
 import { validatePassword, validatePasswordConfirm } from '../../utils/validators';
+import CheckIcon from '../../assets/icon/check.svg';
 import type { AuthStackParamList, Tab } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'AccountRecovery'>;
@@ -201,7 +202,7 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
   const renderPasswordCompleteView = () => (
     <View style={styles.completeContainer}>
       <View style={styles.successIcon}>
-        <View style={styles.successCheckmark} />
+        <CheckIcon width={28} height={28} color={colors.success} />
       </View>
 
       <Text style={styles.completeTitle}>
@@ -339,14 +340,12 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.success,
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xl,
-  },
-  successCheckmark: {
-    width: 32,
-    height: 32,
   },
   completeTitle: {
     ...typography.h3,
