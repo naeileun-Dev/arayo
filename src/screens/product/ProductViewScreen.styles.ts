@@ -138,7 +138,7 @@ export const styles = StyleSheet.create({
   reviewItem: { paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: colors.G200, marginBottom: 20 },
   reProfileImg: { width: 44, height: 44, borderRadius: 22, marginRight: 12 },
   reName: { fontSize: 14, fontWeight: 'bold', color: colors.black },
-  reDate: { fontSize: 12, color: '#7E7E7E' },
+  reDate: { fontSize: 12, color: colors.G600 },
   reStarScore: { fontSize: 16, fontWeight: 'bold', color: colors.black },
   reInfoRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
   reInfoChip: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.G100, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 6 },
@@ -148,7 +148,7 @@ export const styles = StyleSheet.create({
   reAttachedImg: { width: 122.35, height: 122.35, borderRadius: 6, marginRight: 10 },
   reContentText: { fontSize: 14, lineHeight: 22, color: colors.black, marginBottom: 8 },
   moreBtn: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 4 },
-  moreBtnText: { fontSize: 13, color: '#7E7E7E' },
+  moreBtnText: { fontSize: 13, color: colors.G600 },
   chevronUp: { transform: [{ rotate: '180deg' }] },
   loadingText: { textAlign: 'center', padding: 20, color: colors.G600 },
 

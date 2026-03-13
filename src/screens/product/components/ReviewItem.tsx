@@ -65,7 +65,7 @@ export default function ReviewItem({ id }: ReviewItemProps) {
       <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)} style={styles.moreBtn}>
         <Text style={styles.moreBtnText}>{isExpanded ? '접기' : '더보기'}</Text>
         <View style={isExpanded ? styles.chevronUp : undefined}>
-          <ChevronDownIcon width={14} height={14} color="#7E7E7E" />
+          <ChevronDownIcon width={14} height={14} color={colors.G600} />
         </View>
       </TouchableOpacity>
     </View>

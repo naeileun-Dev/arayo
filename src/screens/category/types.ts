@@ -20,9 +20,6 @@ export {
 import type { ProductListItem } from '../../types/product';
 export type Product = ProductListItem;
 
-// ─────────────────────────────────────────────────────────────────
-// 화면 전용 타입 & 상수
-// ─────────────────────────────────────────────────────────────────
 export interface FilterState {
   searchText: string;
   productType: '전체' | '신품' | '중고';

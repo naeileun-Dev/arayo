@@ -19,6 +19,14 @@ import ProfileScreen from '../screens/mypage/ProfileScreen';
 import ProfileEditScreen from '../screens/mypage/ProfileEditScreen';
 import PasswordResetScreen from '../screens/mypage/PasswordResetScreen';
 import TradeReviewScreen from '../screens/mypage/TradeReviewScreen';
+import EstimateReplyListScreen from '../screens/mypage/EstimateReplyListScreen';
+import EstimateDetailScreen from '../screens/mypage/EstimateDetailScreen';
+import EstimateListScreen from '../screens/estimate/EstimateListScreen';
+import BusinessUpgradeFormScreen from '../screens/mypage/BusinessUpgradeFormScreen';
+import BusinessUpgradeFormNormalScreen from '../screens/mypage/BusinessUpgradeFormNormalScreen';
+import BusinessUpgradeFormGoldScreen from '../screens/mypage/BusinessUpgradeFormGoldScreen';
+import EstimateUploadScreen from '../screens/estimate/EstimateUploadScreen';
+import ServiceIntroduceScreen from '../screens/main/ServiceItroduceScreen';
 import MainTabNavigator from './MainTabNavigator';
 import type { RootStackParamList } from '../types';
 
@@ -129,6 +137,46 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="TradeReview"
         component={TradeReviewScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EstimateReplyList"
+        component={EstimateReplyListScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EstimateDetail"
+        component={EstimateDetailScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BusinessUpgradeForm"
+        component={BusinessUpgradeFormScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EstimateList"
+        component={EstimateListScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BusinessUpgradeFormNormal"
+        component={BusinessUpgradeFormNormalScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BusinessUpgradeFormGold"
+        component={BusinessUpgradeFormGoldScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EstimateUpload"
+        component={EstimateUploadScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ServiceIntroduce"
+        component={ServiceIntroduceScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

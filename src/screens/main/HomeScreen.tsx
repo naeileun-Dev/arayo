@@ -30,6 +30,7 @@ import ProcessIcon from '../../assets/icon/process.svg';
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
 import SectionHeader from '../../components/common/SectionHeader';
 import Spinner from '../../components/common/Spinner';
+import CompanyCard from '../../components/common/CompanyCard';
 import ProductMagazineCard from './home/ProductMagazineCard';
 import {
   RECOMMENDED_COMPANIES,
@@ -42,7 +43,7 @@ import {
 const { width } = Dimensions.get('window');
 
 
-export default function HomeScreen() {
+export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: () => void }) {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState('전체');
@@ -135,11 +136,11 @@ export default function HomeScreen() {
           <Text style={styles.gridItemLargeText}>설비 구매하기</Text>
         </TouchableOpacity>
         <View style={styles.gridTopRightCol}>
-          <TouchableOpacity style={styles.gridItemSmall} onPress={() => Alert.alert('견적문의')}>
+          <TouchableOpacity style={styles.gridItemSmall} onPress={() => (navigation as any).navigate('EstimateList')}>
             <HeadsetIcon width={20} height={20} color={colors.primary200} />
             <Text style={styles.gridItemSmallText}>견적문의</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.gridItemSmall} onPress={() => Alert.alert('브랜드 관')}>
+          <TouchableOpacity style={styles.gridItemSmall} onPress={() => onBrandHomePress?.()}>
             <BuildingIcon width={20} height={20} color={colors.primary200} />
             <Text style={styles.gridItemSmallText}>브랜드 관</Text>
           </TouchableOpacity>
@@ -148,7 +149,7 @@ export default function HomeScreen() {
       <View style={styles.gridBottomBox}>
         <Text style={styles.gridBottomTitle}>이런 서비스도 있어요</Text>
         <View style={styles.gridBottomMenu}>
-          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => Alert.alert('서비스 소개')}>
+          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => (navigation as any).navigate('ServiceIntroduce')}>
             <AboutIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>서비스 소개</Text>
           </TouchableOpacity>
@@ -214,24 +215,12 @@ export default function HomeScreen() {
         data={RECOMMENDED_COMPANIES}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.companyCard}>
-            <View style={styles.companyThumbBox}>
-              <Image
-                source={COMPANY_BG_IMAGES[index % COMPANY_BG_IMAGES.length]}
-                style={styles.companyBgImage}
-                resizeMode="cover"
-              />
-              <Image
-                source={require('../../assets/images/profileImg.png')}
-                style={styles.companyProfileImg}
-              />
-            </View>
-            <View style={styles.companyCon}>
-              <Text style={styles.companyName}>{item.name}</Text>
-              <Text style={styles.companyDesc} numberOfLines={2}>{item.desc}</Text>
-              <Text style={styles.companyTags}>{item.tags}</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.companyCard}>
+            <CompanyCard
+              item={{ ...item, description: item.desc }}
+              bgImage={COMPANY_BG_IMAGES[index % COMPANY_BG_IMAGES.length]}
+            />
+          </View>
         )}
       />
     </View>
@@ -487,33 +476,7 @@ const styles = StyleSheet.create({
   companyCard: {
     width: 204,
     marginRight: 10,
-    borderWidth: 1,
-    borderColor: colors.G200,
-    borderRadius: 5,
-    overflow: 'visible',
   },
-  companyThumbBox: { position: 'relative' },
-  companyBgImage: {
-    width: '100%',
-    height: 120,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-  },
-  companyProfileImg: {
-    position: 'absolute',
-    bottom: -10,
-    left: 10,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: colors.white,
-    zIndex: 5,
-  },
-  companyCon: { padding: 15, paddingTop: 20, gap: 8 },
-  companyName: { fontSize: 15, fontWeight: '600', color: colors.black },
-  companyDesc: { fontSize: 13, color: colors.black, lineHeight: 18 },
-  companyTags: { fontSize: 12, color: colors.G600 },
 
   magazineList: { paddingHorizontal: 20, gap: 8 },
 

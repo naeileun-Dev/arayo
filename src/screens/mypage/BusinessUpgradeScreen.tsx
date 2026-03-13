@@ -43,9 +43,13 @@ export default function BusinessUpgradeScreen({ navigation }: any) {
               </View>
             </View>
 
-            <View style={styles.statusBadge}>
+            <TouchableOpacity
+              style={styles.statusBadge}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('BusinessUpgradeFormNormal')}
+            >
               <Text style={styles.statusBadgeText}>이용중</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View style={[styles.box, styles.boxActive]}>
@@ -84,7 +88,11 @@ export default function BusinessUpgradeScreen({ navigation }: any) {
               <Text style={styles.priceFreeGoldText}>무료</Text>
             </View>
 
-            <TouchableOpacity style={styles.goldButton} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.goldButton}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('BusinessUpgradeFormGold')}
+            >
               <Text style={styles.goldButtonText}>₩ 990,000 /연간 -&gt; 무료</Text>
             </TouchableOpacity>
           </View>

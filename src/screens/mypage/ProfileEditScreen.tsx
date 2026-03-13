@@ -1,8 +1,3 @@
-/**
- * ProfileEditScreen.tsx
- * 내 정보 수정 화면 (UI-MYPG-111)
- */
-
 import React, { useState, useRef } from 'react';
 import {
   View,
@@ -23,9 +18,6 @@ import { Header } from '../../components/common';
 import SaveIcon from '../../assets/icon/Save.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 
-// ─────────────────────────────────────────────────────────────
-// 타입 정의
-// ─────────────────────────────────────────────────────────────
 interface FormState {
   pushAgree: boolean;
   nightPush: boolean;
@@ -51,25 +43,16 @@ interface FormState {
 
 const CORP_TYPE_OPTIONS = ['개인', '개인사업자', '법인사업자', '기타'];
 
-// ─────────────────────────────────────────────────────────────
-// 레이아웃 상수
-// ─────────────────────────────────────────────────────────────
 const H_PADDING = 20;
 const TRACK_WIDTH = 52;
 const TRACK_HEIGHT = 30;
 const THUMB_SIZE = 22;
 const TRACK_PADDING = (TRACK_HEIGHT - THUMB_SIZE) / 2;
 
-// ─────────────────────────────────────────────────────────────
-// 섹션 타이틀
-// ─────────────────────────────────────────────────────────────
 const SectionTitle: React.FC<{ title: string }> = ({ title }) => (
   <Text style={styles.sectionTitle}>{title}</Text>
 );
 
-// ─────────────────────────────────────────────────────────────
-// 폼 라벨 (* 필수)
-// ─────────────────────────────────────────────────────────────
 const FormLabel: React.FC<{ label: string; required?: boolean }> = ({ label, required = false }) => (
   <View style={styles.formLabelRow}>
     <Text style={styles.formLabelText}>{label}</Text>
@@ -77,9 +60,6 @@ const FormLabel: React.FC<{ label: string; required?: boolean }> = ({ label, req
   </View>
 );
 
-// ─────────────────────────────────────────────────────────────
-// 텍스트 인풋 (언더라인 스타일)
-// ─────────────────────────────────────────────────────────────
 interface FormInputProps {
   value: string;
   onChangeText?: (text: string) => void;
@@ -111,9 +91,6 @@ const FormInput: React.FC<FormInputProps> = ({
   />
 );
 
-// ─────────────────────────────────────────────────────────────
-// 커스텀 토글 스위치 (thumb < track)
-// ─────────────────────────────────────────────────────────────
 interface ToggleSwitchProps {
   value: boolean;
   onValueChange: (val: boolean) => void;
@@ -150,9 +127,6 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ value, onValueChange }) => 
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// 법인구분 드롭다운 (Modal 바텀시트)
-// ─────────────────────────────────────────────────────────────
 interface CorpTypeDropdownProps {
   value: string;
   options: string[];
@@ -217,9 +191,6 @@ const CorpTypeDropdown: React.FC<CorpTypeDropdownProps> = ({ value, options, onS
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// 메인 스크린
-// ─────────────────────────────────────────────────────────────
 const ProfileEditScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const [form, setForm] = useState<FormState>({
@@ -284,7 +255,6 @@ const ProfileEditScreen: React.FC = () => {
           keyboardShouldPersistTaps="handled"
         >
 
-          {/* ════ [알림] ════ */}
           <SectionTitle title="알림" />
 
           <View style={styles.rowItem}>
@@ -297,7 +267,6 @@ const ProfileEditScreen: React.FC = () => {
             <ToggleSwitch value={form.nightPush} onValueChange={setField('nightPush')} />
           </View>
 
-          {/* ════ [회원정보] ════ */}
           <SectionTitle title="회원정보" />
 
           <View style={styles.fieldItem}>
@@ -377,7 +346,6 @@ const ProfileEditScreen: React.FC = () => {
             </Text>
           </View>
 
-          {/* ════ [사업자정보] ════ */}
           <SectionTitle title="사업자정보" />
 
           <View style={styles.fieldItem}>
@@ -493,9 +461,6 @@ const ProfileEditScreen: React.FC = () => {
 
 export default ProfileEditScreen;
 
-// ─────────────────────────────────────────────────────────────
-// 스타일
-// ─────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
 
   flex1: { flex: 1 },
@@ -518,7 +483,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
 
-  // ── 섹션 타이틀 ──────────────────────────────────
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
@@ -527,7 +491,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  // ── 행(row) 아이템 - 토글 용 ──────────────────────
   rowItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -542,7 +505,6 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
 
-  // ── 커스텀 토글 ───────────────────────────────────
   toggleTrack: {
     width: TRACK_WIDTH,
     height: TRACK_HEIGHT,
@@ -567,12 +529,10 @@ const styles = StyleSheet.create({
     }),
   },
 
-  // ── 필드(vertical) 아이템 ────────────────────────
   fieldItem: {
     paddingVertical: 12,
   },
 
-  // ── 폼 라벨 ──────────────────────────────────────
   formLabelRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -589,7 +549,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // ── 인풋 (언더라인 스타일) ─────────────────────────
   input: {
     height: 44,
     borderWidth: 0,
@@ -605,7 +564,6 @@ const styles = StyleSheet.create({
     color: colors.G500,
   },
 
-  // ── 우편번호 행 ───────────────────────────────────
   zipcodeRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -630,7 +588,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 
-  // ── 안내 텍스트 ───────────────────────────────────
   helpText: {
     marginTop: 8,
     fontSize: 11,
@@ -638,7 +595,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  // ── 드롭다운 트리거 (언더라인 스타일) ─────────────
   dropdownTrigger: {
     height: 44,
     borderWidth: 0,
@@ -656,7 +612,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 
-  // ── 바텀시트 모달 ─────────────────────────────────
   modalDim: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',

@@ -19,7 +19,7 @@ import CameraPlusIcon from '../../assets/icon/camera-plus.svg';
 import TrashIcon from '../../assets/icon/trash.svg';
 import XIcon from '../../assets/icon/X.svg';
 
-import { colors as C } from '../../styles/colors';
+import { colors } from '../../styles/colors';
 
 const USER_IMG = require('../../assets/images/user01.png');
 const MODAL_IMG = require('../../assets/images/img02.png');
@@ -27,9 +27,6 @@ const MODAL_IMG = require('../../assets/images/img02.png');
 const BORDER_RADIUS = 4;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// ─────────────────────────────────────────
-// 타입
-// ─────────────────────────────────────────
 export type ReviewModalType = 'intro' | 'score' | 'write' | 'view' | null;
 
 export interface ReviewModalProps {
@@ -39,9 +36,6 @@ export interface ReviewModalProps {
   onChangeType: (type: ReviewModalType) => void;
 }
 
-// ─────────────────────────────────────────
-// 상수
-// ─────────────────────────────────────────
 const SCORE_ITEMS = [
   { label: '최고에요', stars: 5 },
   { label: '좋아요', stars: 4 },
@@ -50,9 +44,6 @@ const SCORE_ITEMS = [
   { label: '별로에요', stars: 1 },
 ];
 
-// ─────────────────────────────────────────
-// 내부 버튼 컴포넌트
-// ─────────────────────────────────────────
 const ModalBtn = ({
   label,
   onPress,
@@ -65,9 +56,6 @@ const ModalBtn = ({
   </TouchableOpacity>
 );
 
-// ─────────────────────────────────────────
-// 공통 후기 모달
-// ─────────────────────────────────────────
 const ReviewModal: React.FC<ReviewModalProps> = ({
   visible,
   type,
@@ -94,7 +82,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   if (!visible || !type) return null;
 
-  // ── 후기 소개 (intro) ──
   if (type === 'intro') {
     return (
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -103,7 +90,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>김샘플님이 보낸 후기가 도착했어요</Text>
               <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
-                <XIcon width={20} height={20} color={C.black} />
+                <XIcon width={20} height={20} color={colors.black} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -113,7 +100,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               </View>
               <View style={styles.reviewSampleBoxView}>
                 <View style={styles.starRow}>
-                  <StarIcon width={18} height={18} color={C.star} />
+                  <StarIcon width={18} height={18} color={colors.star} />
                   <Text style={styles.starNumber}>4</Text>
                 </View>
                 <Text style={styles.reviewSampleTextView}>
@@ -138,7 +125,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     );
   }
 
-  // ── 별점 선택 (score) ──
   if (type === 'score') {
     return (
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -147,7 +133,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>김샘플님에게 거래 후기 보내기</Text>
               <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
-                <XIcon width={20} height={20} color={C.black} />
+                <XIcon width={20} height={20} color={colors.black} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -207,7 +193,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     );
   }
 
-  // ── 후기 작성 (write) ──
   if (type === 'write') {
     const isPositive = (selectedScore ?? 0) >= 3;
     const positiveOptions = [
@@ -235,11 +220,11 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 onPress={() => onChangeType('score')}
                 style={styles.modalBackBtn}
               >
-                <ChevronLeftIcon width={22} height={22} color={C.black} />
+                <ChevronLeftIcon width={22} height={22} color={colors.black} />
               </TouchableOpacity>
               <Text style={styles.modalTitle}>김샘플님에게 거래 후기 보내기</Text>
               <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
-                <XIcon width={20} height={20} color={C.black} />
+                <XIcon width={20} height={20} color={colors.black} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -286,7 +271,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   multiline
                   numberOfLines={5}
                   placeholder="남겨주신 거래 후기는 상대방의 프로필에 공개돼요."
-                  placeholderTextColor={C.G400}
+                  placeholderTextColor={colors.G400}
                   value={reviewText}
                   onChangeText={setReviewText}
                 />
@@ -304,7 +289,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                     onPress={handlePickImage}
                     activeOpacity={0.7}
                   >
-                    <CameraPlusIcon width={28} height={28} color={C.G400} />
+                    <CameraPlusIcon width={28} height={28} color={colors.G400} />
                   </TouchableOpacity>
                   {reviewImages.map((img, idx) => (
                     <View key={idx} style={styles.imgThumbWrap}>
@@ -330,7 +315,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     );
   }
 
-  // ── 후기 확인 (view) ──
   if (type === 'view') {
     return (
       <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -339,7 +323,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>김샘플님이 보낸 후기가 도착했어요</Text>
               <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
-                <XIcon width={20} height={20} color={C.black} />
+                <XIcon width={20} height={20} color={colors.black} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -349,7 +333,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               </View>
               <View style={styles.reviewSampleBoxView}>
                 <View style={styles.starRow}>
-                  <StarIcon width={18} height={18} color={C.star} />
+                  <StarIcon width={18} height={18} color={colors.star} />
                   <Text style={styles.starNumber}>4</Text>
                 </View>
                 <Text style={styles.reviewSampleTextView}>
@@ -377,11 +361,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   return null;
 };
 
-// ─────────────────────────────────────────
-// 스타일
-// ─────────────────────────────────────────
 const styles = StyleSheet.create({
-  // ── 모달 공통 ──
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -390,7 +370,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 12,
     width: '100%',
     maxHeight: '80%',
@@ -412,7 +392,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '800',
-    color: C.black,
+    color: colors.black,
   },
   modalCloseBtn: {
     width: 32,
@@ -431,10 +411,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
-  // ── 버튼 ──
   btnPrimary: {
     height: 44,
-    backgroundColor: C.primary,
+    backgroundColor: colors.primary,
     borderRadius: BORDER_RADIUS,
     alignItems: 'center',
     justifyContent: 'center',
@@ -443,10 +422,9 @@ const styles = StyleSheet.create({
   btnPrimaryText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#fff',
+    color: colors.white,
   },
 
-  // ── 후기 관련 ──
   reviewWriter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -461,7 +439,7 @@ const styles = StyleSheet.create({
   reviewWriterName: {
     fontSize: 14,
     fontWeight: '500',
-    color: C.black,
+    color: colors.black,
   },
   starRow: {
     flexDirection: 'row',
@@ -470,11 +448,11 @@ const styles = StyleSheet.create({
   starNumber: {
     fontSize: 14,
     fontWeight: '600',
-    color: C.star,
+    color: colors.star,
     marginLeft: 4,
   },
   reviewSampleBoxView: {
-    backgroundColor: C.G100,
+    backgroundColor: colors.G100,
     borderRadius: 8,
     padding: 16,
     marginBottom: 14,
@@ -483,7 +461,7 @@ const styles = StyleSheet.create({
   },
   reviewSampleTextView: {
     fontSize: 13,
-    color: C.G600,
+    color: colors.G600,
     lineHeight: 19,
     letterSpacing: -0.2,
     marginTop: 8,
@@ -504,20 +482,19 @@ const styles = StyleSheet.create({
   reviewInfoTitle: {
     fontSize: 16,
     fontWeight: '500',
-    color: C.black,
+    color: colors.black,
     marginBottom: 6,
   },
   reviewInfoSub: {
     fontSize: 14,
-    color: C.G600,
+    color: colors.G600,
     letterSpacing: -0.2,
   },
   colorBlue: {
-    color: C.system100,
+    color: colors.system100,
     fontWeight: '600',
   },
 
-  // ── 상품 요약 ──
   buyItemRow: {
     flexDirection: 'row',
     gap: 10,
@@ -530,13 +507,13 @@ const styles = StyleSheet.create({
   },
   modalProductLabel: {
     fontSize: 11,
-    color: C.G600,
+    color: colors.G600,
     letterSpacing: -0.2,
   },
   modalProductTitle: {
     fontSize: 12,
     fontWeight: '500',
-    color: C.black,
+    color: colors.black,
     lineHeight: 17,
     marginTop: 2,
   },
@@ -548,35 +525,34 @@ const styles = StyleSheet.create({
   },
   modalInfoDt: {
     fontSize: 12,
-    color: C.G600,
+    color: colors.G600,
   },
   modalInfoDd: {
     fontSize: 13,
     fontWeight: '600',
-    color: C.black,
+    color: colors.black,
   },
 
-  // ── 별점 선택 박스 ──
   scoreBox: {
     alignItems: 'center',
     padding: 14,
     borderWidth: 1,
-    borderColor: C.G200,
+    borderColor: colors.G200,
     borderRadius: BORDER_RADIUS,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginBottom: 5,
   },
   scoreBoxChecked: {
-    borderColor: C.primary,
+    borderColor: colors.primary,
   },
   scoreLabel: {
     fontSize: 15,
     fontWeight: '700',
-    color: C.G800,
+    color: colors.G800,
     marginBottom: 6,
   },
   scoreLabelChecked: {
-    color: C.black,
+    color: colors.black,
     fontWeight: '800',
   },
   scoreStarsRow: {
@@ -586,7 +562,7 @@ const styles = StyleSheet.create({
   totalScoreLabel: {
     fontSize: 15,
     fontWeight: '700',
-    color: C.black,
+    color: colors.black,
   },
   totalScoreStarsRow: {
     flexDirection: 'row',
@@ -595,7 +571,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 17,
     fontWeight: '700',
-    color: C.black,
+    color: colors.black,
   },
   sectionRow: {
     flexDirection: 'row',
@@ -605,25 +581,23 @@ const styles = StyleSheet.create({
   },
   sectionCount: {
     fontSize: 13,
-    color: C.G400,
+    color: colors.G400,
   },
 
-  // ── 폼 ──
   textArea: {
     borderWidth: 1,
-    borderColor: C.G300,
+    borderColor: colors.G300,
     borderRadius: BORDER_RADIUS,
     padding: 12,
     fontSize: 14,
-    color: C.black,
+    color: colors.black,
     textAlignVertical: 'top',
     minHeight: 120,
   },
 
-  // ── 이미지 업로드 ──
   imgHelpText: {
     fontSize: 12,
-    color: C.G500,
+    color: colors.G500,
     marginBottom: 10,
   },
   imgGrid: {
@@ -635,12 +609,12 @@ const styles = StyleSheet.create({
     width: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
     height: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
     borderWidth: 1,
-    borderColor: C.G300,
+    borderColor: colors.G300,
     borderStyle: 'dashed',
     borderRadius: BORDER_RADIUS,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: C.G100,
+    backgroundColor: colors.G100,
   },
   imgThumbWrap: {
     width: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
@@ -665,9 +639,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // ── 유틸리티 ──
   grayBox: {
-    backgroundColor: C.G100,
+    backgroundColor: colors.G100,
     padding: 15,
     borderRadius: BORDER_RADIUS,
   },
@@ -690,7 +663,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   colorG400: {
-    color: C.G400,
+    color: colors.G400,
   },
 });
 

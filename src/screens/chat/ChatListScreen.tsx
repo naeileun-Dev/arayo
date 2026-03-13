@@ -1,8 +1,3 @@
-/**
- * 채팅내역 화면 (UI-MYPG-118)
- * 아라요 기계장터
- */
-
 import React, {
   useCallback,
   useRef,
@@ -29,9 +24,6 @@ import { colors } from '../../styles/colors';
 import { Header, TabBar } from '../../components/common';
 import type { Tab } from '../../types';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 타입 정의
-// ─────────────────────────────────────────────────────────────────────────────
 type TabKey = '전체' | '판매' | '구매' | '기타';
 
 interface ChatItem {
@@ -57,9 +49,6 @@ interface ChatItem {
   thumbnail?: ReturnType<typeof require> | { uri: string };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 상수
-// ─────────────────────────────────────────────────────────────────────────────
 const TABS: Tab[] = [
   { key: '전체', label: '전체' },
   { key: '판매', label: '판매' },
@@ -76,9 +65,6 @@ const THUMB_GAP   = 12;
 // 구분선 시작점: 좌측 패딩 + 썸네일 + 간격
 const SEPARATOR_LEFT = H_PADDING + THUMB_SIZE + THUMB_GAP;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 샘플 데이터 (실제 API 교체 시 이 블록 전체 삭제 가능)
-// ─────────────────────────────────────────────────────────────────────────────
 let _idSeq = 1; // 모듈 레벨 시퀀스 (렌더와 무관)
 
 const makeItem = (overrides?: Partial<ChatItem>): ChatItem => ({
@@ -111,9 +97,6 @@ const SEED_DATA: ChatItem[] = [
 const generatePage = (): ChatItem[] =>
   Array.from({ length: PAGE_SIZE }, () => makeItem());
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ChatItemView 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
 interface ChatItemViewProps {
   item:    ChatItem;
   onPress: (item: ChatItem) => void;
@@ -132,7 +115,6 @@ const ChatItemView = React.memo(({ item, onPress }: ChatItemViewProps) => {
         `${item.isWithdrawn ? '탈퇴회원 ' : ''}${item.name}, ${item.message}`
       }
     >
-      {/* ── 썸네일 */}
       <View style={s.thumbWrap}>
         {item.thumbnail != null ? (
           <Image
@@ -145,7 +127,6 @@ const ChatItemView = React.memo(({ item, onPress }: ChatItemViewProps) => {
         )}
       </View>
 
-      {/* ── 본문 (이름 + 메시지) */}
       <View style={s.content}>
         <View style={s.nameRow}>
           {item.isWithdrawn && (
@@ -166,7 +147,6 @@ const ChatItemView = React.memo(({ item, onPress }: ChatItemViewProps) => {
         </Text>
       </View>
 
-      {/* ── 우측 (날짜 + 배지) */}
       <View style={s.tail}>
         <Text style={s.date}>{item.date}</Text>
         {item.unreadCount > 0 && (
@@ -181,14 +161,8 @@ const ChatItemView = React.memo(({ item, onPress }: ChatItemViewProps) => {
   );
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 구분선 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
 const ItemSeparator = React.memo(() => <View style={s.separator} />);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 로딩 푸터 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
 const ListLoadingFooter = React.memo(() => (
   <View style={s.footer}>
     <ActivityIndicator size="large" color={colors.G300} />
@@ -196,9 +170,6 @@ const ListLoadingFooter = React.memo(() => (
   </View>
 ));
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 메인 화면
-// ─────────────────────────────────────────────────────────────────────────────
 const ChatListScreen = () => {
   const navigation = useNavigation<any>();
   const [activeTab,  setActiveTab]  = useState<TabKey>('전체');
@@ -287,21 +258,18 @@ const ChatListScreen = () => {
   // ── JSX
   return (
     <SafeAreaView style={s.root} edges={['top']}>
-      {/* ───── 헤더 (공통 Header) ───── */}
       <Header
         title="채팅내역"
         onBack={() => navigation.goBack()}
         rightComponent={searchButton}
       />
 
-      {/* ───── 탭 바 (공통 TabBar) ───── */}
       <TabBar
         tabs={TABS}
         activeTab={activeTab}
         onTabChange={handleTabSelect}
       />
 
-      {/* ───── 채팅 목록 ───── */}
       <FlatList<ChatItem>
         data={data}
         keyExtractor={keyExtractor}
@@ -325,23 +293,17 @@ const ChatListScreen = () => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 스타일
-// ─────────────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
 
-  /* ── 루트 */
   root: {
     flex:            1,
     backgroundColor: colors.white,
   },
 
-  /* ── 리스트 */
   listContent: {
     paddingBottom: 24,
   },
 
-  /* ── 채팅 아이템 행 */
   item: {
     flexDirection:   'row',
     alignItems:      'center',
@@ -350,7 +312,6 @@ const s = StyleSheet.create({
     backgroundColor: colors.white,
   },
 
-  /* 썸네일 */
   thumbWrap: {
     marginRight: THUMB_GAP,
     flexShrink:  0,
@@ -364,7 +325,6 @@ const s = StyleSheet.create({
     backgroundColor: colors.G200,
   },
 
-  /* 본문 */
   content: {
     flex:        1,
     marginRight: 8,
@@ -390,7 +350,6 @@ const s = StyleSheet.create({
     color: colors.G400,
   },
 
-  /* 탈퇴회원 태그 */
   redTag: {
     backgroundColor:  'rgba(219, 0, 37, 0.05)',
     borderRadius:     3,
@@ -407,7 +366,6 @@ const s = StyleSheet.create({
     includeFontPadding: false,
   },
 
-  /* 우측: 날짜 + 배지 */
   tail: {
     alignItems:  'flex-end',
     minWidth:    54,
@@ -438,14 +396,12 @@ const s = StyleSheet.create({
     textAlignVertical:  'center',
   },
 
-  /* 구분선 */
   separator: {
     height:          StyleSheet.hairlineWidth,
     backgroundColor: colors.borderLight,
     marginLeft:      SEPARATOR_LEFT,
   },
 
-  /* 로딩 푸터 */
   footer: {
     alignItems:     'center',
     justifyContent: 'center',

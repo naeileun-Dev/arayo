@@ -84,6 +84,7 @@ export const colors = {
   black: '#1B1B1B',
   transparent: 'transparent',
   overlay: 'rgba(0, 0, 0, 0.5)',
+  infoBoxBg: '#F3F6FF',
 } as const;
 
 export type ColorKeys = keyof typeof colors;

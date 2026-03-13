@@ -164,6 +164,14 @@ export type RootStackParamList = {
   ProfileEdit: undefined;
   PasswordReset: undefined;
   TradeReview: undefined;
+  EstimateReplyList: undefined;
+  EstimateDetail: { id: string };
+  EstimateList: undefined;
+  BusinessUpgradeForm: { plan: 'general' | 'gold' };
+  BusinessUpgradeFormNormal: undefined;
+  BusinessUpgradeFormGold: undefined;
+  EstimateUpload: undefined;
+  ServiceIntroduce: undefined;
 };
 
 export interface Banner {

@@ -1,8 +1,3 @@
-/**
- * PasswordResetScreen.tsx
- * 비밀번호 변경 화면
- */
-
 import React, { useState } from 'react';
 import {
   View,
@@ -20,17 +15,11 @@ import { Header } from '../../components/common';
 import EyeIcon from '../../assets/icon/eye.svg';
 import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 
-// ─────────────────────────────────────────────────────────────
-// 레이아웃 상수
-// ─────────────────────────────────────────────────────────────
 const FORM_H  = 50;
 const FORM_R  = 4;
 const FORM_FS = 14;
 const PAD_LR  = 20;
 
-// ─────────────────────────────────────────────────────────────
-// FormLabel
-// ─────────────────────────────────────────────────────────────
 const FormLabel: React.FC<{ label: string; required?: boolean }> = ({ label, required = false }) => (
   <View style={lblSt.row}>
     <Text style={lblSt.text}>{label}</Text>
@@ -41,12 +30,9 @@ const FormLabel: React.FC<{ label: string; required?: boolean }> = ({ label, req
 const lblSt = StyleSheet.create({
   row:  { flexDirection: 'row', alignItems: 'center' },
   text: { fontSize: 16, fontWeight: '500', color: colors.black },
-  star: { fontSize: 16, fontWeight: '500', color: '#FF0000' },
+  star: { fontSize: 16, fontWeight: '500', color: colors.error },
 });
 
-// ─────────────────────────────────────────────────────────────
-// PasswordField
-// ─────────────────────────────────────────────────────────────
 interface PFProps {
   value: string;
   onChangeText: (v: string) => void;
@@ -141,9 +127,6 @@ const pfSt = StyleSheet.create({
   },
 });
 
-// ─────────────────────────────────────────────────────────────
-// HelpBlock
-// ─────────────────────────────────────────────────────────────
 const HelpBlock: React.FC<{ msg: string; color?: 'red' | 'green' }> = ({ msg, color = 'red' }) => (
   <Text style={[hbSt.base, color === 'green' ? hbSt.green : hbSt.red]}>
     {msg}
@@ -156,9 +139,6 @@ const hbSt = StyleSheet.create({
   green: { color: colors.green },
 });
 
-// ─────────────────────────────────────────────────────────────
-// 비밀번호 유효성 검사
-// ─────────────────────────────────────────────────────────────
 const validateNewPw = (pw: string): string | null => {
   if (!pw) return '*비밀번호를 입력해 주세요.';
   if (pw.length < 8 || pw.length > 20)
@@ -172,37 +152,28 @@ const validateConfirmPw = (pw: string, confirm: string): string | null => {
   return null;
 };
 
-// ─────────────────────────────────────────────────────────────
-// 메인 스크린
-// ─────────────────────────────────────────────────────────────
 const PasswordResetScreen: React.FC = () => {
   const navigation = useNavigation<any>();
 
-  // ── 폼 값 ──
   const [currentPw, setCurrentPw] = useState('');
   const [newPw,     setNewPw]     = useState('');
   const [confirmPw, setConfirmPw] = useState('');
 
-  // ── 눈 아이콘 토글 ──
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew,     setShowNew]     = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // ── 필드 dirty 여부 ──
   const [dirtyCurrentPw, setDirtyCurrentPw] = useState(false);
   const [dirtyNewPw,     setDirtyNewPw]     = useState(false);
   const [dirtyConfirmPw, setDirtyConfirmPw] = useState(false);
 
-  // ── 서버 에러 ──
   const [currentPwServerError, setCurrentPwServerError] = useState<string | null>(null);
 
-  // ── 유효성 계산 ──
   const newPwError     = validateNewPw(newPw);
   const newPwValid     = !newPwError && newPw.length > 0;
   const confirmPwError = validateConfirmPw(newPw, confirmPw);
   const confirmPwMatch = !confirmPwError && confirmPw.length > 0;
 
-  // ── 제출 ──
   const handleSubmit = () => {
     setDirtyCurrentPw(true);
     setDirtyNewPw(true);
@@ -229,7 +200,6 @@ const PasswordResetScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
 
-        {/* ■ 기존비밀번호 */}
         <View style={st.formLi}>
           <FormLabel label="기존비밀번호" required />
 
@@ -257,7 +227,6 @@ const PasswordResetScreen: React.FC = () => {
 
         <View style={st.formGap} />
 
-        {/* ■ 새 비밀번호 */}
         <View style={st.formLi}>
           <FormLabel label="새 비밀번호" required />
 
@@ -301,7 +270,6 @@ const PasswordResetScreen: React.FC = () => {
           )}
         </View>
 
-        {/* 제출 버튼 */}
         <View style={st.formBtnSet}>
           <TouchableOpacity
             style={st.submitBtn}
@@ -319,9 +287,6 @@ const PasswordResetScreen: React.FC = () => {
 
 export default PasswordResetScreen;
 
-// ─────────────────────────────────────────────────────────────
-// 스타일
-// ─────────────────────────────────────────────────────────────
 const st = StyleSheet.create({
 
   safe: {

@@ -1,14 +1,3 @@
-/**
- * FavoriteListScreen.tsx
- * 관심목록 화면 - React Native
- *
- * [수정 이력 v3]
- * - 공통 ProductItemMagazine / ProductItemGrid 컴포넌트 사용
- * - 공통 SortModal, ComparePanel, ViewToggle 컴포넌트 사용
- * - DlInfo → mypage/components/DlInfo.tsx 분리
- * - ProductListItem 공통 타입 사용 (price: number)
- */
-
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
   View,
@@ -35,14 +24,8 @@ import type { ProductListItem, ViewType, SortType } from '../../types/product';
 import { SCREEN_HEIGHT } from '../../types/product';
 import DlInfo from './components/DlInfo';
 
-// ─────────────────────────────────────────────────────────────────
-// 상수
-// ─────────────────────────────────────────────────────────────────
 const COMPARISON_MAX = 6;
 
-// ─────────────────────────────────────────────────────────────────
-// 더미 데이터
-// ─────────────────────────────────────────────────────────────────
 const DUMMY_PRODUCTS: ProductListItem[] = Array.from({ length: 5 }, (_, i) => ({
   id:              String(i + 1),
   state:           'new' as const,
@@ -60,9 +43,6 @@ const DUMMY_PRODUCTS: ProductListItem[] = Array.from({ length: 5 }, (_, i) => ({
   warranty:        '2006년 07월',
 }));
 
-// ─────────────────────────────────────────────────────────────────
-// 메인 화면
-// ─────────────────────────────────────────────────────────────────
 const FavoriteListScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const [products,   setProducts]   = useState<ProductListItem[]>(DUMMY_PRODUCTS);
@@ -84,7 +64,6 @@ const FavoriteListScreen: React.FC = () => {
     [products],
   );
 
-  // ── 핸들러 ──────────────────────────────────────────
   const openSortModal = useCallback(() => {
     sortBtnRef.current?.measureInWindow((x, y, width, height) => {
       setSortBtnLayout({ x, y, width, height });
@@ -136,7 +115,6 @@ const FavoriteListScreen: React.FC = () => {
     }, 1200);
   }, []);
 
-  // ── FlatList 렌더 ───────────────────────────────────
   const renderMagazineBottom = useCallback(
     (item: ProductListItem) =>
       item.manufacturer ? (
@@ -210,7 +188,6 @@ const FavoriteListScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={s.safeArea}>
-      {/* ══ 헤더 ══ */}
       <Header
         title="관심목록"
         onBack={() => navigation.goBack()}
@@ -218,7 +195,6 @@ const FavoriteListScreen: React.FC = () => {
         border
       />
 
-      {/* ══ 정렬 & 뷰 토글 바 ══ */}
       <View style={s.controlBar}>
         <TouchableOpacity
           ref={sortBtnRef as any}
@@ -234,7 +210,6 @@ const FavoriteListScreen: React.FC = () => {
         </View>
       </View>
 
-      {/* ══ 상품 목록 ══ */}
       <FlatList
         data={products}
         keyExtractor={keyExtractor}
@@ -254,7 +229,6 @@ const FavoriteListScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       />
 
-      {/* ══ 축소 비교 바 ══ */}
       {!compareVisible && comparedProducts.length > 0 && (
         <View style={s.compareBarWrap}>
           <TouchableOpacity style={s.barToggleBtn} onPress={() => setCompareVisible(true)} activeOpacity={0.8}>
@@ -271,7 +245,6 @@ const FavoriteListScreen: React.FC = () => {
         </View>
       )}
 
-      {/* ══ 비교 패널 확장 ══ */}
       {compareVisible && comparedProducts.length > 0 && (
         <ComparePanel
           products={comparedProducts}
@@ -282,7 +255,6 @@ const FavoriteListScreen: React.FC = () => {
         />
       )}
 
-      {/* ══ 정렬 모달 ══ */}
       <SortModal
         visible={sortVisible}
         selected={selectedSort}
@@ -296,9 +268,6 @@ const FavoriteListScreen: React.FC = () => {
 
 export default FavoriteListScreen;
 
-// ─────────────────────────────────────────────────────────────────
-// StyleSheet
-// ─────────────────────────────────────────────────────────────────
 const H_PADDING = 15;
 const GRID_GAP  = 10;
 
@@ -308,7 +277,6 @@ const s = StyleSheet.create({
     backgroundColor: colors.white,
   },
 
-  // ── 정렬 & 뷰 토글 바
   controlBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -342,7 +310,6 @@ const s = StyleSheet.create({
     alignItems: 'flex-end',
   },
 
-  // ── FlatList
   listContent: {
     paddingBottom: 24,
   },
@@ -365,7 +332,6 @@ const s = StyleSheet.create({
     marginTop: 8,
   },
 
-  // ── 축소 비교 바
   compareBarWrap: {
     position: 'absolute',
     bottom: 0,

@@ -15,34 +15,25 @@ import PencilIcon from '../../assets/icon/pencil.svg';
 
 const USER_IMG = require('../../assets/images/user01.png');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 레이아웃 상수
-// ─────────────────────────────────────────────────────────────────────────────
 const PROFILE_IMG_SIZE = 90;
 const EDIT_BTN_SIZE    = 28;
 const BTN_HEIGHT       = 50;
 const BTN_RADIUS       = 4;
 const H_PADDING        = 60;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 메인 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const email = 'Suseong@gmail.com';
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* ────── 헤더 (공통 Header) ────── */}
       <Header
         title="내 정보 확인/수정"
         onBack={() => navigation.goBack()}
       />
 
-      {/* ────── 섹션 타이틀 (좌측 상단 고정) ────── */}
       <Text style={styles.sectionTitle}>회원정보</Text>
 
-      {/* ────── 본문 ────── */}
       <View style={styles.body}>
 
         {/* 프로필 카드 */}
@@ -97,9 +88,6 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 스타일
-// ─────────────────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
 
   safeArea: {

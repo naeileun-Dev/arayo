@@ -1,26 +1,3 @@
-/**
- * ChatRoomScreen.tsx
- * 아라요 기계장터 - 채팅방 (일반회원)
- * UI-MYPG-119
- *
- * 디자인 원본: UI-MYPG-119_채팅방__일반회원_.png
- * HTML 원본: chatroom.php?type=1
- *
- * [수정 이력 v2]
- * - 이미지 → 빈 View 플레이스홀더로 교체 (직접 Image 교체 가능)
- * - SentMessage chatBody flex:1 버그 수정 (말풍선 너무 넓어지는 현상)
- * - Dimensions 미사용 import 제거
- * - gap → marginBottom/marginRight 방식으로 구버전 RN 호환성 향상
- * - scrollContent paddingBottom 수치 보정
- * - alarmHead justifyContent:space-between으로 개선
- * - 파일첨부 버튼 아이콘 단순화
- * - TypeScript 컴파일 에러 0개 확인
- *
- * [수정 이력 v3]
- * - 로컬 컬러(C) → 공통 colors로 교체
- * - 커스텀 헤더 → 공통 Header 컴포넌트로 교체
- */
-
 import React, {useRef, useState, useEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -38,24 +15,15 @@ import { colors } from '../../styles/colors';
 import { componentHeight } from '../../styles/spacing';
 import { Header } from '../../components/common';
 
-// ─────────────────────────────────────────────────
-// 레이아웃 상수
-// ─────────────────────────────────────────────────
-const PADDING_LR        = 20; // --padding-LR
-const BOTTOM_FLOATING_H = 90; // #BOTTOM-FLOATING --height
+const PADDING_LR        = 20;
+const BOTTOM_FLOATING_H = 90;
 
-// ─────────────────────────────────────────────────
-// 데이터 타입
-// ─────────────────────────────────────────────────
 type ChatItem =
   | { type: 'date'; text: string }
   | { type: 'received'; id: string; name: string; text: string; time: string }
   | { type: 'sent';     id: string; text: string; time: string; unread?: boolean }
   | { type: 'alarm';    id: string; title: string; time: string; body: string; btnText: string };
 
-// ─────────────────────────────────────────────────
-// 샘플 채팅 데이터 (HTML 원본 기준)
-// ─────────────────────────────────────────────────
 const CHAT_DATA: ChatItem[] = [
   { type: 'date', text: '2025년 11월 11일 목요일' },
   {
@@ -82,9 +50,6 @@ const CHAT_DATA: ChatItem[] = [
   },
 ];
 
-// ─────────────────────────────────────────────────
-// 서브 컴포넌트: 날짜 구분선 (.datime)
-// ─────────────────────────────────────────────────
 const DateDivider: React.FC<{ text: string }> = ({ text }) => (
   <View style={styles.dateDivider}>
     <Text style={styles.dateDividerIcon}>📅</Text>
@@ -92,9 +57,6 @@ const DateDivider: React.FC<{ text: string }> = ({ text }) => (
   </View>
 );
 
-// ─────────────────────────────────────────────────
-// 서브 컴포넌트: 상대방 메시지 (.chat-list)
-// ─────────────────────────────────────────────────
 interface ReceivedProps { name: string; text: string; time: string; }
 const ReceivedMessage: React.FC<ReceivedProps> = ({ name, text, time }) => (
   <View style={styles.chatListRow}>
@@ -111,9 +73,6 @@ const ReceivedMessage: React.FC<ReceivedProps> = ({ name, text, time }) => (
   </View>
 );
 
-// ─────────────────────────────────────────────────
-// 서브 컴포넌트: 내 메시지 (.chat-list.my)
-// ─────────────────────────────────────────────────
 interface SentProps { text: string; time: string; unread?: boolean; }
 const SentMessage: React.FC<SentProps> = ({ text, time, unread }) => (
   <View style={styles.chatListMy}>
@@ -131,9 +90,6 @@ const SentMessage: React.FC<SentProps> = ({ text, time, unread }) => (
   </View>
 );
 
-// ─────────────────────────────────────────────────
-// 서브 컴포넌트: 알림 박스 (.alarm)
-// ─────────────────────────────────────────────────
 interface AlarmProps { title: string; time: string; body: string; btnText: string; onPress?: () => void; }
 const AlarmBox: React.FC<AlarmProps> = ({ title, time, body, btnText, onPress }) => (
   <View style={styles.alarmBox}>
@@ -154,9 +110,6 @@ const AlarmBox: React.FC<AlarmProps> = ({ title, time, body, btnText, onPress })
   </View>
 );
 
-// ─────────────────────────────────────────────────
-// 메인 화면
-// ─────────────────────────────────────────────────
 const ChatRoomScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -172,10 +125,8 @@ const ChatRoomScreen: React.FC = () => {
   const handleSend = () => {
     if (!message.trim()) { return; }
     setMessage('');
-    // TODO: 메시지 전송 API 연결
   };
 
-  // 헤더 우측: 더보기 버튼
   const moreButton = (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -192,18 +143,12 @@ const ChatRoomScreen: React.FC = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? componentHeight.header : 0}>
 
-        {/* ══════════════════════════════════════
-            헤더 (공통 Header 컴포넌트)
-        ══════════════════════════════════════ */}
         <Header
           title="판매자 이름"
           onBack={() => navigation.goBack()}
           rightComponent={moreButton}
         />
 
-        {/* ══════════════════════════════════════
-            본문 스크롤
-        ══════════════════════════════════════ */}
         <ScrollView
           ref={scrollViewRef}
           style={styles.scrollArea}
@@ -211,7 +156,6 @@ const ChatRoomScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
 
-          {/* ── 상품 요약 카드 (.sumItem) ── */}
           <View style={styles.sumItem}>
             <View style={styles.sumItemImg} />
             <View style={styles.sumItemCon}>
@@ -227,7 +171,6 @@ const ChatRoomScreen: React.FC = () => {
             </View>
           </View>
 
-          {/* ── 채팅 컨테이너 (#chatRoomContainer) ── */}
           <View style={styles.chatRoomContainer}>
             {CHAT_DATA.map((item, index) => {
               const isLast = index === CHAT_DATA.length - 1;
@@ -273,9 +216,6 @@ const ChatRoomScreen: React.FC = () => {
 
         </ScrollView>
 
-        {/* ══════════════════════════════════════
-            메시지 입력 바 (#chatRoomBtnSet)
-        ══════════════════════════════════════ */}
         <View style={styles.chatInputBar}>
 
           <TouchableOpacity
@@ -316,9 +256,6 @@ const ChatRoomScreen: React.FC = () => {
 
         </View>
 
-        {/* ══════════════════════════════════════
-            하단 플로팅 (#BOTTOM-FLOATING)
-        ══════════════════════════════════════ */}
         <View style={styles.bottomFloating}>
           <TouchableOpacity
             style={styles.bottomFloatingBtn}
@@ -333,12 +270,7 @@ const ChatRoomScreen: React.FC = () => {
   );
 };
 
-// ─────────────────────────────────────────────────
-// 스타일시트
-// ─────────────────────────────────────────────────
 const styles = StyleSheet.create({
-
-  // ── 기본 레이아웃 ──────────────────────────────
   safeArea: {
     flex: 1,
     backgroundColor: colors.white,
@@ -346,15 +278,11 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-
-  // ── 헤더 더보기 아이콘 ─────────────────────────
   headerMoreIcon: {
     fontSize: 22,
     color: colors.black,
     fontWeight: '700',
   },
-
-  // ── 스크롤 영역 ────────────────────────────────
   scrollArea: {
     flex: 1,
     backgroundColor: colors.white,
@@ -362,8 +290,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
-
-  // ── 상품 요약 카드 (.sumItem) ─────────────────
   sumItem: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -410,10 +336,8 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginRight: 8,
   },
-
-  // ── 태그 (.blueTag) ───────────────────────────
   blueTag: {
-    backgroundColor: '#F3F6FF',
+    backgroundColor: colors.infoBoxBg,
     borderRadius: 4,
     paddingHorizontal: 5,
     height: 21,
@@ -426,8 +350,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 14,
   },
-
-  // ── 채팅 컨테이너 (#chatRoomContainer) ─────────
   chatRoomContainer: {
     backgroundColor: colors.G100,
     marginHorizontal: PADDING_LR,
@@ -440,8 +362,6 @@ const styles = StyleSheet.create({
   chatItemGap: {
     marginBottom: 20,
   },
-
-  // ── 날짜 구분선 (.datime) ─────────────────────
   dateDivider: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -457,8 +377,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.G600,
   },
-
-  // ── 상대방 채팅 행 (.chat-list) ────────────────
   chatListRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -487,8 +405,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingRight: 20,
   },
-
-  // ── 내 메시지 행 (.chat-list.my) ──────────────
   chatListMy: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -514,8 +430,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginBottom: 4,
   },
-
-  // ── 말풍선 (.chat-bubble) ─────────────────────
   chatBubble: {
     borderRadius: 10,
     paddingHorizontal: 15,
@@ -541,8 +455,6 @@ const styles = StyleSheet.create({
     color: colors.G600,
     flexShrink: 0,
   },
-
-  // ── 알림 박스 (.alarm) ────────────────────────
   alarmBox: {
     backgroundColor: colors.black,
     borderRadius: 8,
@@ -597,8 +509,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.white,
   },
-
-  // ── 메시지 입력 바 (#chatRoomBtnSet) ──────────
   chatInputBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -672,8 +582,6 @@ const styles = StyleSheet.create({
   sendBtnIconActive: {
     color: colors.system100,
   },
-
-  // ── 하단 플로팅 (#BOTTOM-FLOATING) ────────────
   bottomFloating: {
     height: BOTTOM_FLOATING_H,
     backgroundColor: colors.white,
@@ -704,7 +612,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.blue,
   },
-
 });
 
 export default ChatRoomScreen;

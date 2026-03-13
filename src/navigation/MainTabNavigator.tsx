@@ -25,18 +25,18 @@ import MypageActiveIcon from '../assets/icon/bottom_navigator/mypage_active.svg'
 import HeadsetIcon from '../assets/icon/headset.svg';
 import BuildingIcon from '../assets/icon/building.svg';
 import NewsIcon from '../assets/icon/news.svg';
-import GearsIcon from '../assets/icon/gears.svg';
 import ProcessIcon from '../assets/icon/process.svg';
+import { useNavigation } from '@react-navigation/native';
 import { colors } from '../styles/colors';
 import { spacing } from '../styles/spacing';
+import BrandHomeScreen from '../screens/brand/BrandHomeScreen';
 import type { MainTabParamList } from '../types';
 
 const QUICK_MENU_ITEMS = [
-  { label: '견적문의', Icon: HeadsetIcon },
-  { label: '브랜드관', Icon: BuildingIcon },
-  { label: '산업소식', Icon: NewsIcon },
-  { label: '임가공', Icon: GearsIcon },
-  { label: '고철처리', Icon: ProcessIcon },
+  { label: '견적문의', Icon: HeadsetIcon, route: 'EstimateList' },
+  { label: '브랜드관', Icon: BuildingIcon, route: 'BrandHome' },
+  { label: '산업소식', Icon: NewsIcon, route: null },
+  { label: '고철처리', Icon: ProcessIcon, route: null },
 ];
 
 const TAB_ICONS: Record<string, { icon: React.FC<any>; activeIcon: React.FC<any> }> = {
@@ -52,8 +52,10 @@ const TAB_ITEMS: Array<keyof MainTabParamList> = [
 ];
 
 const MainTabNavigator = () => {
+  const navigation = useNavigation();
   const [activeTab, setActiveTab] = React.useState<keyof MainTabParamList>('Home');
   const [quickMenuVisible, setQuickMenuVisible] = React.useState(false);
+  const [showBrandHome, setShowBrandHome] = React.useState(false);
   const animValue = React.useRef(new Animated.Value(0)).current;
 
   const handleTabPress = (tab: keyof MainTabParamList) => {
@@ -68,6 +70,7 @@ const MainTabNavigator = () => {
     } else {
       setQuickMenuVisible(false);
       Animated.timing(animValue, { toValue: 0, duration: 150, useNativeDriver: true }).start();
+      setShowBrandHome(false);
       setActiveTab(tab);
     }
   };
@@ -78,8 +81,9 @@ const MainTabNavigator = () => {
   };
 
   const renderScreen = () => {
+    if (showBrandHome) return <BrandHomeScreen onBack={() => setShowBrandHome(false)} />;
     switch (activeTab) {
-      case 'Home': return <HomeScreen />;
+      case 'Home': return <HomeScreen onBrandHomePress={() => setShowBrandHome(true)} />;
       case 'CategoryTab': return <CategoryScreen />;
       case 'Chat': return <ChatListScreen />;
       case 'MyPage': return <MyPageScreen />;
@@ -110,6 +114,15 @@ const MainTabNavigator = () => {
               key={i}
               style={[styles.menuItem, i === QUICK_MENU_ITEMS.length - 1 && styles.menuItemLast]}
               activeOpacity={0.7}
+              onPress={() => {
+                if (item.route === 'BrandHome') {
+                  closeMenu();
+                  setShowBrandHome(true);
+                } else if (item.route) {
+                  closeMenu();
+                  (navigation as any).navigate(item.route);
+                }
+              }}
             >
               <item.Icon width={20} height={20} color={colors.primary200} />
               <Text style={styles.menuLabel}>{item.label}</Text>

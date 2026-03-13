@@ -82,6 +82,8 @@ export const MyPageScreen: React.FC = () => {
                       navigation.navigate('TradeReview');
                     } else if (item === '내 정보 확인/수정') {
                       navigation.navigate('Profile');
+                    } else if (item === '견적답변 내역') {
+                      navigation.navigate('EstimateReplyList');
                     } else {
                       console.log(item);
                     }
