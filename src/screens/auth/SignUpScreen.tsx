@@ -1,8 +1,3 @@
-/**
- * 회원가입 화면
- * UI-MMBR-104
- */
-
 import React, { useState } from 'react';
 import {
   View,
@@ -35,8 +30,7 @@ import type {
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
-const SignUpScreen: React.FC<Props> = ({ navigation }) => {
-  // 폼 상태
+export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
   const [formData, setFormData] = useState<SignUpFormData>({
     userId: '',
     password: '',
@@ -51,28 +45,18 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     addressDetail: '',
   });
 
-  // 에러 상태
   const [errors, setErrors] = useState<SignUpErrors>({});
-
-  // 본인인증 완료 여부
   const [isVerified, setIsVerified] = useState(false);
-
-  // 약관 동의 상태
   const [agreements, setAgreements] = useState<AgreementsState>({
     all: false,
     terms: false,
     privacy: false,
     marketing: false,
   });
-
-  // 아이디/닉네임 사용 가능 여부
   const [userIdAvailable, setUserIdAvailable] = useState<boolean | null>(null);
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
-
-  // 로딩 상태
   const [isLoading, setIsLoading] = useState(false);
 
-  // 필드 업데이트
   const updateField = (field: keyof SignUpFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field as keyof SignUpErrors]) {
@@ -80,7 +64,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  // 필드 유효성 검사
   const validateField = (field: keyof SignUpFormData) => {
     let fieldErrors: string[] = [];
 
@@ -95,10 +78,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
         fieldErrors = validatePassword(formData.password);
         break;
       case 'passwordConfirm':
-        fieldErrors = validatePasswordConfirm(
-          formData.password,
-          formData.passwordConfirm
-        );
+        fieldErrors = validatePasswordConfirm(formData.password, formData.passwordConfirm);
         break;
       case 'name':
         fieldErrors = validateName(formData.name);
@@ -122,44 +102,30 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  // 아이디 중복 체크
   const checkUserIdAvailability = async () => {
     const isAvailable = formData.userId !== 'test123';
     setUserIdAvailable(isAvailable);
 
-    if (isAvailable) {
-      setErrors((prev) => ({
-        ...prev,
-        userId: undefined,
-        userIdSuccess: '사용 가능한 아이디 입니다.',
-      }));
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        userId: ['이미 가입된 아이디 입니다.'],
-        userIdSuccess: undefined,
-      }));
-    }
+    setErrors((prev) => ({
+      ...prev,
+      userId: isAvailable ? undefined : ['이미 가입된 아이디 입니다.'],
+      userIdSuccess: isAvailable ? '사용 가능한 아이디 입니다.' : undefined,
+    }));
   };
 
-  // 닉네임 중복 체크
   const checkNicknameAvailability = async () => {
     const isAvailable = formData.nickname !== 'test';
     setNicknameAvailable(isAvailable);
   };
 
-  // 본인인증 처리
   const handleVerification = () => {
-    console.log('PASS 본인인증');
     setIsVerified(true);
   };
 
-  // 우편번호 검색
   const handleSearchZipCode = () => {
-    console.log('우편번호 검색');
+    // TODO: Implement zip code search
   };
 
-  // 전체 동의 토글
   const toggleAllAgreements = (checked: boolean) => {
     setAgreements({
       all: checked,
@@ -169,24 +135,20 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     });
   };
 
-  // 개별 약관 토글
   const toggleAgreement = (key: keyof Omit<AgreementsState, 'all'>, checked: boolean) => {
     const newAgreements = { ...agreements, [key]: checked };
-    newAgreements.all =
-      newAgreements.terms && newAgreements.privacy && newAgreements.marketing;
+    newAgreements.all = newAgreements.terms && newAgreements.privacy && newAgreements.marketing;
     setAgreements(newAgreements);
   };
 
-  // 약관 상세 보기
   const handleViewAgreement = (type: string) => {
     if (type === 'terms') {
-      (navigation as any).navigate('Terms');
+      navigation.getParent()?.navigate('Terms');
     } else if (type === 'privacy') {
-      (navigation as any).navigate('Privacy');
+      navigation.getParent()?.navigate('Privacy');
     }
   };
 
-  // 회원가입 제출
   const handleSubmit = async () => {
     const allErrors: SignUpErrors = {};
 
@@ -196,12 +158,8 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     const passwordErrors = validatePassword(formData.password);
     if (passwordErrors.length > 0) allErrors.password = passwordErrors;
 
-    const passwordConfirmErrors = validatePasswordConfirm(
-      formData.password,
-      formData.passwordConfirm
-    );
-    if (passwordConfirmErrors.length > 0)
-      allErrors.passwordConfirm = passwordConfirmErrors;
+    const passwordConfirmErrors = validatePasswordConfirm(formData.password, formData.passwordConfirm);
+    if (passwordConfirmErrors.length > 0) allErrors.passwordConfirm = passwordConfirmErrors;
 
     const nameErrors = validateName(formData.name);
     if (nameErrors.length > 0) allErrors.name = nameErrors;
@@ -224,26 +182,19 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
     setIsLoading(true);
     try {
-      console.log('Sign up:', formData);
       navigation.navigate('SignUpComplete', { name: formData.name });
-    } catch (error) {
-      console.error('Sign up failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 에러 메시지 렌더링
   const renderErrors = (fieldErrors?: string[]) => {
     if (!fieldErrors || fieldErrors.length === 0) return null;
     return fieldErrors.map((error, index) => (
-      <Text key={index} style={styles.errorText}>
-        *{error}
-      </Text>
+      <Text key={index} style={styles.errorText}>*{error}</Text>
     ));
   };
 
-  // 성공 메시지 렌더링
   const renderSuccess = (message?: string) => {
     if (!message) return null;
     return <Text style={styles.successText}>*{message}</Text>;
@@ -262,9 +213,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* formContainer - 입력 폼 */}
           <View style={styles.formContainer}>
-            {/* 아이디 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 아이디<Text style={styles.req}> *</Text>
@@ -280,7 +229,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               {renderErrors(errors.userId)}
             </View>
 
-            {/* 비밀번호 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 비밀번호<Text style={styles.req}> *</Text>
@@ -307,7 +255,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               {renderErrors(errors.passwordConfirm)}
             </View>
 
-            {/* 이름 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 이름<Text style={styles.req}> *</Text>
@@ -322,7 +269,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               {renderErrors(errors.name)}
             </View>
 
-            {/* 닉네임 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 닉네임<Text style={styles.req}> *</Text>
@@ -340,26 +286,19 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               {renderErrors(errors.nickname)}
             </View>
 
-            {/* 휴대폰인증 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 휴대폰인증<Text style={styles.req}> *</Text>
               </Text>
-              <TouchableOpacity
-                style={styles.lightButton}
-                onPress={handleVerification}
-              >
+              <TouchableOpacity style={styles.lightButton} onPress={handleVerification}>
                 <Text style={styles.lightButtonText}>PASS 본인 인증</Text>
               </TouchableOpacity>
               {isVerified && (
-                <Text style={styles.verifiedText}>
-                  본인 인증이 완료되었습니다
-                </Text>
+                <Text style={styles.verifiedText}>본인 인증이 완료되었습니다</Text>
               )}
               {renderErrors(errors.verification)}
             </View>
 
-            {/* 이메일 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>
                 이메일<Text style={styles.req}> *</Text>
@@ -383,7 +322,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               {renderErrors(errors.email)}
             </View>
 
-            {/* 전화번호 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>전화번호</Text>
               <Input
@@ -395,7 +333,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               />
             </View>
 
-            {/* 사업장 주소지 */}
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>사업장 주소지</Text>
               <View style={styles.addressRow}>
@@ -405,10 +342,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                   disabled
                   containerStyle={[styles.inputNoMargin, styles.flex1]}
                 />
-                <TouchableOpacity
-                  style={styles.searchButton}
-                  onPress={handleSearchZipCode}
-                >
+                <TouchableOpacity style={styles.searchButton} onPress={handleSearchZipCode}>
                   <Text style={styles.lightButtonText}>우편번호 검색</Text>
                 </TouchableOpacity>
               </View>
@@ -425,22 +359,17 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                 containerStyle={styles.inputNoMargin}
               />
               <Text style={styles.addressHint}>
-                입력하신 사업장 소재지를 기준으로 가까운 거리부터 순서대로 확인
-                하실 수 있습니다.
+                입력하신 사업장 소재지를 기준으로 가까운 거리부터 순서대로 확인 하실 수 있습니다.
               </Text>
             </View>
           </View>
 
-          {/* formContainer - 약관 동의 (mt25) */}
           <View style={styles.agreementContainer}>
             <View style={styles.formLi}>
               <Text style={styles.formLabel}>이용 약관</Text>
 
-              {/* 전체 약관 동의 헤더 */}
               <View style={styles.agreementHeaderRow}>
-                <Text style={styles.agreementSubtitle}>
-                  필수 항목에 모두 동의해 주세요.
-                </Text>
+                <Text style={styles.agreementSubtitle}>필수 항목에 모두 동의해 주세요.</Text>
                 <Checkbox
                   checked={agreements.all}
                   onToggle={toggleAllAgreements}
@@ -448,10 +377,8 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                 />
               </View>
 
-              {/* 구분선 <hr> */}
               <View style={styles.agreementDivider} />
 
-              {/* 이용약관 (필수) */}
               <View style={styles.agreementRow}>
                 <Checkbox
                   checked={agreements.terms}
@@ -463,8 +390,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                   activeOpacity={0.7}
                 >
                   <Text style={styles.agreementLabel}>
-                    이용약관
-                    <Text style={styles.agreementReq}> (필수)</Text>
+                    이용약관<Text style={styles.agreementReq}> (필수)</Text>
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -475,7 +401,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
 
-              {/* 개인정보 수집 및 이용 동의 (필수) */}
               <View style={[styles.agreementRow, styles.mt5]}>
                 <Checkbox
                   checked={agreements.privacy}
@@ -487,8 +412,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                   activeOpacity={0.7}
                 >
                   <Text style={styles.agreementLabel}>
-                    개인정보 수집 및 이용 동의
-                    <Text style={styles.agreementReq}> (필수)</Text>
+                    개인정보 수집 및 이용 동의<Text style={styles.agreementReq}> (필수)</Text>
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -499,7 +423,6 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
 
-              {/* 마케팅 수신 동의 (선택) */}
               <View style={[styles.agreementRow, styles.mt5]}>
                 <Checkbox
                   checked={agreements.marketing}
@@ -511,8 +434,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
                   activeOpacity={0.7}
                 >
                   <Text style={styles.agreementLabel}>
-                    마케팅 수신 동의
-                    <Text style={styles.agreementOpt}> (선택)</Text>
+                    마케팅 수신 동의<Text style={styles.agreementOpt}> (선택)</Text>
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -527,13 +449,8 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 회원가입 버튼 */}
           <View style={styles.formBtnSet}>
-            <Button
-              title="회원가입"
-              onPress={handleSubmit}
-              loading={isLoading}
-            />
+            <Button title="회원가입" onPress={handleSubmit} loading={isLoading} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -553,37 +470,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
-
   formContainer: {
     gap: 25,
   },
-
   formLi: {
     gap: 6,
   },
-
   formLabel: {
     fontFamily: fontFamily.regular,
     fontSize: 15,
     color: colors.G600,
   },
-
   req: {
     color: colors.error,
   },
-
   inputNoMargin: {
     marginBottom: 0,
   },
-
   inputFs13: {
     fontSize: 13,
   },
-
   flex1: {
     flex: 1,
   },
-
   errorText: {
     fontSize: 13,
     color: colors.error,
@@ -592,7 +501,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#53B460',
   },
-
   lightButton: {
     height: 50,
     borderWidth: 1,
@@ -612,7 +520,6 @@ const styles = StyleSheet.create({
     color: colors.textTertiary,
     textAlign: 'center',
   },
-
   emailRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -623,7 +530,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textPrimary,
   },
-
   addressRow: {
     flexDirection: 'row',
     gap: 5,
@@ -642,11 +548,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.G600,
   },
-
   agreementContainer: {
     marginTop: 25,
   },
-
   agreementHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -658,12 +562,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
   },
-
   agreementDivider: {
     height: 1,
     backgroundColor: colors.G200,
   },
-
   agreementRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -689,14 +591,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     textDecorationLine: 'underline',
   },
-
   mt5: {
     marginTop: 5,
   },
-
   formBtnSet: {
     marginTop: 30,
   },
 });
-
-export default SignUpScreen;

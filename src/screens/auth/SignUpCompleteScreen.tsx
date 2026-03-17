@@ -1,8 +1,3 @@
-/**
- * 회원가입 완료 화면
- * UI-MMBR-105
- */
-
 import React from 'react';
 import {
   View,
@@ -22,7 +17,7 @@ import type { AuthStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUpComplete'>;
 
-const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
+export const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
   const userName = route.params?.name || '회원';
 
   const handleGoHome = () => {
@@ -30,7 +25,7 @@ const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
   };
 
   const handleUpgradeToBusiness = () => {
-    console.log('기업회원 전환');
+    // TODO: Implement business upgrade
   };
 
   return (
@@ -40,7 +35,6 @@ const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
           <StateCheckIcon width={64} height={64} />
         </View>
 
-        {/* 환영 메시지 */}
         <Text style={styles.title}>
           반갑습니다 {userName}님,{'\n'}
           회원가입이 완료되었습니다.
@@ -49,11 +43,9 @@ const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => {
           아라요 기계장터를 통해 다양한 서비스를 즐겨보세요!
         </Text>
 
-        {/* 홈으로 버튼 */}
         <Button title="홈으로" onPress={handleGoHome} style={styles.homeButton} />
       </View>
 
-      {/* 기업회원 전환 카드 */}
       <View style={styles.upgradeCard}>
         <Text style={styles.upgradeTitle}>상품을 판매하고 싶으신가요?</Text>
         <Text style={styles.upgradeDescription}>
@@ -139,5 +131,3 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
 });
-
-export default SignUpCompleteScreen;

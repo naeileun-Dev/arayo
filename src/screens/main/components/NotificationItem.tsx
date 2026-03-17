@@ -28,7 +28,7 @@ const CheckIcon = ({ color, size = 14 }: { color: string; size?: number }) => (
   </View>
 );
 
-const NotificationItem: React.FC<NotificationItemProps> = ({
+export const NotificationItem: React.FC<NotificationItemProps> = ({
   id,
   subject,
   message,
@@ -121,5 +121,3 @@ const styles = StyleSheet.create({
     color: colors.textTertiary,
   },
 });
-
-export default NotificationItem;

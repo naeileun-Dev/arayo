@@ -21,7 +21,7 @@ const SPEC_ROWS: { key: keyof DlInfoProps; label: string }[] = [
   { key: 'warranty',        label: '보증기간' },
 ];
 
-const DlInfo: React.FC<DlInfoProps> = (props) => (
+export const DlInfo: React.FC<DlInfoProps> = (props) => (
   <View style={styles.dlInfo}>
     {SPEC_ROWS.map(({ key, label }) => (
       <View key={key} style={styles.cell}>
@@ -58,4 +58,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DlInfo;

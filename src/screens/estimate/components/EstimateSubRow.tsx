@@ -9,7 +9,7 @@ interface Props {
   icon?: React.ReactNode;
 }
 
-const EstimateSubRow: React.FC<Props> = ({ subject, date, price, icon }) => (
+export const EstimateSubRow: React.FC<Props> = ({ subject, date, price, icon }) => (
   <View style={styles.subRow}>
     {icon ?? <View style={styles.iconPlaceholder} />}
     {price && <Text style={styles.price}>{price}</Text>}
@@ -50,4 +50,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateSubRow;

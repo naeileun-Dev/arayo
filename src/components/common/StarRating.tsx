@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 
 interface StarRatingProps {
@@ -7,22 +7,35 @@ interface StarRatingProps {
   size?: number;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating, size = 14 }) => {
+const MAX_STARS = 5;
+
+export const StarRating: React.FC<StarRatingProps> = ({ rating, size = 14 }) => {
   const fullStars = Math.floor(rating);
   const hasHalf = rating - fullStars >= 0.5;
-  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+  const emptyStars = MAX_STARS - fullStars - (hasHalf ? 1 : 0);
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={styles.container}>
       {Array.from({ length: fullStars }).map((_, i) => (
-        <Text key={`f${i}`} style={{ fontSize: size, color: colors.star }}>★</Text>
+        <Text key={`full-${i}`} style={[styles.star, { fontSize: size }]}>★</Text>
       ))}
-      {hasHalf && <Text style={{ fontSize: size, color: colors.star }}>★</Text>}
+      {hasHalf && <Text style={[styles.star, { fontSize: size }]}>★</Text>}
       {Array.from({ length: emptyStars }).map((_, i) => (
-        <Text key={`e${i}`} style={{ fontSize: size, color: colors.G300 }}>★</Text>
+        <Text key={`empty-${i}`} style={[styles.emptyStar, { fontSize: size }]}>★</Text>
       ))}
     </View>
   );
 };
 
-export default StarRating;
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  star: {
+    color: colors.star,
+  },
+  emptyStar: {
+    color: colors.G300,
+  },
+});

@@ -18,14 +18,16 @@ import EmptyStarIcon from '../../assets/icon/empty_star.svg';
 import CameraPlusIcon from '../../assets/icon/camera-plus.svg';
 import TrashIcon from '../../assets/icon/trash.svg';
 import XIcon from '../../assets/icon/X.svg';
-
 import { colors } from '../../styles/colors';
 
 const USER_IMG = require('../../assets/images/user01.png');
 const MODAL_IMG = require('../../assets/images/img02.png');
 
-const BORDER_RADIUS = 4;
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const MODAL_HORIZONTAL_PADDING = 40;
+const IMAGE_GAP = 16;
+const IMAGE_GRID_SIZE = (SCREEN_WIDTH - MODAL_HORIZONTAL_PADDING - IMAGE_GAP) / 3;
+const MAX_IMAGES = 5;
 
 export type ReviewModalType = 'intro' | 'score' | 'write' | 'view' | null;
 
@@ -44,19 +46,18 @@ const SCORE_ITEMS = [
   { label: '별로에요', stars: 1 },
 ];
 
-const ModalBtn = ({
-  label,
-  onPress,
-}: {
+interface ModalBtnProps {
   label: string;
   onPress?: () => void;
-}) => (
+}
+
+const ModalBtn: React.FC<ModalBtnProps> = ({ label, onPress }) => (
   <TouchableOpacity style={styles.btnPrimary} onPress={onPress} activeOpacity={0.75}>
     <Text style={styles.btnPrimaryText}>{label}</Text>
   </TouchableOpacity>
 );
 
-const ReviewModal: React.FC<ReviewModalProps> = ({
+export const ReviewModal: React.FC<ReviewModalProps> = ({
   visible,
   type,
   onClose,
@@ -68,16 +69,21 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   const [reviewImages, setReviewImages] = useState<Asset[]>([]);
 
   const handlePickImage = () => {
-    const remaining = 5 - reviewImages.length;
-    if (remaining <= 0) return Alert.alert('알림', '최대 5장까지 등록할 수 있습니다.');
+    const remaining = MAX_IMAGES - reviewImages.length;
+    if (remaining <= 0) {
+      Alert.alert('알림', '최대 5장까지 등록할 수 있습니다.');
+      return;
+    }
     launchImageLibrary({ mediaType: 'photo', selectionLimit: remaining }, (res) => {
       if (res.didCancel || res.errorCode) return;
-      if (res.assets) setReviewImages(prev => [...prev, ...res.assets!].slice(0, 5));
+      if (res.assets) {
+        setReviewImages((prev) => [...prev, ...res.assets!].slice(0, MAX_IMAGES));
+      }
     });
   };
 
   const removeImage = (index: number) => {
-    setReviewImages(reviewImages.filter((_, i) => i !== index));
+    setReviewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   if (!visible || !type) return null;
@@ -137,11 +143,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
-              {/* 상품 요약 */}
               <View style={styles.grayBox}>
                 <View style={styles.buyItemRow}>
                   <Image source={MODAL_IMG} style={styles.buyItemThumbImg} />
-                  <View style={{ flex: 1 }}>
+                  <View style={styles.flex1}>
                     <Text style={styles.modalProductLabel}>상품명</Text>
                     <Text style={styles.modalProductTitle} numberOfLines={2}>
                       접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H
@@ -158,7 +163,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 </View>
               </View>
 
-              {/* 별점 선택 */}
               <View style={styles.mt10}>
                 {SCORE_ITEMS.map((score) => (
                   <TouchableOpacity
@@ -170,7 +174,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                     onPress={() => setSelectedScore(score.stars)}
                     activeOpacity={0.75}
                   >
-                    <Text style={[styles.scoreLabel, selectedScore === score.stars && styles.scoreLabelChecked]}>{score.label}</Text>
+                    <Text style={[styles.scoreLabel, selectedScore === score.stars && styles.scoreLabelChecked]}>
+                      {score.label}
+                    </Text>
                     <View style={styles.scoreStarsRow}>
                       {Array.from({ length: 5 }, (_, i) =>
                         i < score.stars ? (
@@ -254,7 +260,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                       onPress={() => setSelectedOpt(opt)}
                       activeOpacity={0.75}
                     >
-                      <Text style={[styles.scoreLabel, selectedOpt === opt && styles.scoreLabelChecked]}>{opt}</Text>
+                      <Text style={[styles.scoreLabel, selectedOpt === opt && styles.scoreLabelChecked]}>
+                        {opt}
+                      </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -276,11 +284,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   onChangeText={setReviewText}
                 />
               </View>
-              {/* 이미지 섹션 */}
               <View style={styles.mt20}>
                 <View style={styles.sectionRow}>
                   <Text style={styles.sectionLabel}>이미지</Text>
-                  <Text style={styles.sectionCount}>({reviewImages.length}/5)</Text>
+                  <Text style={styles.sectionCount}>({reviewImages.length}/{MAX_IMAGES})</Text>
                 </View>
                 <Text style={styles.imgHelpText}>• 최대 100MB까지 업로드 가능해요.</Text>
                 <View style={styles.imgGrid}>
@@ -364,16 +371,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
     width: '100%',
     maxHeight: '80%',
+    borderRadius: 12,
+    backgroundColor: colors.white,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -382,10 +389,10 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
   },
   modalBackBtn: {
-    width: 32,
-    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 32,
+    height: 32,
     marginRight: 4,
   },
   modalTitle: {
@@ -395,29 +402,29 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   modalCloseBtn: {
-    width: 32,
-    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 32,
+    height: 32,
   },
   modalBody: {
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   modalBtnSet: {
-    marginTop: 30,
-    marginBottom: 35,
     flexDirection: 'row',
     gap: 10,
+    marginTop: 30,
+    marginBottom: 35,
   },
 
   btnPrimary: {
-    height: 44,
-    backgroundColor: colors.primary,
-    borderRadius: BORDER_RADIUS,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    height: 44,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
   },
   btnPrimaryText: {
     fontSize: 13,
@@ -446,31 +453,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   starNumber: {
+    marginLeft: 4,
     fontSize: 14,
     fontWeight: '600',
     color: colors.star,
-    marginLeft: 4,
   },
   reviewSampleBoxView: {
-    backgroundColor: colors.G100,
-    borderRadius: 8,
+    position: 'relative',
+    overflow: 'hidden',
     padding: 16,
     marginBottom: 14,
-    overflow: 'hidden',
-    position: 'relative',
+    borderRadius: 8,
+    backgroundColor: colors.G100,
   },
   reviewSampleTextView: {
+    marginTop: 8,
     fontSize: 13,
-    color: colors.G600,
     lineHeight: 19,
     letterSpacing: -0.2,
-    marginTop: 8,
+    color: colors.G600,
   },
   reviewBlurOverlay: {
     position: 'absolute',
-    bottom: 0,
     left: 0,
     right: 0,
+    bottom: 0,
     height: 40,
     backgroundColor: 'rgba(247,247,247,0.8)',
   },
@@ -480,48 +487,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   reviewInfoTitle: {
+    marginBottom: 6,
     fontSize: 16,
     fontWeight: '500',
     color: colors.black,
-    marginBottom: 6,
   },
   reviewInfoSub: {
     fontSize: 14,
-    color: colors.G600,
     letterSpacing: -0.2,
+    color: colors.G600,
   },
   colorBlue: {
-    color: colors.system100,
     fontWeight: '600',
+    color: colors.system100,
   },
 
   buyItemRow: {
     flexDirection: 'row',
-    gap: 10,
     alignItems: 'flex-start',
+    gap: 10,
   },
   buyItemThumbImg: {
     width: 50,
     height: 50,
-    borderRadius: BORDER_RADIUS,
+    borderRadius: 4,
   },
   modalProductLabel: {
     fontSize: 11,
-    color: colors.G600,
     letterSpacing: -0.2,
+    color: colors.G600,
   },
   modalProductTitle: {
+    marginTop: 2,
     fontSize: 12,
     fontWeight: '500',
-    color: colors.black,
     lineHeight: 17,
-    marginTop: 2,
+    color: colors.black,
   },
   modalInfoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 5,
     marginTop: 4,
+    paddingVertical: 5,
   },
   modalInfoDt: {
     fontSize: 12,
@@ -536,24 +543,24 @@ const styles = StyleSheet.create({
   scoreBox: {
     alignItems: 'center',
     padding: 14,
-    borderWidth: 1,
-    borderColor: colors.G200,
-    borderRadius: BORDER_RADIUS,
-    backgroundColor: colors.white,
     marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: colors.G200,
+    backgroundColor: colors.white,
   },
   scoreBoxChecked: {
     borderColor: colors.primary,
   },
   scoreLabel: {
+    marginBottom: 6,
     fontSize: 15,
     fontWeight: '700',
     color: colors.G800,
-    marginBottom: 6,
   },
   scoreLabelChecked: {
-    color: colors.black,
     fontWeight: '800',
+    color: colors.black,
   },
   scoreStarsRow: {
     flexDirection: 'row',
@@ -585,20 +592,20 @@ const styles = StyleSheet.create({
   },
 
   textArea: {
-    borderWidth: 1,
-    borderColor: colors.G300,
-    borderRadius: BORDER_RADIUS,
     padding: 12,
+    minHeight: 120,
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: colors.G300,
     fontSize: 14,
     color: colors.black,
     textAlignVertical: 'top',
-    minHeight: 120,
   },
 
   imgHelpText: {
+    marginBottom: 10,
     fontSize: 12,
     color: colors.G500,
-    marginBottom: 10,
   },
   imgGrid: {
     flexDirection: 'row',
@@ -606,22 +613,22 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   imgAddBtn: {
-    width: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
-    height: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
-    borderWidth: 1,
-    borderColor: colors.G300,
-    borderStyle: 'dashed',
-    borderRadius: BORDER_RADIUS,
     alignItems: 'center',
     justifyContent: 'center',
+    width: IMAGE_GRID_SIZE,
+    height: IMAGE_GRID_SIZE,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: 4,
+    borderColor: colors.G300,
     backgroundColor: colors.G100,
   },
   imgThumbWrap: {
-    width: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
-    height: (SCREEN_WIDTH - 40 - 40 - 16) / 3,
-    borderRadius: BORDER_RADIUS,
-    overflow: 'hidden',
     position: 'relative',
+    overflow: 'hidden',
+    width: IMAGE_GRID_SIZE,
+    height: IMAGE_GRID_SIZE,
+    borderRadius: 4,
   },
   imgThumb: {
     width: '100%',
@@ -631,18 +638,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 4,
     right: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 24,
     height: 24,
     borderRadius: 12,
     backgroundColor: 'rgba(0,0,0,0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   grayBox: {
-    backgroundColor: colors.G100,
     padding: 15,
-    borderRadius: BORDER_RADIUS,
+    borderRadius: 4,
+    backgroundColor: colors.G100,
   },
   flexRow: {
     flexDirection: 'row',
@@ -665,6 +672,7 @@ const styles = StyleSheet.create({
   colorG400: {
     color: colors.G400,
   },
+  flex1: {
+    flex: 1,
+  },
 });
-
-export default ReviewModal;

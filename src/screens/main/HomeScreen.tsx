@@ -15,6 +15,8 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
 import { colors } from '../../styles/colors';
@@ -28,10 +30,8 @@ import GearsIcon from '../../assets/icon/gears.svg';
 import NewsIcon from '../../assets/icon/news.svg';
 import ProcessIcon from '../../assets/icon/process.svg';
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
-import SectionHeader from '../../components/common/SectionHeader';
-import Spinner from '../../components/common/Spinner';
-import CompanyCard from '../../components/common/CompanyCard';
-import ProductMagazineCard from './home/ProductMagazineCard';
+import { SectionHeader, Spinner, CompanyCard } from '../../components/common';
+import { ProductMagazineCard } from './home/ProductMagazineCard';
 import {
   RECOMMENDED_COMPANIES,
   POPULAR_PRODUCTS,
@@ -43,8 +43,12 @@ import {
 const { width } = Dimensions.get('window');
 
 
-export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: () => void }) {
-  const navigation = useNavigation();
+interface HomeScreenProps {
+  onBrandHomePress?: () => void;
+}
+
+export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState('전체');
   const [bannerIndex, setBannerIndex] = useState(0);
@@ -98,7 +102,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
 
   const handleSearch = () => {
     if (searchText.trim().length >= 2) {
-      (navigation as any).navigate('Search');
+      navigation.navigate('Search');
     } else {
       Alert.alert('알림', '검색어는 두글자 이상 입력하십시오.');
     }
@@ -123,7 +127,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
           <SearchIcon width={20} height={20} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.alarmIcon} onPress={() => (navigation as any).navigate('Notification')}>
+      <TouchableOpacity style={styles.alarmIcon} onPress={() => navigation.navigate('Notification')}>
         <AlarmIcon width={24} height={24} />
       </TouchableOpacity>
     </View>
@@ -136,7 +140,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
           <Text style={styles.gridItemLargeText}>설비 구매하기</Text>
         </TouchableOpacity>
         <View style={styles.gridTopRightCol}>
-          <TouchableOpacity style={styles.gridItemSmall} onPress={() => (navigation as any).navigate('EstimateList')}>
+          <TouchableOpacity style={styles.gridItemSmall} onPress={() => navigation.navigate('EstimateList')}>
             <HeadsetIcon width={20} height={20} color={colors.primary200} />
             <Text style={styles.gridItemSmallText}>견적문의</Text>
           </TouchableOpacity>
@@ -149,11 +153,11 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
       <View style={styles.gridBottomBox}>
         <Text style={styles.gridBottomTitle}>이런 서비스도 있어요</Text>
         <View style={styles.gridBottomMenu}>
-          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => (navigation as any).navigate('ServiceIntroduce')}>
+          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ServiceIntroduce')}>
             <AboutIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>서비스 소개</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => Alert.alert('임가공')}>
+          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ProcessingList')}>
             <GearsIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>임가공</Text>
           </TouchableOpacity>
@@ -161,7 +165,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
             <NewsIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>산업소식</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => Alert.alert('고철처리')}>
+          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ScrapList')}>
             <ProcessIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>고철처리</Text>
           </TouchableOpacity>
@@ -227,7 +231,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
   );
 
   const handleProductPress = useCallback((id: string) => {
-    (navigation as any).navigate('ProductView', { productId: id });
+    navigation.navigate('ProductView', { productId: id });
   }, [navigation]);
 
   const renderPopularProducts = () => (
@@ -282,7 +286,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
         <View style={styles.endOfList}>
           <TouchableOpacity
             style={styles.viewAllListBtn}
-            onPress={() => (navigation as any).navigate('CategoryList', { category: '공작기계', subCategory: 'CNC 선반' })}
+            onPress={() => navigation.navigate('CategoryList', { category: '공작기계', subCategory: 'CNC 선반' })}
             activeOpacity={0.8}
           >
             <Text style={styles.viewAllListBtnText}>전체목록 보기</Text>
@@ -313,11 +317,11 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
       {isBusinessInfoOpen && (
         <View style={styles.businessInfo}>
           <View style={styles.footerLinkRow}>
-            <TouchableOpacity onPress={() => (navigation as any).navigate('Terms')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
               <Text style={styles.footerLinkText}>이용약관</Text>
             </TouchableOpacity>
             <Text style={styles.footerLinkDivider}>|</Text>
-            <TouchableOpacity onPress={() => (navigation as any).navigate('Privacy')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
               <Text style={styles.footerLinkText}>개인정보처리방침</Text>
             </TouchableOpacity>
           </View>
@@ -364,7 +368,7 @@ export default function HomeScreen({ onBrandHomePress }: { onBrandHomePress?: ()
         {!hasMore && renderFooter()}
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => (navigation as any).navigate('ProductUpload')}>
+      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => navigation.navigate('ProductUpload')}>
         <Text style={styles.fabIcon}>+</Text>
         <Text style={styles.fabText}> 상품등록</Text>
       </TouchableOpacity>
@@ -521,7 +525,6 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 
-  // Footer
   footer: {
     marginTop: 10,
     paddingHorizontal: 20,

@@ -13,6 +13,8 @@ import {
   Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
 import SaveIcon from '../../assets/icon/Save.svg';
@@ -191,8 +193,8 @@ const CorpTypeDropdown: React.FC<CorpTypeDropdownProps> = ({ value, options, onS
   );
 };
 
-const ProfileEditScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+export const ProfileEditScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [form, setForm] = useState<FormState>({
     pushAgree: true,
     nightPush: false,
@@ -459,7 +461,6 @@ const ProfileEditScreen: React.FC = () => {
   );
 };
 
-export default ProfileEditScreen;
 
 const styles = StyleSheet.create({
 
@@ -643,7 +644,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.G200,
   },
   bottomSheetItemSelected: {
-    backgroundColor: '#FFF5F6',
+    backgroundColor: colors.selectedItemBg,
   },
   bottomSheetItemText: {
     fontSize: 15,

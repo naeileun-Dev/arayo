@@ -1,26 +1,6 @@
-export type EstimateStatus = 'ing' | 'complete' | 'exp';
-
-export interface EstimateSubItem {
-  subject: string;
-  date: string;
-  price?: string;
-}
-
-export interface EstimateListItemData {
-  id: string;
-  status: EstimateStatus;
-  statusLabel: string;
-  title: string;
-  caseCount?: string;
-  subItems?: EstimateSubItem[];
-}
-
-export type TabType = '전체' | '신품' | '중고';
-
-export type SortType =
-  | '최신순'
-  | '가격 낮은순'
-  | '가격 높은순'
-  | '조회수순'
-  | '관심 많은순'
-  | '거리순';
+// Re-export shared types for backward compatibility
+export type { InquiryStatus as EstimateStatus } from '../../components/inquiry';
+export type { InquirySubItem as EstimateSubItem } from '../../components/inquiry';
+export type { InquiryListItemData as EstimateListItemData } from '../../components/inquiry';
+export type { InquiryTabType as TabType } from '../../components/inquiry';
+export type { InquirySortType as SortType } from '../../components/inquiry';

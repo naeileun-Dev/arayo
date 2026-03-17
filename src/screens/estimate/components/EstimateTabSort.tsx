@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../styles/colors';
 import { TabType, SortType } from '../types';
-import EstimateTabBar from './EstimateTabBar';
+import { EstimateTabBar } from './EstimateTabBar';
 
 interface Props {
   activeTab: TabType;
@@ -13,7 +13,7 @@ interface Props {
 
 const TABS: TabType[] = ['전체', '신품', '중고'];
 
-const EstimateTabSort: React.FC<Props> = ({ activeTab, sortType, onTabChange, onSortPress }) => {
+export const EstimateTabSort: React.FC<Props> = ({ activeTab, sortType, onTabChange, onSortPress }) => {
   const activeIndex = TABS.indexOf(activeTab);
 
   return (
@@ -68,4 +68,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateTabSort;

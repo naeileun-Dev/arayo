@@ -10,6 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
 import EyeIcon from '../../assets/icon/eye.svg';
@@ -152,8 +154,8 @@ const validateConfirmPw = (pw: string, confirm: string): string | null => {
   return null;
 };
 
-const PasswordResetScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+export const PasswordResetScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [currentPw, setCurrentPw] = useState('');
   const [newPw,     setNewPw]     = useState('');
@@ -183,7 +185,6 @@ const PasswordResetScreen: React.FC = () => {
     if (hasError) return;
 
     // TODO: API 호출 (비밀번호 변경)
-    console.log('비밀번호 변경 요청', { currentPw, newPw, confirmPw });
   };
 
   return (
@@ -285,7 +286,6 @@ const PasswordResetScreen: React.FC = () => {
   );
 };
 
-export default PasswordResetScreen;
 
 const st = StyleSheet.create({
 

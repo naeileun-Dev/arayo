@@ -12,13 +12,13 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CheckIcon from '../../assets/icon/check.svg';
 import { colors as COLORS } from '../../styles/colors';
-import Header from '../../components/common/Header';
-import ReviewModal, { ReviewModalType } from '../../components/common/ReviewModal';
-import SectionTitle from './components/SectionTitle';
-import TableRow from './components/TableRow';
+import { Header } from '../../components/common';
+import { ReviewModal, ReviewModalType } from '../../components/common';
+import { SectionTitle } from './components/SectionTitle';
+import { TableRow } from './components/TableRow';
 
 const PRODUCT_IMG = require('../../assets/images/img03.png');
-export default function OrderDetailScreen() {
+export const OrderDetailScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [reviewModal, setReviewModal] = useState<{ visible: boolean; type: ReviewModalType }>({
     visible: true,

@@ -9,6 +9,8 @@ import {
   Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
 import PencilIcon from '../../assets/icon/pencil.svg';
@@ -21,8 +23,8 @@ const BTN_HEIGHT       = 50;
 const BTN_RADIUS       = 4;
 const H_PADDING        = 60;
 
-const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+export const ProfileScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const email = 'Suseong@gmail.com';
 
   return (
@@ -83,6 +85,7 @@ const ProfileScreen: React.FC = () => {
           </TouchableOpacity>
 
         </View>
+
       </View>
     </SafeAreaView>
   );
@@ -192,6 +195,5 @@ const styles = StyleSheet.create({
     color         : colors.white,
     letterSpacing : -0.2,
   },
-});
 
-export default ProfileScreen;
+});

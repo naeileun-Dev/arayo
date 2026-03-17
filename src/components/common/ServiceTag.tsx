@@ -8,10 +8,13 @@ interface ServiceTagProps {
   Icon: React.FC<any>;
 }
 
-const ServiceTag: React.FC<ServiceTagProps> = ({ name, on, Icon }) => (
+const ICON_CONTAINER_SIZE = 28;
+const ICON_SIZE = 16;
+
+export const ServiceTag: React.FC<ServiceTagProps> = ({ name, on, Icon }) => (
   <View style={styles.container}>
     <View style={[styles.iconWrap, on && styles.iconWrapOn]}>
-      <Icon width={16} height={16} color={on ? colors.white : colors.G500} />
+      <Icon width={ICON_SIZE} height={ICON_SIZE} color={on ? colors.white : colors.G500} />
     </View>
     <Text style={[styles.text, on && styles.textOn]}>{name}</Text>
   </View>
@@ -25,25 +28,23 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   iconWrap: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.G100,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: ICON_CONTAINER_SIZE,
+    height: ICON_CONTAINER_SIZE,
+    borderRadius: ICON_CONTAINER_SIZE / 2,
+    backgroundColor: colors.G100,
   },
   iconWrapOn: {
     backgroundColor: colors.primary,
   },
   text: {
     fontSize: 12,
-    color: colors.G500,
     fontWeight: '500',
+    color: colors.G500,
   },
   textOn: {
-    color: colors.primary,
     fontWeight: '600',
+    color: colors.primary,
   },
 });
-
-export default ServiceTag;

@@ -20,7 +20,6 @@ export interface ProductListItem {
   isAd?: boolean;
   isLiked?: boolean;
   isCompared?: boolean;
-  // FavoriteList 전용 스펙
   manufacturer?: string;
   manufactureDate?: string;
   modelName?: string;
@@ -28,19 +27,25 @@ export interface ProductListItem {
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 export { SCREEN_WIDTH, SCREEN_HEIGHT };
 
-export const GRID_ITEM_WIDTH = (SCREEN_WIDTH - 32 - 12) / 2;
-export const COMPARE_CARD_WIDTH = (SCREEN_WIDTH - 32 - 10) / 2;
-
-export const BADGE_CONFIG: Record<ItemState, { bg: string; text: string; label: string }> = {
-  hold:   { bg: colors.green100,    text: colors.white, label: '예약중'  },
-  used:   { bg: colors.orangeDark,  text: colors.white, label: '중고'    },
-  sold:   { bg: colors.white,       text: colors.black, label: '판매완료' },
-  new:    { bg: colors.system100,   text: colors.white, label: '신품'    },
-  normal: { bg: 'transparent', text: 'transparent', label: '' },
-};
+export const GRID_ITEM_WIDTH = (SCREEN_WIDTH - 44) / 2;
+export const COMPARE_CARD_WIDTH = (SCREEN_WIDTH - 42) / 2;
 
 export const SORT_OPTIONS: SortType[] = [
-  '최신순', '가격 낮은순', '가격 높은순', '조회수순', '관심 많은순', '거리순',
+  '최신순',
+  '가격 낮은순',
+  '가격 높은순',
+  '조회수순',
+  '관심 많은순',
+  '거리순',
 ];
+
+export const BADGE_CONFIG: Record<ItemState, { bg: string; text: string; label: string }> = {
+  hold: { bg: colors.green100, text: colors.white, label: '예약중' },
+  used: { bg: colors.orangeDark, text: colors.white, label: '중고' },
+  sold: { bg: colors.white, text: colors.black, label: '판매완료' },
+  new: { bg: colors.system100, text: colors.white, label: '신품' },
+  normal: { bg: 'transparent', text: 'transparent', label: '' },
+};

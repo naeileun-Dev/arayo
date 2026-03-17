@@ -1,7 +1,3 @@
-/**
- * PASS 본인인증 모달 컴포넌트
- */
-
 import React from 'react';
 import {
   View,
@@ -14,7 +10,7 @@ import {
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, borderRadius } from '../../styles/spacing';
-import Button from '../common/Button';
+import { Button } from '../common';
 
 interface VerificationModalProps {
   visible: boolean;
@@ -24,13 +20,15 @@ interface VerificationModalProps {
   loading?: boolean;
 }
 
-const VerificationModal: React.FC<VerificationModalProps> = ({
+export const VerificationModal: React.FC<VerificationModalProps> = ({
   visible,
   onClose,
   onVerify,
   nickname = '',
   loading = false,
 }) => {
+  const preventClose = () => {};
+
   return (
     <Modal
       visible={visible}
@@ -40,9 +38,8 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={() => {}}>
+          <TouchableWithoutFeedback onPress={preventClose}>
             <View style={styles.card}>
-              {/* 닉네임 + 편집 영역 */}
               <View style={styles.nicknameRow}>
                 <Text style={styles.nicknameText}>
                   {nickname || '닉네임'}
@@ -52,12 +49,8 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                 </TouchableOpacity>
               </View>
 
-              {/* 본인 확인 메시지 */}
-              <Text style={styles.message}>
-                ...님이 본인 맞으시죠?
-              </Text>
+              <Text style={styles.message}>...님이 본인 맞으시죠?</Text>
 
-              {/* 인증 하기 버튼 */}
               <Button
                 title="인증 하기"
                 onPress={onVerify}
@@ -113,5 +106,3 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
 });
-
-export default VerificationModal;

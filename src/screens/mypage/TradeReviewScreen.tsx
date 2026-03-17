@@ -13,9 +13,11 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import { colors } from '../../styles/colors';
-import Header from '../../components/common/Header';
-import TabBar from '../../components/common/TabBar';
+import { Header } from '../../components/common';
+import { TabBar } from '../../components/common';
 
 const { width: SW } = Dimensions.get('window');
 const PRODUCT_IMG = require('../../assets/images/img03.png');
@@ -210,8 +212,8 @@ const TABS = [
   { key: 'writable', label: '작성 가능한 후기' },
 ];
 
-const TradeReviewScreen = () => {
-  const navigation = useNavigation<any>();
+export const TradeReviewScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeTab, setActiveTab] = useState('sent');
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData]           = useState(MAKE_DATA);
@@ -220,12 +222,12 @@ const TradeReviewScreen = () => {
     setData((prev) => prev.filter((d) => d.id !== id));
   }, []);
 
-  const handleEdit = useCallback((item: any) => {
-    console.log('[수정] id:', item.id);
+  const handleEdit = useCallback((_item: any) => {
+    // TODO: implement edit functionality
   }, []);
 
-  const handleWrite = useCallback((item: any) => {
-    console.log('[후기보내기] id:', item.id);
+  const handleWrite = useCallback((_item: any) => {
+    // TODO: implement write functionality
   }, []);
 
   const handleTabChange = useCallback((key: string) => {
@@ -406,4 +408,3 @@ const s = StyleSheet.create({
   },
 });
 
-export default TradeReviewScreen;

@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
 export const spacing = {
   xs: 4,
@@ -90,12 +90,3 @@ export const iconSize = {
   xl: 32,
   '2xl': 40,
 } as const;
-
-export default {
-  spacing,
-  screenPadding,
-  borderRadius,
-  shadows,
-  componentHeight,
-  iconSize,
-};

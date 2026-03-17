@@ -12,7 +12,7 @@ import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing } from '../../styles/spacing';
-import NotificationItem from './components/NotificationItem';
+import { NotificationItem } from './components/NotificationItem';
 
 const MoreVerticalIcon = () => (
   <View style={styles.moreIconContainer}>
@@ -22,7 +22,7 @@ const MoreVerticalIcon = () => (
   </View>
 );
 
-const INITIAL_NOTIS = Array(6).fill(null).map((_, index) => ({
+const INITIAL_NOTIFICATIONS = Array.from({ length: 6 }, (_, index) => ({
   id: String(index + 1),
   subject: '아라요 기계장터',
   message: '거래가 정상적으로 완료되었습니다.',
@@ -31,29 +31,22 @@ const INITIAL_NOTIS = Array(6).fill(null).map((_, index) => ({
 
 export const NotificationScreen: React.FC = () => {
   const navigation = useNavigation();
-  
-  // 알림 목록 상태
-  const [notifications, setNotifications] = useState(INITIAL_NOTIS);
-  // 선택된 체크박스 상태 관리 (id 배열)
+  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  // 헤더 우측 '더보기(삭제)' 메뉴 열림 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 체크박스 토글 핸들러
   const toggleCheck = (id: string) => {
-    setSelectedIds((prev) => 
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // 선택 삭제 핸들러
   const handleDeleteSelected = () => {
-    setNotifications(prev => prev.filter(noti => !selectedIds.includes(noti.id)));
+    setNotifications((prev) => prev.filter((noti) => !selectedIds.includes(noti.id)));
     setSelectedIds([]);
     setIsMenuOpen(false);
   };
 
-  // 전체 삭제 핸들러
   const handleDeleteAll = () => {
     setNotifications([]);
     setSelectedIds([]);
@@ -62,27 +55,25 @@ export const NotificationScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* 1. 헤더 영역 */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
           <ChevronLeftIcon width={24} height={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        
+
         <Text style={styles.headerTitle}>알림</Text>
 
         <View style={styles.headerRight}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.moreButton}
             onPress={() => setIsMenuOpen(!isMenuOpen)}
           >
             <MoreVerticalIcon />
           </TouchableOpacity>
 
-          {/* 더보기 토글 메뉴 (전체 삭제 / 삭제) */}
           {isMenuOpen && (
             <View style={styles.dropdownMenu}>
               <TouchableOpacity style={styles.dropdownItem} onPress={handleDeleteAll}>
@@ -96,13 +87,12 @@ export const NotificationScreen: React.FC = () => {
         </View>
       </View>
 
-      {/* 2. 본문 영역 (알림 리스트) */}
-      <TouchableOpacity 
-        style={styles.container} 
-        activeOpacity={1} 
-        onPress={() => setIsMenuOpen(false)} // 여백 클릭 시 더보기 메뉴 닫힘
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={1}
+        onPress={() => setIsMenuOpen(false)}
       >
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         >
@@ -131,13 +121,11 @@ export const NotificationScreen: React.FC = () => {
   );
 };
 
-// --- 스타일 시트 ---
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.white,
   },
-  // 헤더 스타일
   header: {
     height: 56,
     flexDirection: 'row',
@@ -146,12 +134,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
-    zIndex: 10, // 드롭다운 메뉴가 리스트 위로 올라오도록 설정
+    zIndex: 10,
   },
   backButton: {
+    width: 40,
     padding: spacing.xs,
     marginLeft: -spacing.xs,
-    width: 40,
   },
   headerTitle: {
     ...typography.h4,
@@ -181,6 +169,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 0,
+    width: 100,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.borderLight,
@@ -190,7 +179,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    width: 100,
   },
   dropdownItem: {
     paddingVertical: 12,
@@ -203,8 +191,6 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     textAlign: 'center',
   },
-  
-  // 리스트 컨테이너
   container: {
     flex: 1,
   },
@@ -214,8 +200,6 @@ const styles = StyleSheet.create({
   notiList: {
     flexDirection: 'column',
   },
-
-  // 알림 없을 때
   emptyContainer: {
     paddingTop: 100,
     alignItems: 'center',

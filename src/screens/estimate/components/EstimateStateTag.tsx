@@ -8,7 +8,7 @@ interface Props {
   label: string;
 }
 
-const EstimateStateTag: React.FC<Props> = ({ status, label }) => {
+export const EstimateStateTag: React.FC<Props> = ({ status, label }) => {
   const bgColors: Record<EstimateStatus, string> = {
     ing: colors.system100,
     complete: colors.green,
@@ -42,4 +42,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateStateTag;

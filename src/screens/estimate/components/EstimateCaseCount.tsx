@@ -8,7 +8,7 @@ interface Props {
 
 const CASE_COUNT_BG = '#FDF2F4';
 
-const EstimateCaseCount: React.FC<Props> = ({ count }) => (
+export const EstimateCaseCount: React.FC<Props> = ({ count }) => (
   <View style={styles.caseCount}>
     <Text style={styles.caseCountText}>
       {typeof count === 'number' ? `${count}건` : count}
@@ -33,4 +33,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateCaseCount;

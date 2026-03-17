@@ -6,17 +6,12 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
-  Dimensions,
 } from 'react-native';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const LEFT_SIDEBAR_WIDTH = 100;
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 
-// 프로젝트 아이콘
 import SearchIcon from '../../assets/icon/Search.svg';
-
-// 카테고리 아이콘
 import MachiningIcon from '../../assets/icon/category/machining.svg';
 import MachiningActiveIcon from '../../assets/icon/category/machining_active.svg';
 import InjectionIcon from '../../assets/icon/category/injection.svg';
@@ -40,12 +35,12 @@ import SuppliesActiveIcon from '../../assets/icon/category/supplies_active.svg';
 import OthersIcon from '../../assets/icon/category/others.svg';
 import OthersActiveIcon from '../../assets/icon/category/others_active.svg';
 
-// 스타일 시스템
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing } from '../../styles/spacing';
 
-// 아이콘 매핑
+const LEFT_SIDEBAR_WIDTH = 100;
+
 const CATEGORY_ICONS: { icon: React.FC<any>; activeIcon: React.FC<any> }[] = [
   { icon: MachiningIcon, activeIcon: MachiningActiveIcon },
   { icon: InjectionIcon, activeIcon: InjectionActiveIcon },
@@ -60,7 +55,6 @@ const CATEGORY_ICONS: { icon: React.FC<any>; activeIcon: React.FC<any> }[] = [
   { icon: OthersIcon, activeIcon: OthersActiveIcon },
 ];
 
-// HTML에서 추출한 카테고리 데이터 변환
 const CATEGORY_DATA = [
   { id: 'machine_tools', title: '공작기계', data: ['CNC 선반', 'CNC복합기', 'MCT(머시닝센터)', '범용 밀링', '범용 선반', '보링기', '기타'] },
   { id: 'mold_injection', title: '금형/사출기', data: ['플라스틱 사출', '성형기', '플라스틱 가공기', '고무 성형기', '고무 가공기', '와이어 커팅기', '방전가공기', '기타'] },
@@ -75,68 +69,64 @@ const CATEGORY_DATA = [
   { id: 'other_equipment', title: '기타 설비', data: ['쇼트기', '철근/코일 가공기', '프린트/3D프린트', '집진기', '작업대 · 공구함', '기타'] },
 ];
 
-export const CategoryScreen: React.FC = () => {
-  const navigation = useNavigation<any>(); // 필요에 따라 타입 구체화 (ex: RootStackNavigationProp)
-  
+export const CategoryScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeIndex, setActiveIndex] = useState(0);
-  
-  // 스크롤 동기화를 위한 Ref
+
   const rightScrollRef = useRef<ScrollView>(null);
   const leftScrollRef = useRef<ScrollView>(null);
-  const sectionLayouts = useRef<{ [key: number]: number }>({});
-  const leftItemLayouts = useRef<{ [key: number]: number }>({});
-  
-  // 사용자가 탭을 클릭해서 이동 중인지 여부 (스크롤 이벤트 중복 방지)
+  const sectionLayouts = useRef<Record<number, number>>({});
+  const leftItemLayouts = useRef<Record<number, number>>({});
   const isProgrammaticScroll = useRef(false);
 
-  // 1. 좌측 1뎁스 메뉴 클릭 핸들러
   const handleLeftMenuPress = (index: number) => {
     setActiveIndex(index);
     isProgrammaticScroll.current = true;
-    
-    // 우측 콘텐츠 해당 위치로 스크롤
+
     const yPos = sectionLayouts.current[index] || 0;
     rightScrollRef.current?.scrollTo({ y: yPos, animated: true });
 
-    // 좌측 메뉴도 중앙으로 오도록 포커싱
     const leftYPos = leftItemLayouts.current[index] || 0;
     leftScrollRef.current?.scrollTo({ y: Math.max(0, leftYPos - 150), animated: true });
 
-    // 스크롤 애니메이션이 끝날 즈음 flag 해제
     setTimeout(() => {
       isProgrammaticScroll.current = false;
     }, 400);
   };
 
+  const handleSubItemPress = (subItem: string) => {
+    navigation.navigate('CategoryList', {
+      category: CATEGORY_DATA[activeIndex].title,
+      subCategory: subItem,
+    });
+  };
+
+  const handleSearchPress = () => {
+    navigation.navigate('Search');
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* --- 헤더 영역 --- */}
       <View style={styles.header}>
         <View style={styles.headerButton} />
         <Text style={styles.headerTitle}>카테고리</Text>
-        <TouchableOpacity 
-          style={styles.headerButton} 
-          onPress={() => navigation.navigate('Search')}
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={handleSearchPress}
           activeOpacity={0.7}
         >
           <SearchIcon width={24} height={24} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
-      {/* --- 콘텐츠 영역 (좌/우 분할) --- */}
       <View style={styles.contentContainer}>
-        
-        {/* 좌측 1차 카테고리 메뉴 */}
         <View style={styles.leftSidebarWrapper}>
-          <ScrollView
-            ref={leftScrollRef}
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView ref={leftScrollRef} showsVerticalScrollIndicator={false}>
             {CATEGORY_DATA.map((item, index) => {
               const isActive = index === activeIndex;
               const icons = CATEGORY_ICONS[index];
               const IconComponent = isActive ? icons.activeIcon : icons.icon;
+
               return (
                 <TouchableOpacity
                   key={item.id}
@@ -157,24 +147,17 @@ export const CategoryScreen: React.FC = () => {
           </ScrollView>
         </View>
 
-        {/* 우측 2차 카테고리 리스트 - 선택된 카테고리만 표시 */}
-        <ScrollView
-          style={styles.rightContent}
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView style={styles.rightContent} showsVerticalScrollIndicator={false}>
           {CATEGORY_DATA[activeIndex].data.map((subItem, subIndex) => (
             <TouchableOpacity
               key={`${CATEGORY_DATA[activeIndex].id}-${subIndex}`}
               style={styles.subItem}
-              onPress={() => {
-                (navigation as any).navigate('CategoryList', { category: CATEGORY_DATA[activeIndex].title, subCategory: subItem });
-              }}
+              onPress={() => handleSubItemPress(subItem)}
             >
               <Text style={styles.subItemText}>{subItem}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
-
       </View>
     </SafeAreaView>
   );
@@ -185,7 +168,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  // 헤더 스타일
   header: {
     height: 56,
     flexDirection: 'row',
@@ -203,12 +185,10 @@ const styles = StyleSheet.create({
     ...typography.h4,
     color: colors.textPrimary,
   },
-  // 메인 레이아웃
   contentContainer: {
     flex: 1,
     flexDirection: 'row',
   },
-  // 좌측 사이드바 (1차 카테고리)
   leftSidebarWrapper: {
     width: LEFT_SIDEBAR_WIDTH,
     backgroundColor: colors.white,
@@ -236,7 +216,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '700',
   },
-  // 우측 콘텐츠 (2차 카테고리)
   rightContent: {
     flex: 1,
     backgroundColor: colors.G100,

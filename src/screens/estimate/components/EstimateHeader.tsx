@@ -8,7 +8,7 @@ interface Props {
   onSearch?: () => void;
 }
 
-const EstimateHeader: React.FC<Props> = ({ onBack, onSearch }) => (
+export const EstimateHeader: React.FC<Props> = ({ onBack, onSearch }) => (
   <View style={styles.header}>
     <TouchableOpacity
       style={styles.headerLeftBtn}
@@ -66,4 +66,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateHeader;

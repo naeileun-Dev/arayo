@@ -1,7 +1,3 @@
-/**
- * 공통 Header 컴포넌트
- */
-
 import React from 'react';
 import {
   View,
@@ -16,7 +12,11 @@ import { colors } from '../../styles/colors';
 import { spacing, componentHeight, iconSize } from '../../styles/spacing';
 import type { HeaderProps } from '../../types';
 
-const Header: React.FC<HeaderProps> = ({
+const SIDE_CONTAINER_WIDTH = 48;
+const BACK_ICON_SIZE = 24;
+const HIT_SLOP = { top: 10, bottom: 10, left: 10, right: 10 };
+
+export const Header: React.FC<HeaderProps> = ({
   title,
   onBack,
   onClose,
@@ -26,82 +26,65 @@ const Header: React.FC<HeaderProps> = ({
   border = false,
   titleStyle,
   style,
-}) => {
-  return (
-    <View
-      style={[
-        styles.container,
-        transparent && styles.transparent,
-        border && styles.border,
-        style,
-      ]}
-    >
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={transparent ? 'transparent' : colors.white}
-      />
+}) => (
+  <View
+    style={[
+      styles.container,
+      transparent && styles.transparent,
+      border && styles.border,
+      style,
+    ]}
+  >
+    <StatusBar
+      barStyle="dark-content"
+      backgroundColor={transparent ? 'transparent' : colors.white}
+    />
 
-      {/* 왼쪽 영역 */}
-      <View style={styles.leftContainer}>
-        {leftComponent ? (
-          leftComponent
-        ) : onBack ? (
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={onBack}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <ChevronLeftIcon width={24} height={24} color={colors.black} />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.placeholder} />
-        )}
-      </View>
-
-      {/* 타이틀 */}
-      <View style={styles.titleContainer}>
-        {title && (
-          <Text style={[styles.title, titleStyle]} numberOfLines={1}>
-            {title}
-          </Text>
-        )}
-      </View>
-
-      {/* 오른쪽 영역 */}
-      <View style={styles.rightContainer}>
-        {rightComponent ? (
-          rightComponent
-        ) : onClose ? (
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={onClose}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <XIcon width={24} height={24} color={colors.textPrimary} />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.placeholder} />
-        )}
-      </View>
+    <View style={styles.leftContainer}>
+      {leftComponent ?? (onBack ? (
+        <TouchableOpacity style={styles.iconButton} onPress={onBack} hitSlop={HIT_SLOP}>
+          <ChevronLeftIcon width={BACK_ICON_SIZE} height={BACK_ICON_SIZE} color={colors.black} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholder} />
+      ))}
     </View>
-  );
-};
+
+    <View style={styles.titleContainer}>
+      {title && (
+        <Text style={[styles.title, titleStyle]} numberOfLines={1}>
+          {title}
+        </Text>
+      )}
+    </View>
+
+    <View style={styles.rightContainer}>
+      {rightComponent ?? (onClose ? (
+        <TouchableOpacity style={styles.iconButton} onPress={onClose} hitSlop={HIT_SLOP}>
+          <XIcon width={BACK_ICON_SIZE} height={BACK_ICON_SIZE} color={colors.textPrimary} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholder} />
+      ))}
+    </View>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
-    height: componentHeight.header,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
+    height: componentHeight.header,
     paddingHorizontal: spacing.base,
+    backgroundColor: colors.white,
   },
   transparent: {
     backgroundColor: 'transparent',
   },
   border: {},
   leftContainer: {
-    width: 48,
     alignItems: 'flex-start',
+    width: SIDE_CONTAINER_WIDTH,
   },
   titleContainer: {
     flex: 1,
@@ -109,8 +92,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rightContainer: {
-    width: 48,
     alignItems: 'flex-end',
+    width: SIDE_CONTAINER_WIDTH,
   },
   title: {
     fontSize: 16,
@@ -118,15 +101,13 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   iconButton: {
-    width: iconSize.xl,
-    height: iconSize.xl,
     alignItems: 'center',
     justifyContent: 'center',
+    width: iconSize.xl,
+    height: iconSize.xl,
   },
   placeholder: {
     width: iconSize.xl,
     height: iconSize.xl,
   },
 });
-
-export default Header;

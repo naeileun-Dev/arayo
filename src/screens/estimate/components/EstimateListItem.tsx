@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../../styles/colors';
 import { EstimateListItemData } from '../types';
-import EstimateStateTag from './EstimateStateTag';
-import EstimateCaseCount from './EstimateCaseCount';
-import EstimateSubRow from './EstimateSubRow';
+import { EstimateStateTag } from './EstimateStateTag';
+import { EstimateCaseCount } from './EstimateCaseCount';
+import { EstimateSubRow } from './EstimateSubRow';
 
 interface Props {
   item: EstimateListItemData;
@@ -13,7 +13,7 @@ interface Props {
   subRowIcon?: React.ReactNode;
 }
 
-const EstimateListItem: React.FC<Props> = ({ item, isFirst, onPress, subRowIcon }) => (
+export const EstimateListItem: React.FC<Props> = ({ item, isFirst, onPress, subRowIcon }) => (
   <View style={[styles.listItem, !isFirst && styles.listItemBorder]}>
     <TouchableOpacity
       activeOpacity={0.7}
@@ -80,4 +80,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateListItem;

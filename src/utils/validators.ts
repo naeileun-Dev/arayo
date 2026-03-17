@@ -1,13 +1,5 @@
-/**
- * 유효성 검사 유틸리티
- */
+import type { SignUpFormData } from '../types';
 
-import { SignUpFormData } from '../types';
-
-/**
- * 아이디 유효성 검사
- * - 5~20자 영문, 숫자 조합
- */
 export const validateUserId = (userId: string): string[] => {
   const errors: string[] = [];
 
@@ -27,10 +19,6 @@ export const validateUserId = (userId: string): string[] => {
   return errors;
 };
 
-/**
- * 비밀번호 유효성 검사
- * - 8~20자 영문 대·소문자, 숫자, 특수문자 조합
- */
 export const validatePassword = (password: string): string[] => {
   const errors: string[] = [];
 
@@ -53,9 +41,6 @@ export const validatePassword = (password: string): string[] => {
   return errors;
 };
 
-/**
- * 비밀번호 확인 검사
- */
 export const validatePasswordConfirm = (
   password: string,
   passwordConfirm: string
@@ -74,9 +59,6 @@ export const validatePasswordConfirm = (
   return errors;
 };
 
-/**
- * 이름 유효성 검사
- */
 export const validateName = (name: string): string[] => {
   const errors: string[] = [];
 
@@ -92,10 +74,6 @@ export const validateName = (name: string): string[] => {
   return errors;
 };
 
-/**
- * 닉네임 유효성 검사
- * - 5~20자
- */
 export const validateNickname = (nickname: string): string[] => {
   const errors: string[] = [];
 
@@ -111,9 +89,6 @@ export const validateNickname = (nickname: string): string[] => {
   return errors;
 };
 
-/**
- * 이메일 유효성 검사
- */
 export const validateEmail = (email: string): string[] => {
   const errors: string[] = [];
 
@@ -130,27 +105,17 @@ export const validateEmail = (email: string): string[] => {
   return errors;
 };
 
-/**
- * 전화번호 유효성 검사
- */
 export const validatePhone = (phone: string): string[] => {
-  const errors: string[] = [];
-
-  if (!phone) {
-    return errors; // 선택사항
-  }
+  if (!phone) return [];
 
   const phoneRegex = /^01[0-9][0-9]{3,4}[0-9]{4}$/;
   if (!phoneRegex.test(phone.replace(/-/g, ''))) {
-    errors.push('올바른 전화번호를 입력해 주세요.');
+    return ['올바른 전화번호를 입력해 주세요.'];
   }
 
-  return errors;
+  return [];
 };
 
-/**
- * 전체 회원가입 폼 유효성 검사
- */
 export const validateSignUpForm = (
   formData: SignUpFormData
 ): Record<string, string[]> => {
@@ -166,8 +131,9 @@ export const validateSignUpForm = (
     formData.password,
     formData.passwordConfirm
   );
-  if (passwordConfirmErrors.length > 0)
+  if (passwordConfirmErrors.length > 0) {
     errors.passwordConfirm = passwordConfirmErrors;
+  }
 
   const nameErrors = validateName(formData.name);
   if (nameErrors.length > 0) errors.name = nameErrors;
@@ -179,15 +145,4 @@ export const validateSignUpForm = (
   if (emailErrors.length > 0) errors.email = emailErrors;
 
   return errors;
-};
-
-export default {
-  validateUserId,
-  validatePassword,
-  validatePasswordConfirm,
-  validateName,
-  validateNickname,
-  validateEmail,
-  validatePhone,
-  validateSignUpForm,
 };

@@ -62,7 +62,6 @@ export const typography: Record<string, TextStyle> = {
     fontSize: fontSize.lg,
     lineHeight: fontSize.lg * lineHeight.normal,
   },
-
   bodyLarge: {
     fontFamily: fontFamily.regular,
     fontSize: fontSize.base,
@@ -78,7 +77,6 @@ export const typography: Record<string, TextStyle> = {
     fontSize: fontSize.sm,
     lineHeight: fontSize.sm * lineHeight.normal,
   },
-
   label: {
     fontFamily: fontFamily.medium,
     fontSize: fontSize.md,
@@ -89,13 +87,11 @@ export const typography: Record<string, TextStyle> = {
     fontSize: fontSize.sm,
     lineHeight: fontSize.sm * lineHeight.normal,
   },
-
   caption: {
     fontFamily: fontFamily.regular,
     fontSize: fontSize.xs,
     lineHeight: fontSize.xs * lineHeight.normal,
   },
-
   button: {
     fontFamily: fontFamily.semiBold,
     fontSize: fontSize.base,
@@ -107,5 +103,3 @@ export const typography: Record<string, TextStyle> = {
     lineHeight: fontSize.md * lineHeight.tight,
   },
 };
-
-export default typography;

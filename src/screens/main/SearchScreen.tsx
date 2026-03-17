@@ -37,7 +37,6 @@ export const SearchScreen: React.FC = () => {
       Alert.alert('알림', '검색어는 두글자 이상 입력하십시오.');
       return;
     }
-    console.log('검색 실행:', searchText);
   };
 
   // 최근 검색어 모두 삭제
@@ -75,7 +74,6 @@ export const SearchScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* 1. 커스텀 헤더 */}
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
@@ -93,7 +91,6 @@ export const SearchScreen: React.FC = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* 2. 검색 입력 필드 */}
         <View style={styles.searchSection}>
           <View style={styles.searchInputContainer}>
             <TextInput
@@ -111,7 +108,6 @@ export const SearchScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* 3. 최근 검색어 */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>최근 검색어</Text>
@@ -124,7 +120,6 @@ export const SearchScreen: React.FC = () => {
           {renderTags(recentSearches, true)}
         </View>
 
-        {/* 4. 추천 검색어 */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>추천 검색어</Text>
@@ -132,7 +127,6 @@ export const SearchScreen: React.FC = () => {
           {renderTags(RECOMMENDED_SEARCHES)}
         </View>
 
-        {/* 5. 인기 검색어 */}
         <View style={[styles.section, styles.lastSection]}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>인기 검색어</Text>

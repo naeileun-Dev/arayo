@@ -63,7 +63,7 @@ const FAQ_DATA = [
   },
 ];
 
-export default function FAQScreen() {
+export const FAQScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [activeCategory, setActiveCategory] = useState('전체');
   const [expandedId, setExpandedId] = useState<number | null>(1); // 첫 번째 항목 기본 오픈

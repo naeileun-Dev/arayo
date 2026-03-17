@@ -11,13 +11,23 @@ interface ReviewItemProps {
   id: number;
 }
 
-/** 리뷰 한 건 */
-export default function ReviewItem({ id }: ReviewItemProps) {
+const REVIEW_INFO = [
+  { dt: '상품명', dd: '화천기계' },
+  { dt: '상품금액', dd: '2,400,000' },
+  { dt: '조회수', dd: '1' },
+];
+
+const REVIEW_IMAGES = [1, 2, 3, 4, 5];
+
+export const ReviewItem = ({ id }: ReviewItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggleExpand = () => {
+    setIsExpanded(prev => !prev);
+  };
 
   return (
     <View style={styles.reviewItem}>
-      {/* 프로필 + 별점 */}
       <View style={styles.rowCenter}>
         <Image source={USER_IMG} style={styles.reProfileImg} resizeMode="cover" />
         <View style={styles.flex1}>
@@ -32,13 +42,8 @@ export default function ReviewItem({ id }: ReviewItemProps) {
         </View>
       </View>
 
-      {/* 상품 요약 칩 */}
       <View style={styles.reInfoRow}>
-        {[
-          { dt: '상품명', dd: '화천기계' },
-          { dt: '상품금액', dd: '2,400,000' },
-          { dt: '조회수', dd: '1' },
-        ].map((info) => (
+        {REVIEW_INFO.map(info => (
           <View key={info.dt} style={styles.reInfoChip}>
             <Text style={styles.reInfoDt}>{info.dt}</Text>
             <Text style={styles.reInfoDd}>{info.dd}</Text>
@@ -46,14 +51,17 @@ export default function ReviewItem({ id }: ReviewItemProps) {
         ))}
       </View>
 
-      {/* 첨부 이미지 */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.reImgScroll}>
-        {[1, 2, 3, 4, 5].map((img) => (
-          <Image key={img} source={PRODUCT_IMGS[img % 3]} style={styles.reAttachedImg} resizeMode="cover" />
+        {REVIEW_IMAGES.map(img => (
+          <Image
+            key={img}
+            source={PRODUCT_IMGS[img % 3]}
+            style={styles.reAttachedImg}
+            resizeMode="cover"
+          />
         ))}
       </ScrollView>
 
-      {/* 리뷰 본문 */}
       <Text style={styles.reContentText} numberOfLines={isExpanded ? undefined : 4}>
         작업자가 하루에도 수십 번 치수를 확인해야 하는 편인데, 이 장비로 바꾼 뒤로 작업 효율이 확실히 올라갔습니다.{'\n'}
         UI도 직관적이고, 프로그램 세팅이 간단해서 숙련도가 낮은 작업자도 금방 적응했습니다.{'\n'}
@@ -62,7 +70,7 @@ export default function ReviewItem({ id }: ReviewItemProps) {
         판매자 응대도 친절해서 거래 과정이 편했습니다.
       </Text>
 
-      <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)} style={styles.moreBtn}>
+      <TouchableOpacity onPress={handleToggleExpand} style={styles.moreBtn}>
         <Text style={styles.moreBtnText}>{isExpanded ? '접기' : '더보기'}</Text>
         <View style={isExpanded ? styles.chevronUp : undefined}>
           <ChevronDownIcon width={14} height={14} color={colors.G600} />
@@ -70,4 +78,4 @@ export default function ReviewItem({ id }: ReviewItemProps) {
       </TouchableOpacity>
     </View>
   );
-}
+};

@@ -18,7 +18,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
 import MainLogo from '../../assets/images/main_logo.svg';
 import SearchIcon from '../../assets/icon/Search.svg';
-import CompanyCard from '../../components/common/CompanyCard';
+import { CompanyCard } from '../../components/common';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const PADDING_LR = 20;
@@ -239,7 +239,11 @@ const AllCompaniesSection = ({ companies, isLoading }: { companies: AllCompanyIt
 const INITIAL_COUNT = 10;
 const MAX_COUNT = 40;
 
-const BrandHomeScreen = ({ onBack }: { onBack?: () => void }) => {
+interface BrandHomeScreenProps {
+  onBack?: () => void;
+}
+
+export const BrandHomeScreen = ({ onBack }: BrandHomeScreenProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [companies, setCompanies] = useState<AllCompanyItem[]>(() => generateAllCompanies(INITIAL_COUNT));
   const [isLoading, setIsLoading] = useState(true);
@@ -290,7 +294,7 @@ const BrandHomeScreen = ({ onBack }: { onBack?: () => void }) => {
         <TouchableOpacity
           style={styles.appBarSearchBtn}
           activeOpacity={0.6}
-          onPress={() => (navigation as any).navigate('Search')}
+          onPress={() => navigation.navigate('Search')}
         >
           <SearchIcon width={24} height={24} color={colors.black} />
         </TouchableOpacity>
@@ -319,7 +323,6 @@ const BrandHomeScreen = ({ onBack }: { onBack?: () => void }) => {
   );
 };
 
-export default BrandHomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -559,7 +562,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   redTag: {
-    backgroundColor: '#FDF2F4',
+    backgroundColor: colors.redTagBg,
     paddingHorizontal: 5,
     borderRadius: 4,
     height: 21,

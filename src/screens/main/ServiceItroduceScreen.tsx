@@ -9,7 +9,9 @@ import {
     SafeAreaView,
     Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
@@ -71,8 +73,8 @@ const GalleryCard: React.FC<{ item: GalleryItem }> = ({ item }) => (
 // ─────────────────────────────────────────────────
 // Main Screen
 // ─────────────────────────────────────────────────
-const ServiceIntroduceScreen: React.FC = () => {
-    const navigation = useNavigation();
+export const ServiceIntroduceScreen: React.FC = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -131,7 +133,7 @@ const ServiceIntroduceScreen: React.FC = () => {
                         <TouchableOpacity
                             style={styles.ctaButton}
                             activeOpacity={0.7}
-                            onPress={() => (navigation as any).navigate('Main', { screen: 'CategoryTab' })}
+                            onPress={() => navigation.navigate('Main')}
                         >
                             <Text style={styles.ctaButtonText}>중고거래 구경하기</Text>
                         </TouchableOpacity>
@@ -270,4 +272,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ServiceIntroduceScreen;

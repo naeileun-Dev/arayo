@@ -1,7 +1,5 @@
-/**
- * 메인 화면 Export
- */
-
-export { default as HomeScreen } from './HomeScreen';
-export { default as WishlistScreen } from './WishlistScreen';
-export * from './SearchScreen';
+export { HomeScreen } from './HomeScreen';
+export { WishlistScreen } from './WishlistScreen';
+export { SearchScreen } from './SearchScreen';
+export { NotificationScreen } from './NotificationScreen';
+export { ServiceIntroduceScreen } from './ServiceItroduceScreen';

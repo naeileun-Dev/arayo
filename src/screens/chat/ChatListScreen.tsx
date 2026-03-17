@@ -4,6 +4,8 @@ import React, {
   useState,
 } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import {
   ActivityIndicator,
   FlatList,
@@ -19,7 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SearchIcon from '../../assets/icon/Search.svg';
 
-const USER_IMG = require('../../assets/images/user01.png');
+const PRODUCT_IMG = require('../../assets/images/img01.png');
 import { colors } from '../../styles/colors';
 import { Header, TabBar } from '../../components/common';
 import type { Tab } from '../../types';
@@ -73,7 +75,7 @@ const makeItem = (overrides?: Partial<ChatItem>): ChatItem => ({
   message:      '거래 감사합니다. ^_^',
   date:         '11월 27일',
   unreadCount:  5,
-  thumbnail:    USER_IMG,
+  thumbnail:    PRODUCT_IMG,
   ...overrides,
 });
 
@@ -170,8 +172,8 @@ const ListLoadingFooter = React.memo(() => (
   </View>
 ));
 
-const ChatListScreen = () => {
-  const navigation = useNavigation<any>();
+export const ChatListScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeTab,  setActiveTab]  = useState<TabKey>('전체');
   const [data,       setData]       = useState<ChatItem[]>(SEED_DATA);
   const [isLoading,  setIsLoading]  = useState(false);
@@ -415,4 +417,3 @@ const s = StyleSheet.create({
   },
 });
 
-export default ChatListScreen;

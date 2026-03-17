@@ -10,32 +10,28 @@ interface SectionHeaderProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({
+export const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   onViewAll,
   viewAllLabel = '전체보기',
   rightComponent,
   style,
-}) => {
-  return (
-    <View style={[styles.container, style]}>
-      <Text style={styles.title}>{title}</Text>
-      {rightComponent
-        ? rightComponent
-        : onViewAll && (
-            <TouchableOpacity onPress={onViewAll}>
-              <Text style={styles.viewAll}>{viewAllLabel}</Text>
-            </TouchableOpacity>
-          )}
-    </View>
-  );
-};
+}) => (
+  <View style={[styles.container, style]}>
+    <Text style={styles.title}>{title}</Text>
+    {rightComponent ?? (onViewAll && (
+      <TouchableOpacity onPress={onViewAll}>
+        <Text style={styles.viewAll}>{viewAllLabel}</Text>
+      </TouchableOpacity>
+    ))}
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 15,
   },
   title: {
@@ -48,5 +44,3 @@ const styles = StyleSheet.create({
     color: colors.G600,
   },
 });
-
-export default SectionHeader;

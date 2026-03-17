@@ -1,9 +1,5 @@
-/**
- * 인증 화면 Export
- */
-
-export { default as LoginScreen } from './LoginScreen';
-export { default as SignUpScreen } from './SignUpScreen';
-export { default as SignUpCompleteScreen } from './SignUpCompleteScreen';
-export { default as AccountRestrictedScreen } from './AccountRestrictedScreen';
-export { default as AccountRecoveryScreen } from './AccountRecoveryScreen';
+export { LoginScreen } from './LoginScreen';
+export { SignUpScreen } from './SignUpScreen';
+export { SignUpCompleteScreen } from './SignUpCompleteScreen';
+export { AccountRestrictedScreen } from './AccountRestrictedScreen';
+export { AccountRecoveryScreen } from './AccountRecoveryScreen';

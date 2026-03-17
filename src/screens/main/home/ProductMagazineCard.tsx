@@ -17,7 +17,7 @@ interface ProductMagazineCardProps {
   onPress: (id: string) => void;
 }
 
-const ProductMagazineCard: React.FC<ProductMagazineCardProps> = ({ item, onPress }) => (
+export const ProductMagazineCard: React.FC<ProductMagazineCardProps> = ({ item, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={() => onPress(item.id)}>
     <Image
       source={require('../../../assets/images/img03.png')}
@@ -54,16 +54,54 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     overflow: 'hidden',
   },
-  thumb: { width: 120, height: 120 },
-  content: { flex: 1, paddingVertical: 12, paddingHorizontal: 15, gap: 5 },
-  bestBadge: { fontSize: 10, fontWeight: '500', color: colors.error },
-  title: { fontSize: 14, fontWeight: '600', color: colors.black, lineHeight: 18 },
-  tags: { fontSize: 12, color: colors.G600 },
-  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
-  price: { fontSize: 14, fontWeight: 'bold', color: colors.black },
-  meta: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  metaText: { fontSize: 11, color: colors.G600 },
-  iconWithText: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  thumb: {
+    width: 120,
+    height: 120,
+  },
+  content: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    gap: 5,
+  },
+  bestBadge: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: colors.error,
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.black,
+    lineHeight: 18,
+  },
+  tags: {
+    fontSize: 12,
+    color: colors.G600,
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.black,
+  },
+  meta: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  metaText: {
+    fontSize: 11,
+    color: colors.G600,
+  },
+  iconWithText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
 });
-
-export default ProductMagazineCard;

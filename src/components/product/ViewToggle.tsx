@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors as C } from '../../styles/colors';
+import { colors } from '../../styles/colors';
 import type { ViewType } from '../../types/product';
 
 interface ViewToggleProps {
@@ -8,20 +8,21 @@ interface ViewToggleProps {
   onChange: (t: ViewType) => void;
 }
 
-const ViewToggle: React.FC<ViewToggleProps> = ({ viewType, onChange }) => (
+const LIST_LINES = [0, 1, 2];
+const GRID_CELLS = [0, 1, 2, 3];
+
+export const ViewToggle = ({ viewType, onChange }: ViewToggleProps) => (
   <View style={styles.container}>
-    {/* 리스트형 */}
     <TouchableOpacity style={styles.btn} onPress={() => onChange('magazine')} activeOpacity={0.7}>
       <View style={styles.listIconWrapper}>
-        {[0, 1, 2].map((i) => (
+        {LIST_LINES.map(i => (
           <View key={i} style={[styles.listIconLine, viewType === 'magazine' && styles.iconActive]} />
         ))}
       </View>
     </TouchableOpacity>
-    {/* 그리드형 */}
     <TouchableOpacity style={styles.btn} onPress={() => onChange('grid')} activeOpacity={0.7}>
       <View style={styles.gridIconWrapper}>
-        {[0, 1, 2, 3].map((i) => (
+        {GRID_CELLS.map(i => (
           <View key={i} style={[styles.gridIconCell, viewType === 'grid' && styles.iconActive]} />
         ))}
       </View>
@@ -49,10 +50,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 3,
     borderRadius: 1,
-    backgroundColor: C.G400,
+    backgroundColor: colors.G400,
   },
   iconActive: {
-    backgroundColor: C.primary,
+    backgroundColor: colors.primary,
   },
   gridIconWrapper: {
     width: 18,
@@ -66,8 +67,6 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 1,
-    backgroundColor: C.G400,
+    backgroundColor: colors.G400,
   },
 });
-
-export default ViewToggle;

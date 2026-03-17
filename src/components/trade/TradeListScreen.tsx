@@ -12,11 +12,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CalendarIcon from '../../assets/icon/calendar.svg';
-import Header from '../common/Header';
+import { Header } from '../common';
 import HeartIcon from '../../assets/icon/heart.svg';
 import CommentIcon from '../../assets/icon/comment.svg';
 import { colors as C } from '../../styles/colors';
-import ReviewModal, { ReviewModalType } from '../common/ReviewModal';
+import { ReviewModal, ReviewModalType } from '../common';
 import type { TradeItem, TradeState } from '../../types';
 
 const BORDER_RADIUS = 4;
@@ -202,7 +202,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
   );
 };
 
-const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, topTabs, subTabs, stateFilters, stateFilterLabel, periodLabel, showDateHeader = true }) => {
+export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, topTabs, subTabs, stateFilters, stateFilterLabel, periodLabel, showDateHeader = true }) => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [activeTab, setActiveTab] = useState(0);
   const [activeSubTab, setActiveSubTab] = useState(0);
@@ -895,4 +895,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TradeListScreen;

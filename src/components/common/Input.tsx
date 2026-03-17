@@ -1,7 +1,3 @@
-/**
- * 공통 Input 컴포넌트
- */
-
 import React, { useState, forwardRef } from 'react';
 import {
   View,
@@ -18,7 +14,12 @@ import { typography, fontFamily } from '../../styles/typography';
 import { spacing } from '../../styles/spacing';
 import type { InputProps } from '../../types';
 
-const Input = forwardRef<TextInput, InputProps & TextInputProps>(
+const INPUT_HEIGHT = 50;
+const MULTILINE_HEIGHT = 100;
+const ICON_SIZE = 20;
+const HIT_SLOP = { top: 10, bottom: 10, left: 10, right: 10 };
+
+export const Input = forwardRef<TextInput, InputProps & TextInputProps>(
   (
     {
       label,
@@ -58,7 +59,7 @@ const Input = forwardRef<TextInput, InputProps & TextInputProps>(
     };
 
     const togglePasswordVisibility = () => {
-      setIsPasswordVisible(!isPasswordVisible);
+      setIsPasswordVisible((prev) => !prev);
     };
 
     const inputContainerStyles = [
@@ -108,12 +109,12 @@ const Input = forwardRef<TextInput, InputProps & TextInputProps>(
             <TouchableOpacity
               style={styles.rightIcon}
               onPress={togglePasswordVisibility}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={HIT_SLOP}
             >
               {isPasswordVisible ? (
-                <EyeIcon width={20} height={20} color={colors.textTertiary} />
+                <EyeIcon width={ICON_SIZE} height={ICON_SIZE} color={colors.textTertiary} />
               ) : (
-                <EyeClosedIcon width={20} height={20} color={colors.textTertiary} />
+                <EyeClosedIcon width={ICON_SIZE} height={ICON_SIZE} color={colors.textTertiary} />
               )}
             </TouchableOpacity>
           )}
@@ -156,18 +157,18 @@ const styles = StyleSheet.create({
   },
   required: {
     ...typography.label,
-    color: colors.error,
     marginLeft: 2,
+    color: colors.error,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.borderMedium,
+    height: INPUT_HEIGHT,
     paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: colors.borderMedium,
+    backgroundColor: colors.white,
   },
   inputContainerFocused: {
     borderColor: 'rgba(0,0,0,0.65)',
@@ -177,15 +178,14 @@ const styles = StyleSheet.create({
   },
   inputContainerDisabled: {
     backgroundColor: colors.G200,
-    color: colors.G500,
   },
   input: {
     flex: 1,
     height: '100%',
+    padding: 0,
     fontFamily: fontFamily.medium,
     fontSize: 14,
     color: colors.textPrimary,
-    padding: 0,
   },
   inputWithLeftIcon: {
     marginLeft: spacing.sm,
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   inputMultiline: {
-    height: 100,
-    textAlignVertical: 'top',
+    height: MULTILINE_HEIGHT,
     paddingVertical: spacing.md,
+    textAlignVertical: 'top',
   },
   leftIcon: {
     marginRight: spacing.sm,
@@ -217,5 +217,3 @@ const styles = StyleSheet.create({
     color: colors.textTertiary,
   },
 });
-
-export default Input;

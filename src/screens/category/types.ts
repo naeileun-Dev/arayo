@@ -1,12 +1,12 @@
 import { Dimensions } from 'react-native';
 
-// 공통 타입 re-export (하위 호환)
 export type {
   ItemState,
   ViewType,
   SortType,
   ProductListItem,
 } from '../../types/product';
+
 export {
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
@@ -16,8 +16,8 @@ export {
   SORT_OPTIONS,
 } from '../../types/product';
 
-// ProductListItem을 기존 코드에서 Product으로도 쓸 수 있도록 alias
 import type { ProductListItem } from '../../types/product';
+
 export type Product = ProductListItem;
 
 export interface FilterState {
@@ -36,13 +36,32 @@ export interface FilterState {
   dateToMonth: string;
 }
 
-export const PRICE_RANGES = ['전체', '10만원 이하', '10~100만원', '100~1000만원', '1000~2000만원', '2000만원 이상'];
+export const PRICE_RANGES = [
+  '전체',
+  '10만원 이하',
+  '10~100만원',
+  '100~1000만원',
+  '1000~2000만원',
+  '2000만원 이상',
+];
+
 export const DRAWER_WIDTH = Dimensions.get('window').width * 0.8;
 
 export const MANUFACTURERS = [
-  '화천기계', 'DN솔루션즈(구두산)', 'SMEC(스맥)', '하스(Haas)', '마작(Mazak)',
-  'DMG모리(DMG MORI)', '오쿠마(Okuma)', '미쓰비시(Mitsubishi)', '파나소닉(Panasonic)',
-  '화낙(Fanuc)', '두산공작기계', '현대위아', '기아기계', '삼성중공업',
+  '화천기계',
+  'DN솔루션즈(구두산)',
+  'SMEC(스맥)',
+  '하스(Haas)',
+  '마작(Mazak)',
+  'DMG모리(DMG MORI)',
+  '오쿠마(Okuma)',
+  '미쓰비시(Mitsubishi)',
+  '파나소닉(Panasonic)',
+  '화낙(Fanuc)',
+  '두산공작기계',
+  '현대위아',
+  '기아기계',
+  '삼성중공업',
 ];
 
 export const INITIAL_FILTER: FilterState = {
@@ -64,19 +83,20 @@ export const INITIAL_FILTER: FilterState = {
 const IMG_01 = require('../../assets/images/img01.png');
 const IMG_02 = require('../../assets/images/img02.png');
 const IMG_03 = require('../../assets/images/img03.png');
+
 export const PROFILE_IMG = require('../../assets/images/profileImg.png');
 
 export const MOCK_PRODUCTS: ProductListItem[] = [
-  { id: '1',  state: 'hold',   isAd: true,  isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
-  { id: '2',  state: 'used',   isAd: true,  isLiked: false, image: IMG_02, title: '화천기계 범용선반 CS-3020H 온도조절 안정적 · 장시간 운전 가능',        tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
-  { id: '3',  state: 'sold',   isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
-  { id: '4',  state: 'new',    isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
-  { id: '5',  state: 'normal', isAd: false, isLiked: true,  image: IMG_02, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전',   likes: 21, reviews: 0 },
-  { id: '6',  state: 'hold',   isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '15분전',  likes: 5,  reviews: 2 },
-  { id: '7',  state: 'used',   isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '1시간전',  likes: 12, reviews: 0 },
-  { id: '8',  state: 'sold',   isAd: false, isLiked: false, image: IMG_02, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '2시간전',  likes: 8,  reviews: 1 },
-  { id: '9',  state: 'new',    isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '3시간전',  likes: 45, reviews: 5 },
-  { id: '10', state: 'normal', isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '4시간전',  likes: 3,  reviews: 0 },
+  { id: '1', state: 'hold', isAd: true, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전', likes: 21, reviews: 0 },
+  { id: '2', state: 'used', isAd: true, isLiked: false, image: IMG_02, title: '화천기계 범용선반 CS-3020H 온도조절 안정적 · 장시간 운전 가능', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전', likes: 21, reviews: 0 },
+  { id: '3', state: 'sold', isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전', likes: 21, reviews: 0 },
+  { id: '4', state: 'new', isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전', likes: 21, reviews: 0 },
+  { id: '5', state: 'normal', isAd: false, isLiked: true, image: IMG_02, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '9분전', likes: 21, reviews: 0 },
+  { id: '6', state: 'hold', isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '15분전', likes: 5, reviews: 2 },
+  { id: '7', state: 'used', isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '1시간전', likes: 12, reviews: 0 },
+  { id: '8', state: 'sold', isAd: false, isLiked: false, image: IMG_02, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '2시간전', likes: 8, reviews: 1 },
+  { id: '9', state: 'new', isAd: false, isLiked: false, image: IMG_03, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '3시간전', likes: 45, reviews: 5 },
+  { id: '10', state: 'normal', isAd: false, isLiked: false, image: IMG_01, title: '온도조절 안정적 · 장시간 운전 가능 온도조절 안정적 · 온도조절 안정적', tags: '#누유무 #톱날교체용이', price: 12300000, timeAgo: '4시간전', likes: 3, reviews: 0 },
 ];
 
 export const MOCK_COMPARE_DETAIL = {
@@ -102,13 +122,13 @@ export const MOCK_COMPARE_DETAIL = {
   },
 };
 
-import BasketIcon     from '../../assets/icon/product/shopping-basket.svg';
-import TruckUpIcon    from '../../assets/icon/product/truck - up.svg';
-import WrenchIcon     from '../../assets/icon/product/wrench.svg';
-import ScrollIcon     from '../../assets/icon/product/scroll.svg';
-import CogIcon        from '../../assets/icon/product/cog.svg';
-import TruckDownIcon  from '../../assets/icon/product/truck - down.svg';
-import ForkliftIcon   from '../../assets/icon/product/forklift.svg';
+import BasketIcon from '../../assets/icon/product/shopping-basket.svg';
+import TruckUpIcon from '../../assets/icon/product/truck - up.svg';
+import WrenchIcon from '../../assets/icon/product/wrench.svg';
+import ScrollIcon from '../../assets/icon/product/scroll.svg';
+import CogIcon from '../../assets/icon/product/cog.svg';
+import TruckDownIcon from '../../assets/icon/product/truck - down.svg';
+import ForkliftIcon from '../../assets/icon/product/forklift.svg';
 import CreditCardIcon from '../../assets/icon/product/credit-card.svg';
 
 export const SERVICE_ITEMS: { name: string; on: boolean; Icon: React.FC<any> }[][] = [
@@ -137,14 +157,14 @@ export const SERVICE_LABELS: { key: keyof typeof MOCK_COMPARE_DETAIL.services; l
   { key: 'installment', label: '할부가능' },
 ];
 
-export const countActiveFilters = (f: FilterState) => {
-  let n = 0;
-  if (f.searchText) n++;
-  if (f.productType !== '전체') n++;
-  if (f.saleStatus !== '전체') n++;
-  if (f.manufacturers.length > 0) n++;
-  if (f.city) n++;
-  if (f.priceRange !== '전체' || f.priceMin || f.priceMax) n++;
-  if (f.dateFromYear || f.dateFromMonth || f.dateToYear || f.dateToMonth) n++;
-  return n;
+export const countActiveFilters = (f: FilterState): number => {
+  let count = 0;
+  if (f.searchText) count++;
+  if (f.productType !== '전체') count++;
+  if (f.saleStatus !== '전체') count++;
+  if (f.manufacturers.length > 0) count++;
+  if (f.city) count++;
+  if (f.priceRange !== '전체' || f.priceMin || f.priceMax) count++;
+  if (f.dateFromYear || f.dateFromMonth || f.dateToYear || f.dateToMonth) count++;
+  return count;
 };

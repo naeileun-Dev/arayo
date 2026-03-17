@@ -1,8 +1,3 @@
-/**
- * 로그인 화면
- * UI-MMBR-101
- */
-
 import React, { useState } from 'react';
 import {
   View,
@@ -25,7 +20,7 @@ import type { AuthStackParamList, SocialProvider } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
+export const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [autoLogin, setAutoLogin] = useState(false);
@@ -33,8 +28,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [idError, setIdError] = useState('');
   const [pwError, setPwError] = useState('');
 
-  const handleLogin = async () => {
-    // 유효성 검사
+  const validateForm = (): boolean => {
     let hasError = false;
     setIdError('');
     setPwError('');
@@ -52,20 +46,21 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       hasError = true;
     }
 
-    if (hasError) return;
+    return !hasError;
+  };
+
+  const handleLogin = async () => {
+    if (!validateForm()) return;
 
     setIsLoading(true);
     try {
-      console.log('Login attempt:', { userId, password, autoLogin });
-
-      // 로그인 성공 시 Main 화면으로 이동
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [{ name: 'Main' as any }],
         }),
       );
-    } catch (error) {
+    } catch {
       setPwError('*아이디 또는 비밀번호가 일치하지 않습니다.');
     } finally {
       setIsLoading(false);
@@ -73,7 +68,25 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleSocialLogin = (provider: SocialProvider) => {
-    console.log('Social login:', provider);
+    // TODO: Implement social login
+  };
+
+  const handleUserIdChange = (text: string) => {
+    setUserId(text);
+    if (idError) setIdError('');
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    if (pwError) setPwError('');
+  };
+
+  const navigateToFindId = () => navigation.navigate('AccountRecovery', { tab: 'findId' });
+  const navigateToResetPassword = () => navigation.navigate('AccountRecovery', { tab: 'resetPassword' });
+  const navigateToSignUp = () => navigation.navigate('SignUp');
+
+  const handleBannerPress = () => {
+    // TODO: Implement banner action
   };
 
   return (
@@ -87,50 +100,39 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* 로고 영역 */}
           <View style={styles.logoContainer}>
             <MainLogo width={160} height={50} />
           </View>
 
-          {/* 로그인 입력 폼 */}
           <View style={styles.formSection}>
             <View style={styles.formContainer}>
               <View style={styles.formLi}>
                 <Input
                   placeholder="아이디 입력를 입력해 주세요."
                   value={userId}
-                  onChangeText={(text) => {
-                    setUserId(text);
-                    if (idError) setIdError('');
-                  }}
+                  onChangeText={handleUserIdChange}
                   autoCapitalize="none"
                   containerStyle={styles.inputBox}
                 />
               </View>
-
               <View style={styles.formLi}>
                 <Input
                   placeholder="비밀번호를 입력해 주세요."
                   value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    if (pwError) setPwError('');
-                  }}
+                  onChangeText={handlePasswordChange}
                   secureTextEntry
                   containerStyle={styles.inputBox}
                 />
               </View>
             </View>
 
-            {/* 에러 메시지 */}
-            {(pwError || idError) ? (
+            {(pwError || idError) && (
               <View style={styles.errorContainer}>
-                {pwError ? <Text style={styles.errorText}>{pwError}</Text> : null}
-                {idError ? <Text style={styles.errorText}>{idError}</Text> : null}
+                {pwError && <Text style={styles.errorText}>{pwError}</Text>}
+                {idError && <Text style={styles.errorText}>{idError}</Text>}
               </View>
-            ) : null}
+            )}
 
-            {/* 자동로그인 및 링크 */}
             <View style={styles.optionsRow}>
               <Checkbox
                 checked={autoLogin}
@@ -139,58 +141,38 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 size="small"
               />
               <View style={styles.linksContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('AccountRecovery', { tab: 'findId' })}>
+                <TouchableOpacity onPress={navigateToFindId}>
                   <Text style={styles.linkText}>아이디 찾기</Text>
                 </TouchableOpacity>
                 <View style={styles.linkDivider} />
-                <TouchableOpacity onPress={() => navigation.navigate('AccountRecovery', { tab: 'resetPassword' })}>
+                <TouchableOpacity onPress={navigateToResetPassword}>
                   <Text style={styles.linkText}>비밀번호 재설정</Text>
                 </TouchableOpacity>
                 <View style={styles.linkDivider} />
-                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                <TouchableOpacity onPress={navigateToSignUp}>
                   <Text style={styles.linkText}>회원가입</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* 로그인 버튼 */}
             <View style={styles.formBtnSet}>
-              <Button
-                title="로그인"
-                onPress={handleLogin}
-                loading={isLoading}
-              />
+              <Button title="로그인" onPress={handleLogin} loading={isLoading} />
             </View>
           </View>
 
-          {/* SNS 간편 로그인 */}
           <View style={styles.snsLoginSection}>
             <View style={styles.divider} />
             <Text style={styles.socialTitle}>간편 로그인</Text>
-
             <View style={styles.socialButtons}>
-              <SocialLoginButton
-                provider="kakao"
-                onPress={() => handleSocialLogin('kakao')}
-              />
-              <SocialLoginButton
-                provider="naver"
-                onPress={() => handleSocialLogin('naver')}
-              />
-              <SocialLoginButton
-                provider="google"
-                onPress={() => handleSocialLogin('google')}
-              />
-              <SocialLoginButton
-                provider="apple"
-                onPress={() => handleSocialLogin('apple')}
-              />
+              <SocialLoginButton provider="kakao" onPress={() => handleSocialLogin('kakao')} />
+              <SocialLoginButton provider="naver" onPress={() => handleSocialLogin('naver')} />
+              <SocialLoginButton provider="google" onPress={() => handleSocialLogin('google')} />
+              <SocialLoginButton provider="apple" onPress={() => handleSocialLogin('apple')} />
             </View>
           </View>
 
-          {/* 하단 배너 영역 */}
           <View style={styles.bannerSection}>
-            <TouchableOpacity onPress={() => console.log('Banner clicked')}>
+            <TouchableOpacity onPress={handleBannerPress}>
               <Image
                 source={require('../../assets/images/banner02.png')}
                 style={styles.bannerImage}
@@ -198,7 +180,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -217,8 +198,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 20,
   },
-
-  /* 로고 영역 - 더 크게, 아래 간격 줄임 */
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -226,10 +205,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     height: 80,
   },
-
-  /* 로그인 폼 영역 */
   formSection: {
-    paddingTop: 0,
     paddingBottom: 10,
   },
   formContainer: {
@@ -248,7 +224,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.error,
   },
-
   optionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -272,7 +247,6 @@ const styles = StyleSheet.create({
   formBtnSet: {
     marginTop: 15,
   },
-
   snsLoginSection: {
     marginTop: 10,
   },
@@ -293,8 +267,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 25,
   },
-
-  /* 하단 배너 영역 */
   bannerSection: {
     paddingVertical: 25,
   },
@@ -304,5 +276,3 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
-
-export default LoginScreen;

@@ -6,7 +6,7 @@ interface SectionTitleProps {
   title: string;
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ title }) => (
+export const SectionTitle: React.FC<SectionTitleProps> = ({ title }) => (
   <View style={styles.wrap}>
     <Text style={styles.title}>{title}</Text>
   </View>
@@ -25,4 +25,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SectionTitle;

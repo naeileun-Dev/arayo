@@ -9,23 +9,21 @@ import BasketIcon from '../../assets/icon/product/shopping-basket.svg';
 
 export { colors } from '../../styles/colors';
 
-// 이미지
 export const PRODUCT_IMGS = [
   require('../../assets/images/img01.png'),
   require('../../assets/images/img02.png'),
   require('../../assets/images/img03.png'),
 ];
+
 export const BANNER_IMG = require('../../assets/images/banner03.png');
 export const PROFILE_IMG = require('../../assets/images/profileImg.png');
 export const USER_IMG = require('../../assets/images/user01.png');
 
-// 탭 / 섹션
 export const TABS = ['상품소개', '판매자 정보', '추천상품', '판매자 후기'];
 export const SECTION_KEYS = ['intro', 'seller', 'recommend', 'review'] as const;
 export type SectionKey = typeof SECTION_KEYS[number];
 export const STICKY_HEADER_HEIGHT = 55;
 
-// 서비스 제공 항목 (on: 해당 판매자가 제공하는 서비스)
 export const SERVICE_ITEMS = [
   [
     { name: '주문제작', on: false, Icon: BasketIcon },
@@ -41,7 +39,6 @@ export const SERVICE_ITEMS = [
   ],
 ];
 
-// 상품 스펙 (API 연동 시 교체)
 export const SPEC_ROWS = [
   { label: '제조사', value: '아라요 기계장터' },
   { label: '모델명', value: 'kkma-0000' },
@@ -49,7 +46,6 @@ export const SPEC_ROWS = [
   { label: '보증기간', value: '2028년 10월' },
 ];
 
-// 판매자 정보 (API 연동 시 교체)
 export const SELLER_INFO = [
   { label: '상호', value: '주식회사 아라요 기계장터' },
   { label: '담당자명', value: '김샘플' },
@@ -59,7 +55,6 @@ export const SELLER_INFO = [
   { label: '홈페이지', value: 'https://www.naver.com/', isLink: true },
 ];
 
-// 평점 분포 (API 연동 시 교체)
 export const RATING_BARS = [
   { score: 5, pct: '100%', active: true },
   { score: 4, pct: '20%', active: false },

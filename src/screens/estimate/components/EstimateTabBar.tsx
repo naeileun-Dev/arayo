@@ -8,7 +8,7 @@ interface Props {
   onChange: (index: number) => void;
 }
 
-const EstimateTabBar: React.FC<Props> = ({ tabs, activeIndex, onChange }) => (
+export const EstimateTabBar: React.FC<Props> = ({ tabs, activeIndex, onChange }) => (
   <View style={styles.tabMenu}>
     {tabs.map((tab, index) => {
       const active = activeIndex === index;
@@ -54,4 +54,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateTabBar;

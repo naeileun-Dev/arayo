@@ -1,8 +1,3 @@
-/**
- * 계정정보 찾기 화면
- * UI-MMBR-106 ~ UI-MMBR-110
- */
-
 import React, { useState } from 'react';
 import {
   View,
@@ -24,13 +19,11 @@ import type { AuthStackParamList, Tab } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'AccountRecovery'>;
 
-// 탭 정의
 const TABS: Tab[] = [
   { key: 'findId', label: '아이디찾기' },
   { key: 'resetPassword', label: '비밀번호 재설정' },
 ];
 
-// 상태 정의
 enum Status {
   INITIAL = 'initial',
   VERIFIED = 'verified',
@@ -38,26 +31,20 @@ enum Status {
   COMPLETE = 'complete',
 }
 
-const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
+export const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
   const initialTab = route.params?.tab || 'findId';
 
   const [activeTab, setActiveTab] = useState(initialTab);
   const [status, setStatus] = useState<Status>(Status.INITIAL);
-
-  // 아이디 찾기 결과
   const [foundUserId, setFoundUserId] = useState('');
-
-  // 비밀번호 재설정 폼
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<{
     password?: string[];
     confirm?: string[];
   }>({});
-
   const [isLoading, setIsLoading] = useState(false);
 
-  // 탭 변경 시 상태 초기화
   const handleTabChange = (tab: string) => {
     setActiveTab(tab as 'findId' | 'resetPassword');
     setStatus(Status.INITIAL);
@@ -67,11 +54,10 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
     setPasswordErrors({});
   };
 
-  // PASS 본인인증 처리
   const handleVerification = async () => {
     setIsLoading(true);
     try {
-      await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
+      await new Promise<void>((resolve) => setTimeout(resolve, 1000));
 
       if (activeTab === 'findId') {
         setFoundUserId('sa••••');
@@ -79,14 +65,11 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
       } else {
         setStatus(Status.PASSWORD_RESET);
       }
-    } catch (error) {
-      console.error('Verification failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 비밀번호 재설정 완료
   const handlePasswordReset = async () => {
     const errors: { password?: string[]; confirm?: string[] } = {};
     const passwordErrs = validatePassword(newPassword);
@@ -102,21 +85,17 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
 
     setIsLoading(true);
     try {
-      await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
+      await new Promise<void>((resolve) => setTimeout(resolve, 1000));
       setStatus(Status.COMPLETE);
-    } catch (error) {
-      console.error('Password reset failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 로그인 화면으로 이동
   const handleGoToLogin = () => {
     navigation.navigate('Login');
   };
 
-  // 초기 화면 (PASS 인증)
   const renderInitialView = () => (
     <View style={styles.contentContainer}>
       <Text style={styles.sectionTitle}>휴대폰인증</Text>
@@ -129,7 +108,6 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
     </View>
   );
 
-  // 아이디 찾기 결과 화면
   const renderIdFoundView = () => (
     <View style={styles.contentContainer}>
       <Text style={styles.resultMessage}>
@@ -150,7 +128,6 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
     </View>
   );
 
-  // 새 비밀번호 입력 화면
   const renderPasswordResetView = () => (
     <View style={styles.contentContainer}>
       <View style={styles.fieldContainer}>
@@ -167,9 +144,7 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
           (보안을 위해 영문, 숫자, 특수문자를 사용을 권장드립니다.)
         </Text>
         {passwordErrors.password?.map((error, index) => (
-          <Text key={index} style={styles.errorText}>
-            *{error}
-          </Text>
+          <Text key={index} style={styles.errorText}>*{error}</Text>
         ))}
       </View>
 
@@ -183,9 +158,7 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
           containerStyle={styles.inputNoMargin}
         />
         {passwordErrors.confirm?.map((error, index) => (
-          <Text key={index} style={styles.errorText}>
-            *{error}
-          </Text>
+          <Text key={index} style={styles.errorText}>*{error}</Text>
         ))}
       </View>
 
@@ -198,7 +171,6 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
     </View>
   );
 
-  // 비밀번호 재설정 완료 화면
   const renderPasswordCompleteView = () => (
     <View style={styles.completeContainer}>
       <View style={styles.successIcon}>
@@ -218,24 +190,18 @@ const AccountRecoveryScreen: React.FC<Props> = ({ navigation, route }) => {
     </View>
   );
 
-  // 현재 상태에 따른 컨텐츠 렌더링
   const renderContent = () => {
     if (activeTab === 'findId') {
-      switch (status) {
-        case Status.VERIFIED:
-          return renderIdFoundView();
-        default:
-          return renderInitialView();
-      }
-    } else {
-      switch (status) {
-        case Status.PASSWORD_RESET:
-          return renderPasswordResetView();
-        case Status.COMPLETE:
-          return renderPasswordCompleteView();
-        default:
-          return renderInitialView();
-      }
+      return status === Status.VERIFIED ? renderIdFoundView() : renderInitialView();
+    }
+
+    switch (status) {
+      case Status.PASSWORD_RESET:
+        return renderPasswordResetView();
+      case Status.COMPLETE:
+        return renderPasswordCompleteView();
+      default:
+        return renderInitialView();
     }
   };
 
@@ -354,5 +320,3 @@ const styles = StyleSheet.create({
     marginBottom: spacing['2xl'],
   },
 });
-
-export default AccountRecoveryScreen;

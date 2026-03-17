@@ -11,7 +11,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
-import Header from '../../components/common/Header';
+import { Header } from '../../components/common';
+import { BottomButtonBar } from '../../components/common';
 
 interface DisabledField {
   value: string;
@@ -69,7 +70,7 @@ const FormSectionComponent = ({ section }: { section: FormSection }) => (
   </View>
 );
 
-const BusinessUpgradeFormGoldScreen = () => {
+export const BusinessUpgradeFormGoldScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
@@ -88,11 +89,11 @@ const BusinessUpgradeFormGoldScreen = () => {
         </View>
       </ScrollView>
 
-      <View style={styles.bottomFloating}>
-        <TouchableOpacity style={styles.submitButton} activeOpacity={0.8}>
-          <Text style={styles.submitButtonText}>전환하기</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomButtonBar
+        buttons={[
+          { label: '전환하기', onPress: () => {} },
+        ]}
+      />
     </SafeAreaView>
   );
 };
@@ -185,4 +186,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BusinessUpgradeFormGoldScreen;

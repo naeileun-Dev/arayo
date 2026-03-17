@@ -1,7 +1,3 @@
-/**
- * 공통 버튼 컴포넌트
- */
-
 import React from 'react';
 import {
   TouchableOpacity,
@@ -12,10 +8,13 @@ import {
 } from 'react-native';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
-import { borderRadius, componentHeight, spacing } from '../../styles/spacing';
+import { componentHeight, spacing } from '../../styles/spacing';
 import type { ButtonProps } from '../../types';
 
-const Button: React.FC<ButtonProps> = ({
+const MEDIUM_HEIGHT = 50;
+const MEDIUM_PADDING = 15;
+
+export const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
   variant = 'primary',
@@ -47,12 +46,9 @@ const Button: React.FC<ButtonProps> = ({
     textStyle,
   ];
 
-  const getLoaderColor = (): string => {
-    if (variant === 'primary' || variant === 'danger') {
-      return colors.white;
-    }
-    return colors.primary;
-  };
+  const loaderColor = (variant === 'primary' || variant === 'danger')
+    ? colors.white
+    : colors.primary;
 
   return (
     <TouchableOpacity
@@ -62,7 +58,7 @@ const Button: React.FC<ButtonProps> = ({
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator color={getLoaderColor()} size="small" />
+        <ActivityIndicator color={loaderColor} size="small" />
       ) : (
         <View style={styles.content}>
           {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
@@ -100,7 +96,6 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
 
-  // Variants
   primary: {
     backgroundColor: colors.primary,
   },
@@ -128,9 +123,9 @@ const styles = StyleSheet.create({
   },
 
   outline: {
-    backgroundColor: colors.transparent,
     borderWidth: 1,
     borderColor: colors.borderMedium,
+    backgroundColor: colors.transparent,
   },
   outlineText: {
     color: colors.textPrimary,
@@ -166,7 +161,6 @@ const styles = StyleSheet.create({
     color: colors.textTertiary,
   },
 
-  // Sizes
   small: {
     height: componentHeight.buttonSmall,
     paddingHorizontal: spacing.base,
@@ -176,8 +170,8 @@ const styles = StyleSheet.create({
   },
 
   medium: {
-    height: 50,
-    paddingHorizontal: 15,
+    height: MEDIUM_HEIGHT,
+    paddingHorizontal: MEDIUM_PADDING,
   },
   mediumText: {
     ...typography.button,
@@ -198,5 +192,3 @@ const styles = StyleSheet.create({
   },
   disabledText: {},
 });
-
-export default Button;

@@ -1,16 +1,12 @@
-/**
- * 약관 동의 아이템 컴포넌트
- */
-
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing } from '../../styles/spacing';
-import Checkbox from '../common/Checkbox';
+import { Checkbox } from '../common';
 import type { AgreementItemProps } from '../../types';
 
-const AgreementItem: React.FC<AgreementItemProps> = ({
+export const AgreementItem: React.FC<AgreementItemProps> = ({
   checked,
   onToggle,
   label,
@@ -19,11 +15,13 @@ const AgreementItem: React.FC<AgreementItemProps> = ({
   isAllAgree = false,
   style,
 }) => {
+  const handleToggle = () => onToggle(!checked);
+
   if (isAllAgree) {
     return (
       <TouchableOpacity
         style={[styles.allAgreeContainer, style]}
-        onPress={() => onToggle(!checked)}
+        onPress={handleToggle}
         activeOpacity={0.7}
       >
         <Checkbox checked={checked} onToggle={onToggle} />
@@ -36,14 +34,15 @@ const AgreementItem: React.FC<AgreementItemProps> = ({
     <View style={[styles.container, style]}>
       <TouchableOpacity
         style={styles.checkboxArea}
-        onPress={() => onToggle(!checked)}
+        onPress={handleToggle}
         activeOpacity={0.7}
       >
         <Checkbox checked={checked} onToggle={onToggle} size="small" />
         <View style={styles.labelContainer}>
           <Text style={styles.label}>{label}</Text>
-          {required && <Text style={styles.required}>(필수)</Text>}
-          {!required && <Text style={styles.optional}>(선택)</Text>}
+          <Text style={required ? styles.required : styles.optional}>
+            {required ? '(필수)' : '(선택)'}
+          </Text>
         </View>
       </TouchableOpacity>
 
@@ -114,5 +113,3 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
 });
-
-export default AgreementItem;

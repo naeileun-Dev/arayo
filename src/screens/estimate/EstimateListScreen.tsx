@@ -1,26 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  StatusBar,
-  Platform,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../styles/colors';
-import CurveArrowIcon from '../../assets/icon/curve_arrow.svg';
-import { EstimateListItemData, TabType, SortType } from './types';
-import EstimateHeader from './components/EstimateHeader';
-import EstimateTabSort from './components/EstimateTabSort';
-import EstimateListItem from './components/EstimateListItem';
+import React from 'react';
+import { InquiryListScreen, InquiryListItemData } from '../../components/inquiry';
 
 // ─────────────────────────────────────────────────
 // Sample Data
 // ─────────────────────────────────────────────────
-const SAMPLE_DATA: EstimateListItemData[] = [
+const SAMPLE_DATA: InquiryListItemData[] = [
   {
     id: '1',
     status: 'ing',
@@ -104,153 +88,13 @@ const SAMPLE_DATA: EstimateListItemData[] = [
   },
 ];
 
-// ─────────────────────────────────────────────────
-// Main Screen
-// ─────────────────────────────────────────────────
-const EstimateListScreen: React.FC = () => {
-  const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState<TabType>('전체');
-  const [sortType] = useState<SortType>('최신순');
-  const [isLoadingMore] = useState(true);
+export const EstimateListScreen: React.FC = () => (
+  <InquiryListScreen
+    title="견적 문의"
+    fabLabel="견적문의"
+    fabNavigateTo="EstimateUpload"
+    detailNavigateTo="EstimateDetail"
+    sampleData={SAMPLE_DATA}
+  />
+);
 
-  const handleTabChange = useCallback((tab: TabType) => setActiveTab(tab), []);
-
-  const handleItemPress = useCallback((id: string) => {
-    (navigation as any).navigate('EstimateDetail', { id });
-  }, [navigation]);
-
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
-
-      <EstimateHeader
-        onBack={() => navigation.goBack()}
-        onSearch={() => (navigation as any).navigate('Search')}
-      />
-
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* 배너 */}
-        <View style={styles.bannerWrapper}>
-          <View style={styles.bannerImage} />
-        </View>
-
-        {/* 탭 + 정렬 */}
-        <EstimateTabSort
-          activeTab={activeTab}
-          sortType={sortType}
-          onTabChange={handleTabChange}
-          onSortPress={() => {}}
-        />
-
-        {/* 견적 목록 */}
-        <View style={styles.estimateList}>
-          {SAMPLE_DATA.map((item, index) => (
-            <EstimateListItem
-              key={item.id}
-              item={item}
-              isFirst={index === 0}
-              onPress={handleItemPress}
-              subRowIcon={<CurveArrowIcon width={16} height={16} color={colors.G600} />}
-            />
-          ))}
-        </View>
-
-        {isLoadingMore && (
-          <View style={styles.loadingWrap}>
-            <ActivityIndicator size="large" color={colors.G400} />
-            <Text style={styles.loadingLabel}>목록을 불러오는 중입니다.</Text>
-          </View>
-        )}
-
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
-
-      {/* 플로팅 버튼 */}
-      <TouchableOpacity
-        style={styles.fab}
-        activeOpacity={0.8}
-        onPress={() => (navigation as any).navigate('EstimateUpload')}
-      >
-        <Text style={styles.fabPlus}>+</Text>
-        <Text style={styles.fabLabel}>견적문의</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  bottomSpacer: {
-    height: 100,
-  },
-  bannerWrapper: {
-    marginTop: 10,
-    marginBottom: 25,
-  },
-  bannerImage: {
-    width: '100%',
-    height: 100,
-    borderRadius: 4,
-    backgroundColor: colors.G200,
-  },
-  estimateList: {},
-  loadingWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-    gap: 15,
-  },
-  loadingLabel: {
-    fontSize: 14,
-    color: colors.G500,
-  },
-  fab: {
-    position: 'absolute',
-    bottom: 30,
-    right: 15,
-    height: 44,
-    paddingHorizontal: 16,
-    borderRadius: 40,
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 8,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 6,
-      },
-      android: { elevation: 6 },
-    }),
-  },
-  fabPlus: {
-    fontSize: 18,
-    fontWeight: '300',
-    color: colors.white,
-    marginRight: 7,
-  },
-  fabLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.white,
-  },
-});
-
-export default EstimateListScreen;

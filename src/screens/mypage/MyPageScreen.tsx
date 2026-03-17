@@ -7,19 +7,25 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Modal,
+  Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
 import RefreshCwIcon from '../../assets/icon/refresh-cw.svg';
+import ShareIcon from '../../assets/icon/share.svg';
 import { colors } from '../../styles/colors';
 import { MENU_ICONS, MENU_SECTIONS, USER_INFO } from './constants';
 
 export const MyPageScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isBusinessInfoOpen, setIsBusinessInfoOpen] = useState(false);
+  const [isWithdrawVisible, setIsWithdrawVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -84,14 +90,12 @@ export const MyPageScreen: React.FC = () => {
                       navigation.navigate('Profile');
                     } else if (item === '견적답변 내역') {
                       navigation.navigate('EstimateReplyList');
-                    } else {
-                      console.log(item);
                     }
                   }}
                   activeOpacity={0.7}
                 >
                   <View style={styles.menuItemLeft}>
-                    {IconComponent && <IconComponent width={20} height={20} color={colors.G600} />}
+                    {IconComponent && <IconComponent width={20} height={20} color="#7E7E7E" />}
                     <Text style={styles.menuItemText}>{item}</Text>
                   </View>
                   <ChevronRightIcon width={16} height={16} color={colors.G300} />
@@ -100,6 +104,20 @@ export const MyPageScreen: React.FC = () => {
             })}
           </View>
         ))}
+
+        <TouchableOpacity
+          style={styles.menuItem}
+          activeOpacity={0.7}
+          onPress={() => setIsWithdrawVisible(true)}
+        >
+          <View style={styles.menuItemLeft}>
+            <View style={styles.withdrawIconWrap}>
+              <ShareIcon width={20} height={20} color="#7E7E7E" />
+            </View>
+            <Text style={[styles.menuItemText, { color: '#7E7E7E' }]}>회원탈퇴</Text>
+          </View>
+          <ChevronRightIcon width={16} height={16} color={colors.G300} />
+        </TouchableOpacity>
 
         <View style={styles.footer}>
           <TouchableOpacity
@@ -153,6 +171,56 @@ export const MyPageScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
+
+      {/* 회원탈퇴 모달 */}
+      <Modal
+        visible={isWithdrawVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsWithdrawVisible(false)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setIsWithdrawVisible(false)}>
+          <View style={styles.modalContainer} onStartShouldSetResponder={() => true}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>회원탈퇴</Text>
+              <TouchableOpacity
+                onPress={() => setIsWithdrawVisible(false)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.modalBody}>
+              <Text style={styles.modalBodyText}>
+                회원 탈퇴 시 계정 정보와 이용 내역이{'\n'}
+                <Text style={styles.modalBodyBold}>모두 삭제되며 복구할 수 없습니다.</Text>
+              </Text>
+              <Text style={[styles.modalBodyText, { marginTop: 20 }]}>
+                탈퇴 후 30일 동안 재가입이 제한되며,{'\n'}
+                <Text style={styles.modalBodyBold}>사용 중인 050 안심번호는 회수됩니다.</Text>
+              </Text>
+            </View>
+
+            <View style={styles.modalFooter}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setIsWithdrawVisible(false)}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.modalCancelText}>취소</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={() => setIsWithdrawVisible(false)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.modalConfirmText}>탈퇴하기</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -275,6 +343,83 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.black,
+    lineHeight: 20,
+  },
+  withdrawIconWrap: {
+    transform: [{ rotate: '90deg' }],
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  modalContainer: {
+    width: '100%',
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 22,
+    paddingTop: 22,
+    paddingBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.black,
+  },
+  modalClose: {
+    fontSize: 18,
+    color: colors.black,
+  },
+  modalBody: {
+    paddingHorizontal: 22,
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+  modalBodyText: {
+    fontSize: 15,
+    fontWeight: '400',
+    color: colors.G600,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  modalBodyBold: {
+    fontWeight: '700',
+    color: colors.black,
+  },
+  modalFooter: {
+    flexDirection: 'row',
+  },
+  modalCancelBtn: {
+    flex: 1,
+    height: 56,
+    backgroundColor: colors.G100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalCancelText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  modalConfirmBtn: {
+    flex: 1,
+    height: 56,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalConfirmText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.white,
   },
   footer: {
     marginTop: 30,

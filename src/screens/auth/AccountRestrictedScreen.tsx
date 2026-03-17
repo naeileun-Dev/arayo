@@ -1,8 +1,3 @@
-/**
- * 계정 제한 안내 화면
- * UI-MMBR-102
- */
-
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,7 +9,7 @@ import type { AuthStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'AccountRestricted'>;
 
-const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
+export const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
   const handleGoHome = () => {
     navigation.navigate('Login');
   };
@@ -28,7 +23,6 @@ const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* 안내 메시지 */}
         <Text style={styles.title}>이용이 제한된 계정입니다.</Text>
         <Text style={styles.description}>
           확인 및 해제가 필요하신 경우{'\n'}
@@ -36,7 +30,6 @@ const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
         </Text>
       </View>
 
-      {/* 홈으로 버튼 */}
       <View style={styles.buttonContainer}>
         <Button title="홈으로" onPress={handleGoHome} />
       </View>
@@ -87,5 +80,3 @@ const styles = StyleSheet.create({
     paddingBottom: spacing['2xl'],
   },
 });
-
-export default AccountRestrictedScreen;

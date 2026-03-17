@@ -1,5 +1,5 @@
 import React from 'react';
-import TradeListScreen from '../../components/trade/TradeListScreen';
+import { TradeListScreen } from '../../components/trade/TradeListScreen';
 import type { TradeItem } from '../../types';
 
 const PURCHASE_ITEMS: TradeItem[] = [
@@ -94,8 +94,7 @@ const PURCHASE_ITEMS: TradeItem[] = [
   },
 ];
 
-const BuyListScreen: React.FC = () => {
-  return <TradeListScreen title="구매내역" items={PURCHASE_ITEMS} />;
-};
+export const PurchasListScreen: React.FC = () => (
+  <TradeListScreen title="구매내역" items={PURCHASE_ITEMS} />
+);
 
-export default BuyListScreen;

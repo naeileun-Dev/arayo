@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import { colors } from '../../styles/colors';
 
 export interface CompanyCardData {
@@ -7,13 +7,13 @@ export interface CompanyCardData {
   name: string;
   description: string;
   tags: string;
-  image?: any;
+  image?: ImageSourcePropType;
 }
 
 interface CompanyCardProps {
   item: CompanyCardData;
-  bgImage?: any;
-  profileImage?: any;
+  bgImage?: ImageSourcePropType;
+  profileImage?: ImageSourcePropType;
   onPress?: () => void;
   descNumberOfLines?: number;
   badge?: React.ReactNode;
@@ -21,7 +21,12 @@ interface CompanyCardProps {
 
 const PROFILE_IMG = require('../../assets/images/profileImg.png');
 
-const CompanyCard: React.FC<CompanyCardProps> = ({
+const BG_IMAGE_HEIGHT = 120;
+const PROFILE_SIZE = 40;
+const PROFILE_OFFSET_BOTTOM = -10;
+const PROFILE_OFFSET_LEFT = 10;
+
+export const CompanyCard: React.FC<CompanyCardProps> = ({
   item,
   bgImage,
   profileImage,
@@ -37,13 +42,10 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
         {thumbSource ? (
           <Image source={thumbSource} style={styles.bgImage} resizeMode="cover" />
         ) : (
-          <View style={[styles.bgImage, { backgroundColor: colors.G200 }]} />
+          <View style={[styles.bgImage, styles.bgImagePlaceholder]} />
         )}
         {badge && <View style={styles.badgeWrap}>{badge}</View>}
-        <Image
-          source={profileImage ?? PROFILE_IMG}
-          style={styles.profileImg}
-        />
+        <Image source={profileImage ?? PROFILE_IMG} style={styles.profileImg} />
       </View>
       <View style={styles.content}>
         <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
@@ -56,10 +58,10 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
-    borderColor: colors.G200,
-    borderRadius: 5,
     overflow: 'visible',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: colors.G200,
     backgroundColor: colors.white,
   },
   thumbBox: {
@@ -67,9 +69,12 @@ const styles = StyleSheet.create({
   },
   bgImage: {
     width: '100%',
-    height: 120,
+    height: BG_IMAGE_HEIGHT,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
+  },
+  bgImagePlaceholder: {
+    backgroundColor: colors.G200,
   },
   badgeWrap: {
     position: 'absolute',
@@ -79,19 +84,19 @@ const styles = StyleSheet.create({
   },
   profileImg: {
     position: 'absolute',
-    bottom: -10,
-    left: 10,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    bottom: PROFILE_OFFSET_BOTTOM,
+    left: PROFILE_OFFSET_LEFT,
+    width: PROFILE_SIZE,
+    height: PROFILE_SIZE,
     borderWidth: 2,
+    borderRadius: PROFILE_SIZE / 2,
     borderColor: colors.white,
     zIndex: 5,
   },
   content: {
+    gap: 8,
     padding: 15,
     paddingTop: 20,
-    gap: 8,
   },
   name: {
     fontSize: 15,
@@ -100,13 +105,11 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 13,
-    color: colors.black,
     lineHeight: 18,
+    color: colors.black,
   },
   tags: {
     fontSize: 12,
     color: colors.G600,
   },
 });
-
-export default CompanyCard;

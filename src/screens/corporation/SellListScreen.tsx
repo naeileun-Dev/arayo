@@ -1,5 +1,5 @@
 import React from 'react';
-import TradeListScreen from '../../components/trade/TradeListScreen';
+import { TradeListScreen } from '../../components/trade/TradeListScreen';
 import type { TradeItem } from '../../types';
 
 const SELL_ITEMS: TradeItem[] = [
@@ -143,18 +143,14 @@ const STATE_FILTERS = [
   { label: '입금완료', count: 5 },
 ];
 
-const SellListScreen: React.FC = () => {
-  return (
-    <TradeListScreen
-      title="판매내역"
-      items={SELL_ITEMS}
-      topTabs={TOP_TABS}
-      stateFilterLabel="안전결제"
-      stateFilters={STATE_FILTERS}
-      periodLabel="기간선택"
-      showDateHeader={false}
-    />
-  );
-};
-
-export default SellListScreen;
+export const SellListScreen: React.FC = () => (
+  <TradeListScreen
+    title="판매내역"
+    items={SELL_ITEMS}
+    topTabs={TOP_TABS}
+    stateFilterLabel="안전결제"
+    stateFilters={STATE_FILTERS}
+    periodLabel="기간선택"
+    showDateHeader={false}
+  />
+);

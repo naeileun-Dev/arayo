@@ -11,10 +11,10 @@ import {
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
-import Header from '../../components/common/Header';
+import { Header } from '../../components/common';
 import type { RootStackParamList } from '../../types';
 
-const BusinessUpgradeFormScreen = () => {
+export const BusinessUpgradeFormScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'BusinessUpgradeForm'>>();
   const { plan } = route.params;
@@ -191,4 +191,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BusinessUpgradeFormScreen;

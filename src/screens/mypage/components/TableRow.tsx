@@ -8,7 +8,7 @@ interface TableRowProps {
   bold?: boolean;
 }
 
-const TableRow: React.FC<TableRowProps> = ({ label, value, bold }) => (
+export const TableRow: React.FC<TableRowProps> = ({ label, value, bold }) => (
   <View style={styles.row}>
     <View style={styles.thWrap}>
       <Text style={[styles.th, bold && styles.bold]}>{label}</Text>
@@ -60,4 +60,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TableRow;

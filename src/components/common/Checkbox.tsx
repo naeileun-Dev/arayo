@@ -5,7 +5,17 @@ import { typography } from '../../styles/typography';
 import { borderRadius } from '../../styles/spacing';
 import type { CheckboxProps } from '../../types';
 
-const Checkbox: React.FC<CheckboxProps> = ({
+const CHECKBOX_SIZE = {
+  small: 16,
+  medium: 20,
+} as const;
+
+const CHECKMARK_SIZE = {
+  small: { width: 4, height: 7, borderWidth: 1.5 },
+  medium: { width: 5, height: 10, borderWidth: 2 },
+} as const;
+
+export const Checkbox: React.FC<CheckboxProps> = ({
   checked,
   onToggle,
   label,
@@ -23,11 +33,10 @@ const Checkbox: React.FC<CheckboxProps> = ({
     }
   };
 
-  const boxSize = size === 'small' ? 16 : 20;
+  const boxSize = CHECKBOX_SIZE[size];
   const isRadio = variant === 'radio';
-
-  const checkedBg = activeColor || colors.primary;
-  const checkedBorder = activeColor || colors.primary;
+  const checkedColor = activeColor ?? colors.primary;
+  const checkmarkDimensions = CHECKMARK_SIZE[size];
 
   return (
     <TouchableOpacity
@@ -38,13 +47,25 @@ const Checkbox: React.FC<CheckboxProps> = ({
     >
       <View
         style={[
-          isRadio ? [styles.radioBox, { width: boxSize, height: boxSize }] : [styles.checkbox, { width: boxSize, height: boxSize, borderRadius: borderRadius.sm }],
-          checked && { backgroundColor: checkedBg, borderColor: checkedBorder },
+          isRadio
+            ? [styles.radioBox, { width: boxSize, height: boxSize }]
+            : [styles.checkbox, { width: boxSize, height: boxSize, borderRadius: borderRadius.sm }],
+          checked && { backgroundColor: checkedColor, borderColor: checkedColor },
           disabled && styles.checkboxDisabled,
         ]}
       >
         {checked && !isRadio && (
-          <View style={[styles.checkmark, size === 'small' && styles.checkmarkSmall]} />
+          <View
+            style={[
+              styles.checkmark,
+              {
+                width: checkmarkDimensions.width,
+                height: checkmarkDimensions.height,
+                borderBottomWidth: checkmarkDimensions.borderWidth,
+                borderRightWidth: checkmarkDimensions.borderWidth,
+              },
+            ]}
+          />
         )}
         {checked && isRadio && <View style={styles.radioInner} />}
       </View>
@@ -72,37 +93,26 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   checkbox: {
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: colors.G400,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   radioBox: {
-    borderWidth: 1,
-    borderColor: colors.G200,
-    borderRadius: 10,
-    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: colors.G200,
+    backgroundColor: colors.white,
   },
   checkboxDisabled: {
-    backgroundColor: colors.borderLight,
     borderColor: colors.borderLight,
+    backgroundColor: colors.borderLight,
   },
   checkmark: {
-    width: 5,
-    height: 10,
-    borderBottomWidth: 2,
-    borderRightWidth: 2,
     borderColor: colors.white,
-    transform: [{ rotate: '45deg' }, { translateY: -1 }],
-  },
-  checkmarkSmall: {
-    width: 4,
-    height: 7,
-    borderBottomWidth: 1.5,
-    borderRightWidth: 1.5,
     transform: [{ rotate: '45deg' }, { translateY: -1 }],
   },
   radioInner: {
@@ -113,8 +123,8 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.body,
-    color: colors.textPrimary,
     marginLeft: 0,
+    color: colors.textPrimary,
   },
   labelSmall: {
     fontSize: 12,
@@ -123,5 +133,3 @@ const styles = StyleSheet.create({
     color: colors.textTertiary,
   },
 });
-
-export default Checkbox;

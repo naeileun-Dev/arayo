@@ -10,11 +10,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
-import Header from '../../components/common/Header';
+import { Header } from '../../components/common';
 import CurveArrowIcon from '../../assets/icon/curve_arrow.svg';
-import { EstimateListItemData } from '../estimate/types';
-import EstimateTabBar from '../estimate/components/EstimateTabBar';
-import EstimateListItem from '../estimate/components/EstimateListItem';
+import { EstimateListItemData } from './types';
+import { EstimateTabBar } from './components/EstimateTabBar';
+import { EstimateListItem } from './components/EstimateListItem';
 
 const REPLY_TABS = ['견적 요청 중', '요청 완료', '만료'];
 
@@ -105,7 +105,7 @@ const ESTIMATE_DATA: EstimateListItemData[] = [
 
 const curveArrowIcon = <CurveArrowIcon width={16} height={16} color={colors.G600} />;
 
-const EstimateReplyListScreen = () => {
+export const EstimateReplyListScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [activeTab, setActiveTab] = useState(0);
 
@@ -130,7 +130,10 @@ const EstimateReplyListScreen = () => {
               key={item.id}
               item={item}
               isFirst={index === 0}
-              onPress={(id) => navigation.navigate('EstimateDetail', { id })}
+              onPress={(id) => {
+                const found = ESTIMATE_DATA.find((d) => d.id === id);
+                navigation.navigate('EstimateDetail', { id, status: found?.status ?? 'ing' });
+              }}
               subRowIcon={curveArrowIcon}
             />
           ))}
@@ -171,4 +174,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EstimateReplyListScreen;

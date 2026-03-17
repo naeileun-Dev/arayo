@@ -13,7 +13,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
-import Header from '../../components/common/Header';
+import { Header } from '../../components/common';
+import { BottomButtonBar } from '../../components/common';
 
 interface FormField {
   label: string;
@@ -39,7 +40,7 @@ const FORM_FIELDS: FormField[] = [
   { label: '이메일주소', required: true, disabled: false, value: '', placeholder: '', keyboardType: 'email-address', key: 'email' },
 ];
 
-const BusinessUpgradeFormNormalScreen = () => {
+export const BusinessUpgradeFormNormalScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [formData, setFormData] = useState<Record<string, string>>(
     FORM_FIELDS.reduce((acc, field) => ({ ...acc, [field.key]: field.value }), {}),
@@ -89,11 +90,11 @@ const BusinessUpgradeFormNormalScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View style={styles.bottomFloating}>
-        <TouchableOpacity style={styles.submitButton} activeOpacity={0.8}>
-          <Text style={styles.submitButtonText}>전환하기</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomButtonBar
+        buttons={[
+          { label: '전환하기', onPress: () => {} },
+        ]}
+      />
     </SafeAreaView>
   );
 };
@@ -178,4 +179,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BusinessUpgradeFormNormalScreen;

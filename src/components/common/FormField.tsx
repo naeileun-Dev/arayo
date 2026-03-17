@@ -10,9 +10,9 @@ interface FormFieldProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const FormField: React.FC<FormFieldProps> = ({
+export const FormField: React.FC<FormFieldProps> = ({
   label,
-  required,
+  required = false,
   rightComponent,
   children,
   style,
@@ -38,22 +38,20 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
   label: {
+    marginBottom: 10,
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.black,
-    marginBottom: 10,
   },
   labelNoMargin: {
     marginBottom: 0,
   },
   required: {
-    color: colors.redDark,
+    color: colors.red,
   },
 });
-
-export default FormField;

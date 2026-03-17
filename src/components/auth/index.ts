@@ -1,7 +1,3 @@
-/**
- * 인증 컴포넌트 Export
- */
-
-export { default as SocialLoginButton } from './SocialLoginButton';
-export { default as AgreementItem } from './AgreementItem';
-export { default as VerificationModal } from './VerificationModal';
+export { SocialLoginButton } from './SocialLoginButton';
+export { AgreementItem } from './AgreementItem';
+export { VerificationModal } from './VerificationModal';

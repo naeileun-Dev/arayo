@@ -14,9 +14,9 @@ import BuildingIcon from '../../assets/icon/building.svg';
 import CrownIcon from '../../assets/icon/crown.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
-import Header from '../../components/common/Header';
+import { Header } from '../../components/common';
 
-export default function BusinessUpgradeScreen({ navigation }: any) {
+export const BusinessUpgradeScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="기업회원 전환" onBack={() => navigation.goBack()} />

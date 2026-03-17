@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   Animated,
   Pressable,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeScreen } from '../screens/main';
 import { MyPageScreen } from '../screens/mypage';
 import { CategoryScreen } from '../screens/category';
-import ChatListScreen from '../screens/chat/ChatListScreen';
+import { ChatListScreen } from '../screens/chat/ChatListScreen';
+import { BrandHomeScreen } from '../screens/brand/BrandHomeScreen';
 import HomeIcon from '../assets/icon/bottom_navigator/home.svg';
 import HomeActiveIcon from '../assets/icon/bottom_navigator/home_active.svg';
 import CategoryIcon from '../assets/icon/bottom_navigator/category.svg';
@@ -26,68 +29,88 @@ import HeadsetIcon from '../assets/icon/headset.svg';
 import BuildingIcon from '../assets/icon/building.svg';
 import NewsIcon from '../assets/icon/news.svg';
 import ProcessIcon from '../assets/icon/process.svg';
-import { useNavigation } from '@react-navigation/native';
+import GearsIcon from '../assets/icon/gears.svg';
 import { colors } from '../styles/colors';
 import { spacing } from '../styles/spacing';
-import BrandHomeScreen from '../screens/brand/BrandHomeScreen';
-import type { MainTabParamList } from '../types';
+import type { RootStackParamList, MainTabParamList } from '../types';
 
-const QUICK_MENU_ITEMS = [
+type QuickMenuItem = {
+  label: string;
+  Icon: React.FC<any>;
+  route: keyof RootStackParamList | null;
+};
+
+const QUICK_MENU_ITEMS: QuickMenuItem[] = [
   { label: '견적문의', Icon: HeadsetIcon, route: 'EstimateList' },
   { label: '브랜드관', Icon: BuildingIcon, route: 'BrandHome' },
   { label: '산업소식', Icon: NewsIcon, route: null },
-  { label: '고철처리', Icon: ProcessIcon, route: null },
+  { label: '고철처리', Icon: ProcessIcon, route: 'ScrapList' },
+  { label: '임가공', Icon: GearsIcon, route: 'ProcessingList' },
 ];
 
-const TAB_ICONS: Record<string, { icon: React.FC<any>; activeIcon: React.FC<any> }> = {
+const TAB_ICONS = {
   Home: { icon: HomeIcon, activeIcon: HomeActiveIcon },
   CategoryTab: { icon: CategoryIcon, activeIcon: CategoryActiveIcon },
   Menu: { icon: MenuIcon, activeIcon: MenuActiveIcon },
   Chat: { icon: ChatIcon, activeIcon: ChatActiveIcon },
   MyPage: { icon: MypageIcon, activeIcon: MypageActiveIcon },
-};
+} as const;
 
-const TAB_ITEMS: Array<keyof MainTabParamList> = [
-  'Home', 'CategoryTab', 'Menu', 'Chat', 'MyPage',
-];
+const TAB_ITEMS: (keyof MainTabParamList)[] = ['Home', 'CategoryTab', 'Menu', 'Chat', 'MyPage'];
 
-const MainTabNavigator = () => {
-  const navigation = useNavigation();
-  const [activeTab, setActiveTab] = React.useState<keyof MainTabParamList>('Home');
-  const [quickMenuVisible, setQuickMenuVisible] = React.useState(false);
-  const [showBrandHome, setShowBrandHome] = React.useState(false);
-  const animValue = React.useRef(new Animated.Value(0)).current;
+export const MainNavigator = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [activeTab, setActiveTab] = useState<keyof MainTabParamList>('Home');
+  const [quickMenuVisible, setQuickMenuVisible] = useState(false);
+  const [showBrandHome, setShowBrandHome] = useState(false);
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  const animateMenu = (toValue: number, duration = 150) => {
+    Animated.timing(animValue, { toValue, duration, useNativeDriver: true }).start();
+  };
+
+  const closeMenu = () => {
+    setQuickMenuVisible(false);
+    animateMenu(0);
+  };
 
   const handleTabPress = (tab: keyof MainTabParamList) => {
     if (tab === 'Menu') {
       const next = !quickMenuVisible;
       setQuickMenuVisible(next);
-      Animated.timing(animValue, {
-        toValue: next ? 1 : 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      setQuickMenuVisible(false);
-      Animated.timing(animValue, { toValue: 0, duration: 150, useNativeDriver: true }).start();
-      setShowBrandHome(false);
-      setActiveTab(tab);
+      animateMenu(next ? 1 : 0, 200);
+      return;
+    }
+    closeMenu();
+    setShowBrandHome(false);
+    setActiveTab(tab);
+  };
+
+  const handleQuickMenuPress = (route: keyof RootStackParamList | null) => {
+    if (route === 'BrandHome') {
+      closeMenu();
+      setShowBrandHome(true);
+    } else if (route) {
+      closeMenu();
+      navigation.navigate(route as never);
     }
   };
 
-  const closeMenu = () => {
-    setQuickMenuVisible(false);
-    Animated.timing(animValue, { toValue: 0, duration: 150, useNativeDriver: true }).start();
-  };
-
   const renderScreen = () => {
-    if (showBrandHome) return <BrandHomeScreen onBack={() => setShowBrandHome(false)} />;
+    if (showBrandHome) {
+      return <BrandHomeScreen onBack={() => setShowBrandHome(false)} />;
+    }
     switch (activeTab) {
-      case 'Home': return <HomeScreen onBrandHomePress={() => setShowBrandHome(true)} />;
-      case 'CategoryTab': return <CategoryScreen />;
-      case 'Chat': return <ChatListScreen />;
-      case 'MyPage': return <MyPageScreen />;
-      default: return <HomeScreen />;
+      case 'Home':
+        return <HomeScreen onBrandHomePress={() => setShowBrandHome(true)} />;
+      case 'CategoryTab':
+        return <CategoryScreen />;
+      case 'Chat':
+        return <ChatListScreen />;
+      case 'MyPage':
+        return <MyPageScreen />;
+      default:
+        return <HomeScreen />;
     }
   };
 
@@ -95,9 +118,7 @@ const MainTabNavigator = () => {
     <View style={styles.container}>
       {renderScreen()}
 
-      {quickMenuVisible && (
-        <Pressable style={styles.overlay} onPress={closeMenu} />
-      )}
+      {quickMenuVisible && <Pressable style={styles.overlay} onPress={closeMenu} />}
 
       {quickMenuVisible && (
         <Animated.View
@@ -105,24 +126,18 @@ const MainTabNavigator = () => {
             styles.menuContainer,
             {
               opacity: animValue,
-              transform: [{ translateY: animValue.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }],
+              transform: [{
+                translateY: animValue.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+              }],
             },
           ]}
         >
-          {QUICK_MENU_ITEMS.map((item, i) => (
+          {QUICK_MENU_ITEMS.map((item, idx) => (
             <TouchableOpacity
-              key={i}
-              style={[styles.menuItem, i === QUICK_MENU_ITEMS.length - 1 && styles.menuItemLast]}
+              key={item.label}
+              style={[styles.menuItem, idx === QUICK_MENU_ITEMS.length - 1 && styles.menuItemLast]}
               activeOpacity={0.7}
-              onPress={() => {
-                if (item.route === 'BrandHome') {
-                  closeMenu();
-                  setShowBrandHome(true);
-                } else if (item.route) {
-                  closeMenu();
-                  (navigation as any).navigate(item.route);
-                }
-              }}
+              onPress={() => handleQuickMenuPress(item.route)}
             >
               <item.Icon width={20} height={20} color={colors.primary200} />
               <Text style={styles.menuLabel}>{item.label}</Text>
@@ -134,9 +149,9 @@ const MainTabNavigator = () => {
       <View style={styles.tabBarWrap}>
         <View style={styles.tabBar}>
           {TAB_ITEMS.map((tabKey) => {
-            const icons = TAB_ICONS[tabKey];
+            const { icon, activeIcon } = TAB_ICONS[tabKey];
             const isActive = tabKey === 'Menu' ? quickMenuVisible : tabKey === activeTab;
-            const Icon = isActive ? icons.activeIcon : icons.icon;
+            const Icon = isActive ? activeIcon : icon;
             return (
               <TouchableOpacity
                 key={tabKey}
@@ -162,10 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.borderLight,
-    ...Platform.select({
-      ios: { paddingBottom: 20 },
-      android: { paddingBottom: spacing.xs },
-    }),
+    paddingBottom: Platform.OS === 'ios' ? 20 : spacing.xs,
   },
   tabBar: {
     flexDirection: 'row',
@@ -181,11 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.3)',
     zIndex: 10,
   },
@@ -231,5 +239,3 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 });
-
-export default MainTabNavigator;
