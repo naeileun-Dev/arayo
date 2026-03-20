@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TradeListScreen } from '../../components/trade/TradeListScreen';
-import type { TradeItem } from '../../types';
+import type { TradeItem, RootStackParamList } from '../../types';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 const PURCHASE_ITEMS: TradeItem[] = [
   {
@@ -94,7 +97,19 @@ const PURCHASE_ITEMS: TradeItem[] = [
   },
 ];
 
-export const PurchasListScreen: React.FC = () => (
-  <TradeListScreen title="구매내역" items={PURCHASE_ITEMS} />
-);
+export const PurchasListScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const route = useRoute<RouteProp<any>>();
+  const isEmpty = route.params?.empty === true;
+
+  return (
+    <TradeListScreen
+      title="구매내역"
+      items={isEmpty ? [] : PURCHASE_ITEMS}
+      emptyMessage="구매 내역이 없습니다."
+      emptyButtonLabel="상품 구경하기"
+      onEmptyButtonPress={() => navigation.navigate('Main')}
+    />
+  );
+};
 

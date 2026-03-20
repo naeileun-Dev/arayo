@@ -15,6 +15,7 @@ import EyeIcon from '../../assets/icon/eye.svg';
 import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 import { Header } from '../../components/common';
 import { BottomButtonBar } from '../../components/common';
+import { ProcessGuideModal } from '../../components/common/ProcessGuideModal';
 import {
   SectionLabel,
   FormLabel,
@@ -59,6 +60,7 @@ const EDIT_SAMPLE = {
 export const ScrapWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit' } } }> = ({ route }) => {
   const navigation = useNavigation();
   const isEditMode = route?.params?.mode === 'edit';
+  const [guideVisible, setGuideVisible] = useState(!isEditMode);
 
   // ── 기본 정보 ──
   const [title, setTitle] = useState(isEditMode ? EDIT_SAMPLE.title : '');
@@ -424,6 +426,21 @@ export const ScrapWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit' } }
           { label: '취소', variant: 'gray', onPress: () => navigation.goBack() },
           { label: isEditMode ? '수정하기' : '등록하기', onPress: handleSubmit },
         ]}
+      />
+
+      <ProcessGuideModal
+        visible={guideVisible}
+        title="고철 처리 견적 문의"
+        processTitle="고철 처리 프로세스"
+        steps={[
+          { number: 1, label: '의뢰 등록' },
+          { number: 2, label: '검수 후 답변 등록' },
+          { number: 3, label: '견적 선택' },
+        ]}
+        completeLabel="의뢰완료"
+        ctaLabel="고철 처리 의뢰 받기"
+        onClose={() => setGuideVisible(false)}
+        onConfirm={() => setGuideVisible(false)}
       />
     </View>
   );

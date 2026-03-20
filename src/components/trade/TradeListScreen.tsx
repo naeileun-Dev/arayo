@@ -12,12 +12,15 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CalendarIcon from '../../assets/icon/calendar.svg';
-import { Header } from '../common';
+import { Header, Button } from '../common';
+import XIcon from '../../assets/icon/X.svg';
 import HeartIcon from '../../assets/icon/heart.svg';
 import CommentIcon from '../../assets/icon/comment.svg';
 import { colors as C } from '../../styles/colors';
 import { ReviewModal, ReviewModalType } from '../common';
 import type { TradeItem, TradeState } from '../../types';
+import { BumpModal } from './BumpModal';
+import { SelectBuyerModal } from './SelectBuyerModal';
 
 const BORDER_RADIUS = 4;
 const HORIZONTAL_PAD = 15;
@@ -38,6 +41,9 @@ interface TradeListScreenProps {
   stateFilterLabel?: string;
   periodLabel?: string;
   showDateHeader?: boolean;
+  emptyMessage?: string;
+  emptyButtonLabel?: string;
+  onEmptyButtonPress?: () => void;
 }
 
 interface MoreMenuState {
@@ -124,6 +130,21 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
               style={{ paddingHorizontal: 26 }}
             />
           )}
+          {hasMore && (
+            <View ref={moreBtnRef} collapsable={false}>
+              <TouchableOpacity
+                style={styles.moreToggleBtn}
+                onPress={() => {
+                  moreBtnRef.current?.measure((_x, _y, w, h, pageX, pageY) => {
+                    onMorePress(item, pageY + h, pageX + w);
+                  });
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.moreToggleIcon}>···</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       );
     }
@@ -202,7 +223,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
   );
 };
 
-export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, topTabs, subTabs, stateFilters, stateFilterLabel, periodLabel, showDateHeader = true }) => {
+export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, topTabs, subTabs, stateFilters, stateFilterLabel, periodLabel, showDateHeader = true, emptyMessage, emptyButtonLabel, onEmptyButtonPress }) => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [activeTab, setActiveTab] = useState(0);
   const [activeSubTab, setActiveSubTab] = useState(0);
@@ -219,6 +240,8 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
     visible: false,
     type: null,
   });
+  const [bumpVisible, setBumpVisible] = useState(false);
+  const [selectBuyerVisible, setSelectBuyerVisible] = useState(false);
 
   const formatDate = (date: Date | null) => {
     if (!date) return '';
@@ -257,6 +280,13 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
         break;
       case 'detail':
         navigation.navigate('OrderDetail');
+        break;
+      case 'bump':
+        setBumpVisible(true);
+        break;
+      case 'complete_direct':
+      case 'complete_safe':
+        setSelectBuyerVisible(true);
         break;
     }
   };
@@ -376,14 +406,30 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
           </View>
         )}
 
-        {items.map((item) => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onAction={handleAction}
-            onMorePress={(it, y, right) => setMoreOpen({ itemId: it.id, y, right })}
-          />
-        ))}
+        {items.length === 0 && emptyMessage ? (
+          <View style={styles.emptyContainer}>
+            <View style={styles.emptyIconCircle}>
+              <XIcon width={24} height={24} color={C.G400} />
+            </View>
+            <Text style={styles.emptyText}>{emptyMessage}</Text>
+            {emptyButtonLabel && (
+              <Button
+                title={emptyButtonLabel}
+                onPress={onEmptyButtonPress || (() => {})}
+                style={styles.emptyButton}
+              />
+            )}
+          </View>
+        ) : (
+          items.map((item) => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              onAction={handleAction}
+              onMorePress={(it, y, right) => setMoreOpen({ itemId: it.id, y, right })}
+            />
+          ))
+        )}
       </ScrollView>
 
       {pickerTarget && (
@@ -471,13 +517,6 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
                     <Text style={styles.moreMenuText}>{btn.label}</Text>
                   </TouchableOpacity>
                 ))}
-                <TouchableOpacity
-                  style={[styles.moreMenuItem, { borderBottomWidth: 0 }]}
-                  onPress={() => setMoreOpen(null)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.moreMenuText}>닫기</Text>
-                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Modal>
@@ -489,6 +528,18 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
         type={reviewModal.type}
         onClose={() => setReviewModal({ visible: false, type: null })}
         onChangeType={(type) => setReviewModal({ visible: true, type })}
+      />
+
+      <BumpModal
+        visible={bumpVisible}
+        onClose={() => setBumpVisible(false)}
+        onBump={() => setBumpVisible(false)}
+      />
+
+      <SelectBuyerModal
+        visible={selectBuyerVisible}
+        onClose={() => setSelectBuyerVisible(false)}
+        onSelect={() => setSelectBuyerVisible(false)}
       />
     </SafeAreaView>
   );
@@ -892,6 +943,31 @@ const styles = StyleSheet.create({
   pickerItemTextActive: {
     color: C.black,
     fontWeight: '600',
+  },
+  emptyContainer: {
+    backgroundColor: C.G100,
+    borderRadius: 8,
+    paddingVertical: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  emptyIconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: C.G200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: C.G400,
+    marginBottom: 16,
+  },
+  emptyButton: {
+    width: '90%',
   },
 });
 

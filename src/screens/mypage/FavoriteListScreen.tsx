@@ -27,6 +27,7 @@ import type { ProductListItem, ViewType, SortType } from '../../types/product';
 import { SCREEN_HEIGHT } from '../../types/product';
 import { DlInfo } from './components/DlInfo';
 import type { RootStackParamList } from '../../types';
+import { CompareToast } from '../../components/common';
 
 const productImage = require('../../assets/images/img01.png');
 
@@ -59,6 +60,15 @@ export const FavoriteListScreen: React.FC = () => {
   const [viewType,   setViewType]   = useState<ViewType>('magazine');
   const [isLoading,  setIsLoading]  = useState(false);
   const loadingRef = useRef(false);
+
+  // 토스트
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const showToast = useCallback((msg: string) => {
+    setToastMessage(msg);
+    setToastVisible(true);
+  }, []);
 
   // 정렬 모달
   const [sortVisible, setSortVisible] = useState(false);
@@ -93,12 +103,14 @@ export const FavoriteListScreen: React.FC = () => {
       if (target.isCompared) {
         const next = prev.map((p) => (p.id === id ? { ...p, isCompared: false } : p));
         if (next.filter((p) => p.isCompared).length === 0) setCompareVisible(false);
+        showToast('비교하기 리스트에서 삭제 되었습니다.');
         return next;
       }
       if (prev.filter((p) => p.isCompared).length >= COMPARISON_MAX) return prev;
+      showToast('비교하기 리스트에 추가 되었습니다.');
       return prev.map((p) => (p.id === id ? { ...p, isCompared: true } : p));
     });
-  }, []);
+  }, [showToast]);
 
   const handleCompareReset = useCallback(() => {
     setProducts((prev) => prev.map((p) => ({ ...p, isCompared: false })));
@@ -304,6 +316,12 @@ export const FavoriteListScreen: React.FC = () => {
         onSelect={setSelectedSort}
         onClose={() => setSortVisible(false)}
         anchorLayout={sortBtnLayout}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
       />
     </SafeAreaView>
   );

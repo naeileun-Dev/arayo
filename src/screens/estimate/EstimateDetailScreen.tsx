@@ -16,13 +16,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
 import { InfoTag } from '../../components/common';
-import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
-import LinearGradient from 'react-native-linear-gradient';
-import { BottomButtonBar } from '../../components/common';
+import { BottomButtonBar, SelectPartnerModal, ConfirmModal, ImageViewerModal } from '../../components/common';
+import { GuestAuthModal } from '../../components/common/GuestAuthModal';
 import { QuoteCard } from './components/QuoteCard';
 import { QuoteItem } from './components/quoteTypes';
 
-const userImage = require('../../assets/images/user01.png');
+const productImage = require('../../assets/images/img01.png');
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const PADDING_LR = 20;
@@ -31,25 +30,10 @@ const IMAGE_COUNT = 3;
 const IMAGE_SIZE =
   (SCREEN_WIDTH - PADDING_LR * 2 - IMAGE_GAP * (IMAGE_COUNT - 1)) / IMAGE_COUNT;
 
-// 접힌 카드 높이 — 아이템의 약 0.7배
-const PARTNER_COLLAPSED_HEIGHT = 240;
-
 interface InfoRow {
   label: string;
   value: string;
   tag?: string;
-}
-
-interface GridItem {
-  label: string;
-  value: string;
-}
-
-interface PartnerData {
-  id: string;
-  name: string;
-  tags: { text: string; type: 'red' | 'blue' }[];
-  gridInfo: GridItem[];
 }
 
 type EstimateStatus = 'ing' | 'complete' | 'exp';
@@ -69,26 +53,17 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
   const [isPartnerModalVisible, setIsPartnerModalVisible] = useState(false);
   const [isSentQuoteVisible, setIsSentQuoteVisible] = useState(false);
   const [sentQuoteExpanded, setSentQuoteExpanded] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState<string | null>(null);
-  const [expandedPartners, setExpandedPartners] = useState<Set<string>>(
-    new Set(),
-  );
-
-  const toggleExpand = (id: string) => {
-    setExpandedPartners((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isGuestAuthVisible, setIsGuestAuthVisible] = useState(false);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [imageViewerIndex, setImageViewerIndex] = useState(0);
 
   const inquiryData = {
     state: stateInfo.label,
     date: '25.06.15',
     subject: '안녕하세요. CNC 선반 견적 문의 드립니다.',
     content: '안녕하세요 견적문의 드립니다. 확인 후 답변 부탁드립니다. ^^',
-    images: [1, 2, 3],
+    images: [productImage, productImage, productImage],
   };
 
   const sentQuote: QuoteItem = {
@@ -132,43 +107,7 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
     { label: '휴대폰 번호', value: '010-1234-5678' },
   ];
 
-  const partners: PartnerData[] = [
-    {
-      id: 'partner1',
-      name: '김샘플',
-      tags: [
-        { text: '가격제안가능', type: 'red' },
-        { text: '9분전 대화', type: 'blue' },
-      ],
-      gridInfo: [
-        { label: '담당자명', value: '김샘플' },
-        { label: '제품 유형', value: '중고' },
-        { label: '휴대폰번호', value: '010-1234-5678' },
-        { label: '제품 구분', value: '공작기계' },
-        { label: '제품위치', value: '경기 안산' },
-        { label: '제조연월', value: '2006년 07월' },
-        { label: '견적 금액', value: '40,500,000원' },
-        { label: '제조사', value: '화천기계' },
-      ],
-    },
-    {
-      id: 'partner2',
-      name: '홍길동',
-      tags: [{ text: '9분전 대화', type: 'blue' }],
-      gridInfo: [
-        { label: '담당자명', value: '김샘플' },
-        { label: '제품 유형', value: '중고' },
-        { label: '휴대폰번호', value: '010-1234-5678' },
-        { label: '제품 구분', value: '공작기계' },
-        { label: '제품위치', value: '경기 안산' },
-        { label: '제조연월', value: '2006년 07월' },
-        { label: '견적 금액', value: '40,500,000원' },
-        { label: '제조사', value: '화천기계' },
-      ],
-    },
-  ];
-
-  // ─── 기존 화면 렌더링 ───
+  // ─── 화면 렌더링 ───
 
   const renderInfoRow = (item: InfoRow, index: number, list: InfoRow[]) => (
     <View
@@ -190,212 +129,30 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
 
   const renderImageGrid = () => (
     <View style={styles.imageGrid}>
-      {inquiryData.images.map((_, index) => (
-        <View
+      {inquiryData.images.map((img, index) => (
+        <TouchableOpacity
           key={index}
-          style={[
-            styles.imagePlaceholder,
-            index < inquiryData.images.length - 1 && {
-              marginRight: IMAGE_GAP,
-            },
-          ]}
-        />
+          activeOpacity={0.8}
+          onPress={() => {
+            setImageViewerIndex(index);
+            setImageViewerVisible(true);
+          }}
+        >
+          <Image
+            source={img}
+            style={[
+              styles.imagePlaceholder,
+              index < inquiryData.images.length - 1 && {
+                marginRight: IMAGE_GAP,
+              },
+            ]}
+          />
+        </TouchableOpacity>
       ))}
     </View>
   );
 
-  // ─── 모달 내부 렌더링 ───
-
-  /** 태그 (redTag / blueTag) */
-  const renderTag = (
-    text: string,
-    type: 'red' | 'blue',
-    index: number,
-  ) => (
-    <InfoTag key={index} text={text} variant={type} />
-  );
-
-  /**
-   * 2열 그리드 정보
-   * CSS: dl[data-dl-style="grid"][data-dl-cols="2"]
-   *   grid-template-columns: repeat(2, 1fr);
-   *   column-gap: 14px; row-gap: 3px;
-   * 짝수 index(0,2,4…) → 왼쪽열, 홀수 index(1,3,5…) → 오른쪽열
-   * 각 셀: dt(label) 위, dd(value) 아래
-   */
-  const renderGridInfo = (gridInfo: GridItem[]) => {
-    const leftItems: GridItem[] = [];
-    const rightItems: GridItem[] = [];
-    gridInfo.forEach((item, i) => {
-      if (i % 2 === 0) leftItems.push(item);
-      else rightItems.push(item);
-    });
-
-    const rowCount = Math.max(leftItems.length, rightItems.length);
-    const rows: (GridItem | null)[][] = [];
-    for (let i = 0; i < rowCount; i++) {
-      rows.push([leftItems[i] ?? null, rightItems[i] ?? null]);
-    }
-
-    return (
-      <View style={styles.gridContainer}>
-        {rows.map((row, rowIdx) => (
-          <View key={rowIdx} style={styles.gridRow}>
-            {row.map((cell, colIdx) => (
-              <View key={colIdx} style={styles.gridCell}>
-                {cell ? (
-                  <>
-                    <Text style={styles.gridLabel}>{cell.label}</Text>
-                    <Text style={styles.gridValue}>{cell.value}</Text>
-                  </>
-                ) : null}
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
-    );
-  };
-
-  /** 파트너 카드 1개 */
-  const renderPartnerItem = (partner: PartnerData) => {
-    const isSelected = selectedPartner === partner.id;
-    const isExpanded = expandedPartners.has(partner.id);
-
-    return (
-      <View key={partner.id} style={styles.partnerItemWrapper}>
-        {/* Lbox — 선택시 보더색 변경, 접힘시 maxHeight 제한 */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => setSelectedPartner(partner.id)}
-          style={[
-            styles.lBox,
-            isSelected && styles.lBoxSelected,
-            !isExpanded && {
-              maxHeight: PARTNER_COLLAPSED_HEIGHT,
-              overflow: 'hidden',
-            },
-          ]}
-        >
-          {/* 프로필 */}
-          <View style={styles.partnerProfile}>
-            <Image source={userImage} style={styles.partnerAvatar} />
-            <View style={styles.partnerInfoWrap}>
-              <Text style={styles.partnerName}>{partner.name}</Text>
-              <View style={styles.partnerTagRow}>
-                {partner.tags.map((t, i) => renderTag(t.text, t.type, i))}
-              </View>
-            </View>
-          </View>
-
-          {/* 2열 그리드 */}
-          <View style={styles.gridMarginTop}>
-            {renderGridInfo(partner.gridInfo)}
-          </View>
-        </TouchableOpacity>
-
-        {/* 더보기 — 접혀있을 때만 */}
-        {!isExpanded && (
-          <TouchableOpacity
-            style={styles.expandButton}
-            activeOpacity={0.8}
-            onPress={() => toggleExpand(partner.id)}
-          >
-            <LinearGradient
-              colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.85)', 'rgba(255,255,255,1)']}
-              locations={[0, 0.5, 1]}
-              style={styles.expandGradient}
-            >
-              <View style={styles.expandContent}>
-                <Text style={styles.expandText}>더보기</Text>
-                <ChevronDownIcon width={12} height={12} color="#1B1B1B" />
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
-
-  /** 모달 전체 */
-  const renderPartnerModal = () => (
-    <Modal
-      visible={isPartnerModalVisible}
-      transparent
-      animationType="fade"
-      onRequestClose={() => setIsPartnerModalVisible(false)}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContainer}>
-          {/* 헤더 */}
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>어느분과 거래 하셨나요 ?</Text>
-            <TouchableOpacity
-              onPress={() => {
-                setIsPartnerModalVisible(false);
-                setSelectedPartner(null);
-                setExpandedPartners(new Set());
-              }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={styles.modalCloseIcon}>✕</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* 바디 */}
-          <ScrollView
-            style={styles.modalBody}
-            contentContainerStyle={styles.modalBodyContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* "없어요" 옵션 */}
-            <TouchableOpacity
-              style={[
-                styles.lBox,
-                selectedPartner === 'none' && styles.lBoxSelected,
-              ]}
-              activeOpacity={0.7}
-              onPress={() => setSelectedPartner('none')}
-            >
-              <Text style={styles.noneOptionText}>
-                나와 거래한 판매자/구매자가 없어요
-              </Text>
-            </TouchableOpacity>
-
-            {/* 파트너 옵션 */}
-            {partners.map((p) => renderPartnerItem(p))}
-          </ScrollView>
-
-          {/* 하단 버튼 */}
-          <View style={styles.modalFooter}>
-            <TouchableOpacity
-              style={[
-                styles.modalSubmitButton,
-                !selectedPartner && styles.modalSubmitButtonDisabled,
-              ]}
-              activeOpacity={0.8}
-              onPress={() => {
-                if (selectedPartner) {
-                  setIsPartnerModalVisible(false);
-                  // TODO: 선택 완료 후 처리
-                }
-              }}
-              disabled={!selectedPartner}
-            >
-              <Text
-                style={[
-                  styles.modalSubmitText,
-                  !selectedPartner && styles.modalSubmitTextDisabled,
-                ]}
-              >
-                선택하기
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
+  // renderPartnerModal → SelectPartnerModal 컴포넌트로 대체
 
   // ─── 메인 렌더 ───
 
@@ -472,8 +229,23 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
                 >
                   <Text style={styles.moreMenuText}>문의글 수정</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.moreMenuItem}>
+                <TouchableOpacity
+                  style={styles.moreMenuItem}
+                  onPress={() => {
+                    setIsMoreVisible(false);
+                    setIsDeleteVisible(true);
+                  }}
+                >
                   <Text style={styles.moreMenuText}>삭제</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.moreMenuItem}
+                  onPress={() => {
+                    setIsMoreVisible(false);
+                    setIsGuestAuthVisible(true);
+                  }}
+                >
+                  <Text style={styles.moreMenuText}>비회원 인증</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -510,7 +282,11 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
         )}
       </View>
 
-      {renderPartnerModal()}
+      <SelectPartnerModal
+        visible={isPartnerModalVisible}
+        onClose={() => setIsPartnerModalVisible(false)}
+        onSelect={() => setIsPartnerModalVisible(false)}
+      />
 
       {/* 보낸 견적 확인 모달 */}
       <Modal
@@ -576,6 +352,34 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
           </View>
         </View>
       </Modal>
+
+      <ConfirmModal
+        visible={isDeleteVisible}
+        title="삭제하기"
+        message="해당 견적 문의를 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        onClose={() => setIsDeleteVisible(false)}
+        onConfirm={() => {
+          setIsDeleteVisible(false);
+          navigation.goBack();
+        }}
+      />
+
+      <GuestAuthModal
+        visible={isGuestAuthVisible}
+        onClose={() => setIsGuestAuthVisible(false)}
+        onConfirm={() => {
+          setIsGuestAuthVisible(false);
+        }}
+      />
+
+      <ImageViewerModal
+        visible={imageViewerVisible}
+        images={inquiryData.images}
+        initialIndex={imageViewerIndex}
+        onClose={() => setImageViewerVisible(false)}
+      />
     </SafeAreaView>
   );
 };

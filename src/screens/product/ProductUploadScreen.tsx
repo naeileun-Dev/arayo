@@ -25,6 +25,8 @@ import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import { Checkbox } from '../../components/common';
 import { SelectModal } from '../../components/common';
 import { FormField } from '../../components/common';
+import { ConfirmModal } from '../../components/common';
+import { CompareToast } from '../../components/common';
 
 const MAX_IMAGES = 10;
 
@@ -95,6 +97,11 @@ export const ProductUploadScreen = () => {
     selectedValue: '',
     onSelect: () => {},
   });
+
+  const [tempSaveVisible, setTempSaveVisible] = useState(false);
+  const [registerVisible, setRegisterVisible] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const toggleKeyword = (word: string) => {
     setKeywords(prev =>
@@ -283,7 +290,7 @@ export const ProductUploadScreen = () => {
           <ChevronLeftIcon width={24} height={24} color={colors.black} />
         </TouchableOpacity>
         <Text style={localStyles.headerTitle}>상품등록</Text>
-        <TouchableOpacity style={localStyles.headerIconBtn}>
+        <TouchableOpacity style={localStyles.headerIconBtn} onPress={() => setTempSaveVisible(true)}>
           <Text style={localStyles.tempSaveText}>임시저장</Text>
         </TouchableOpacity>
       </View>
@@ -570,7 +577,7 @@ export const ProductUploadScreen = () => {
         </View>
       </ScrollView>
 
-      <BottomButtonBar buttons={[{ label: '등록하기', onPress: () => {} }]} />
+      <BottomButtonBar buttons={[{ label: '등록하기', onPress: () => setRegisterVisible(true) }]} />
 
       <SelectModal
         visible={modalVisible}
@@ -579,6 +586,38 @@ export const ProductUploadScreen = () => {
         selectedValue={modalConfig.selectedValue}
         onSelect={modalConfig.onSelect}
         onClose={() => setModalVisible(false)}
+      />
+
+      <ConfirmModal
+        visible={tempSaveVisible}
+        title="글 임시저장 확인"
+        message="작성중인 글을 임시저장 하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="임시저장"
+        onClose={() => setTempSaveVisible(false)}
+        onConfirm={() => {
+          setTempSaveVisible(false);
+        }}
+      />
+
+      <ConfirmModal
+        visible={registerVisible}
+        title="상품 등록 확인"
+        message="상품을 등록 하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="등록"
+        onClose={() => setRegisterVisible(false)}
+        onConfirm={() => {
+          setRegisterVisible(false);
+          setToastMessage('상품이 등록 되었습니다.');
+          setToastVisible(true);
+        }}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
       />
     </SafeAreaView>
   );

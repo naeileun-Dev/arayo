@@ -16,7 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
 import { Header } from '../../components/common';
 import { InfoTag } from '../../components/common';
-import { BottomButtonBar } from '../../components/common';
+import { BottomButtonBar, SelectPartnerModal } from '../../components/common';
 import { QuoteCard } from '../estimate/components/QuoteCard';
 import { QuoteItem } from '../estimate/components/quoteTypes';
 
@@ -47,6 +47,7 @@ export const ProcessingDetailScreen: React.FC<{ route?: { params?: { id?: string
   const stateInfo = STATE_CONFIG[status];
 
   const [isMoreVisible, setIsMoreVisible] = useState(false);
+  const [isPartnerModalVisible, setIsPartnerModalVisible] = useState(false);
   const [isSentQuoteVisible, setIsSentQuoteVisible] = useState(false);
   const [sentQuoteExpanded, setSentQuoteExpanded] = useState(false);
 
@@ -214,7 +215,10 @@ export const ProcessingDetailScreen: React.FC<{ route?: { params?: { id?: string
               <TouchableOpacity
                 style={s.completeButton}
                 activeOpacity={0.8}
-                onPress={() => setIsMoreVisible(false)}
+                onPress={() => {
+                  setIsMoreVisible(false);
+                  setIsPartnerModalVisible(true);
+                }}
               >
                 <Text style={s.completeButtonText}>의뢰 완료</Text>
               </TouchableOpacity>
@@ -300,6 +304,12 @@ export const ProcessingDetailScreen: React.FC<{ route?: { params?: { id?: string
           </View>
         </View>
       </Modal>
+
+      <SelectPartnerModal
+        visible={isPartnerModalVisible}
+        onClose={() => setIsPartnerModalVisible(false)}
+        onSelect={() => setIsPartnerModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };

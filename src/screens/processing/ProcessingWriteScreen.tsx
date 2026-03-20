@@ -17,6 +17,7 @@ import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 import CalendarIcon from '../../assets/icon/calendar.svg';
 import { Header } from '../../components/common';
 import { BottomButtonBar } from '../../components/common';
+import { ProcessGuideModal } from '../../components/common/ProcessGuideModal';
 import {
   SectionLabel,
   FormLabel,
@@ -154,6 +155,7 @@ const EDIT_SAMPLE = {
 export const ProcessingWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit' } } }> = ({ route }) => {
   const navigation = useNavigation();
   const isEditMode = route?.params?.mode === 'edit';
+  const [guideVisible, setGuideVisible] = useState(!isEditMode);
 
   // ── 기본 정보 ──
   const [projectName, setProjectName] = useState(isEditMode ? EDIT_SAMPLE.projectName : '');
@@ -577,6 +579,21 @@ export const ProcessingWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit
           </View>
         </Modal>
       )}
+
+      <ProcessGuideModal
+        visible={guideVisible}
+        title="임가공 견적 문의"
+        processTitle="견적 문의 프로세스"
+        steps={[
+          { number: 1, label: '견적 등록' },
+          { number: 2, label: '검수 후 답변 등록' },
+          { number: 3, label: '견적 선택' },
+        ]}
+        completeLabel="의뢰완료"
+        ctaLabel="임가공 견적 받기"
+        onClose={() => setGuideVisible(false)}
+        onConfirm={() => setGuideVisible(false)}
+      />
     </View>
   );
 };

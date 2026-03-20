@@ -32,6 +32,7 @@ import {
   countActiveFilters,
 } from './types';
 import { ProductItemMagazine, ProductItemGrid, SortModal, ComparePanel } from '../../components/product';
+import { CompareToast } from '../../components/common';
 import { FilterPanel, SelectedCategoryItem } from './components/FilterPanel';
 import { CompareResultModal } from './components/CompareResultModal';
 
@@ -53,6 +54,9 @@ export const CategoryListScreen = () => {
   const [compareList, setCompareList] = useState<string[]>([]);
   const [compareVisible, setCompareVisible] = useState(false);
   const [compareResultVisible, setCompareResultVisible] = useState(false);
+
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const [filter, setFilter] = useState<FilterState>(INITIAL_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<FilterState>(INITIAL_FILTER);
@@ -85,17 +89,24 @@ export const CategoryListScreen = () => {
     setProducts(prev => prev.map(p => (p.id === id ? { ...p, isLiked: !p.isLiked } : p)));
   }, []);
 
+  const showToast = useCallback((msg: string) => {
+    setToastMessage(msg);
+    setToastVisible(true);
+  }, []);
+
   const handleCompareToggle = useCallback((id: string) => {
     setCompareList(prev => {
       if (prev.includes(id)) {
         const next = prev.filter(x => x !== id);
         if (next.length === 0) setCompareVisible(false);
+        showToast('비교하기 리스트에서 삭제 되었습니다.');
         return next;
       }
       if (prev.length >= 6) return prev;
+      showToast('비교하기 리스트에 추가 되었습니다.');
       return [...prev, id];
     });
-  }, []);
+  }, [showToast]);
 
   const handleCompareReset = useCallback(() => {
     setCompareList([]);
@@ -361,6 +372,12 @@ export const CategoryListScreen = () => {
         visible={compareResultVisible}
         products={compareProducts}
         onClose={() => setCompareResultVisible(false)}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
       />
     </SafeAreaView>
   );

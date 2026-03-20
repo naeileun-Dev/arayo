@@ -23,14 +23,18 @@ export const InquiryHeader: React.FC<Props> = ({ title, onBack, onSearch }) => (
 
     <Text style={styles.headerTitle}>{title}</Text>
 
-    <TouchableOpacity
-      style={styles.headerRightBtn}
-      onPress={onSearch}
-      activeOpacity={0.6}
-      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-    >
-      <SearchIcon width={24} height={24} color={colors.black} />
-    </TouchableOpacity>
+    {onSearch ? (
+      <TouchableOpacity
+        style={styles.headerRightBtn}
+        onPress={onSearch}
+        activeOpacity={0.6}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      >
+        <SearchIcon width={24} height={24} color={colors.black} />
+      </TouchableOpacity>
+    ) : (
+      <View style={styles.headerRightBtn} />
+    )}
   </View>
 );
 

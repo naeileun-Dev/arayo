@@ -22,9 +22,9 @@ interface CompanyCardProps {
 const PROFILE_IMG = require('../../assets/images/profileImg.png');
 
 const BG_IMAGE_HEIGHT = 120;
-const PROFILE_SIZE = 40;
-const PROFILE_OFFSET_BOTTOM = -10;
-const PROFILE_OFFSET_LEFT = 10;
+const PROFILE_SIZE = 48;
+const PROFILE_OFFSET_BOTTOM = -(PROFILE_SIZE / 2);
+const PROFILE_OFFSET_LEFT = 12;
 
 export const CompanyCard: React.FC<CompanyCardProps> = ({
   item,
@@ -45,7 +45,7 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({
           <View style={[styles.bgImage, styles.bgImagePlaceholder]} />
         )}
         {badge && <View style={styles.badgeWrap}>{badge}</View>}
-        <Image source={profileImage ?? PROFILE_IMG} style={styles.profileImg} />
+        <Image source={profileImage ?? thumbSource ?? PROFILE_IMG} style={styles.profileImg} />
       </View>
       <View style={styles.content}>
         <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   content: {
     gap: 8,
     padding: 15,
-    paddingTop: 20,
+    paddingTop: PROFILE_SIZE / 2 + 8,
   },
   name: {
     fontSize: 15,

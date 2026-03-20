@@ -89,6 +89,9 @@ export type RootStackParamList = {
   BrandProducts: { brandId?: string; empty?: boolean };
   BrandContact: { brandId?: string };
   BrandProductDetail: { brandId?: string; productId?: string };
+  ProcessingHome: undefined;
+  ProcessingCompanyDetail: undefined;
+  ProcessingCompanyWrite: { mode?: 'create' | 'edit' };
 };
 
 export interface SignUpFormData {

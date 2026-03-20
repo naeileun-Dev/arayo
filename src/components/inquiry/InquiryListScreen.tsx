@@ -26,6 +26,10 @@ interface Props {
   fabNavigateTo: string;
   detailNavigateTo: string;
   sampleData: InquiryListItemData[];
+  hideBanner?: boolean;
+  hideSort?: boolean;
+  hideSearch?: boolean;
+  hideFab?: boolean;
 }
 
 export const InquiryListScreen: React.FC<Props> = ({
@@ -35,9 +39,13 @@ export const InquiryListScreen: React.FC<Props> = ({
   fabNavigateTo,
   detailNavigateTo,
   sampleData,
+  hideBanner = false,
+  hideSort = false,
+  hideSearch = false,
+  hideFab = false,
 }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [activeTab, setActiveTab] = useState('전체');
+  const [activeTab, setActiveTab] = useState(tabs?.[0] ?? '전체');
   const [sortType] = useState<InquirySortType>('최신순');
   const [isLoadingMore] = useState(true);
 
@@ -55,7 +63,7 @@ export const InquiryListScreen: React.FC<Props> = ({
       <InquiryHeader
         title={title}
         onBack={() => navigation.goBack()}
-        onSearch={() => navigation.navigate('Search')}
+        onSearch={hideSearch ? undefined : () => navigation.navigate('Search')}
       />
 
       <ScrollView
@@ -64,18 +72,31 @@ export const InquiryListScreen: React.FC<Props> = ({
         showsVerticalScrollIndicator={false}
       >
         {/* 배너 */}
-        <View style={styles.bannerWrapper}>
-          <View style={styles.bannerImage} />
-        </View>
+        {!hideBanner && (
+          <View style={styles.bannerWrapper}>
+            <View style={styles.bannerImage} />
+          </View>
+        )}
 
         {/* 탭 + 정렬 */}
-        <InquiryTabSort
-          tabs={tabs}
-          activeTab={activeTab}
-          sortType={sortType}
-          onTabChange={handleTabChange}
-          onSortPress={() => {}}
-        />
+        {hideSort ? (
+          <InquiryTabSort
+            tabs={tabs}
+            activeTab={activeTab}
+            sortType={sortType}
+            onTabChange={handleTabChange}
+            onSortPress={() => {}}
+            hideSortDropdown
+          />
+        ) : (
+          <InquiryTabSort
+            tabs={tabs}
+            activeTab={activeTab}
+            sortType={sortType}
+            onTabChange={handleTabChange}
+            onSortPress={() => {}}
+          />
+        )}
 
         {/* 목록 */}
         <View style={styles.listContainer}>
@@ -101,14 +122,16 @@ export const InquiryListScreen: React.FC<Props> = ({
       </ScrollView>
 
       {/* 플로팅 버튼 */}
-      <TouchableOpacity
-        style={styles.fab}
-        activeOpacity={0.8}
-        onPress={() => (navigation as any).navigate(fabNavigateTo)}
-      >
-        <Text style={styles.fabPlus}>+</Text>
-        <Text style={styles.fabLabel}>{fabLabel}</Text>
-      </TouchableOpacity>
+      {!hideFab && (
+        <TouchableOpacity
+          style={styles.fab}
+          activeOpacity={0.8}
+          onPress={() => (navigation as any).navigate(fabNavigateTo)}
+        >
+          <Text style={styles.fabPlus}>+</Text>
+          <Text style={styles.fabLabel}>{fabLabel}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

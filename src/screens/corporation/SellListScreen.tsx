@@ -17,7 +17,14 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '끌어올리기', type: 'blue', action: 'bump' },
       { label: '대화중인 채팅창', type: 'light', action: 'chat_list' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '예약중으로 변경', action: 'change_reserved' },
+      { label: '거래완료(직거래)로 변경', action: 'complete_direct' },
+      { label: '게시글 수정', action: 'edit' },
+      { label: '숨기기', action: 'hide' },
+      { label: '삭제', action: 'delete' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '1',
@@ -33,7 +40,11 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '거래완료(직거래)로 변경', type: 'blue', action: 'complete_direct' },
     ],
-    moreButtons: [{ label: '거래 취소', action: 'cancel' }],
+    moreButtons: [
+      { label: '구매자와 채팅하기', action: 'chat' },
+      { label: '판매중으로 변경', action: 'change_selling' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '2',
@@ -49,7 +60,10 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '배송 예약일 : 20.02.25', type: 'schedule', action: 'schedule' },
       { label: '거래완료(안전거래)로 변경', type: 'blue', action: 'complete_safe' },
     ],
-    moreButtons: [{ label: '거래 취소', action: 'cancel' }],
+    moreButtons: [
+      { label: '구매자와 채팅하기', action: 'chat' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '3',
@@ -65,7 +79,10 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '구매자와 채팅하기', type: 'blue', action: 'chat' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '거래 취소', action: 'cancel' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '4',
@@ -81,7 +98,10 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '배송 예약일 : 26.02.25', type: 'schedule', action: 'schedule' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '구매자와 채팅하기', action: 'chat' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '5',
@@ -97,7 +117,10 @@ const SELL_ITEMS: TradeItem[] = [
       { label: '구매자와 채팅하기', type: 'blue', action: 'chat' },
       { label: '주문상세', type: 'light', action: 'detail' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '게시글 숨기기', action: 'hide' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '6',
@@ -112,7 +135,11 @@ const SELL_ITEMS: TradeItem[] = [
     buttons: [
       { label: '후기 보내기/보낸 후기 보기/받은 후기 보기', type: 'blue', action: 'review_send' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '숨기기', action: 'hide' },
+      { label: '삭제', action: 'delete' },
+      { label: '닫기', action: 'close' },
+    ],
   },
   {
     id: '7',
@@ -127,7 +154,13 @@ const SELL_ITEMS: TradeItem[] = [
     buttons: [
       { label: '후기 보내기/보낸 후기 보기/받은 후기 보기', type: 'blue', action: 'review_send' },
     ],
-    moreButtons: [{ label: '게시글 숨기기', action: 'hide' }],
+    moreButtons: [
+      { label: '판매중으로 변경', action: 'change_selling' },
+      { label: '게시글 수정', action: 'edit' },
+      { label: '숨기기', action: 'hide' },
+      { label: '삭제', action: 'delete' },
+      { label: '닫기', action: 'close' },
+    ],
   },
 ];
 

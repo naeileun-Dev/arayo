@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,28 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
+import { AlreadyRegisteredModal } from '../../components/auth/AlreadyRegisteredModal';
+import { MainPopupModal } from '../../components/home/MainPopupModal';
+import { SendSmsModal } from '../../components/product/SendSmsModal';
+import { ReportModal } from '../../components/product/ReportModal';
+import { CompareToast, ConfirmModal } from '../../components/common';
+import { ProcessGuideModal } from '../../components/common/ProcessGuideModal';
+import { BumpModal } from '../../components/trade/BumpModal';
+import { SelectBuyerModal } from '../../components/trade/SelectBuyerModal';
+import { GuestAuthModal } from '../../components/common/GuestAuthModal';
+import { EstimateSelectBuyerModal } from '../../components/estimate/EstimateSelectBuyerModal';
+import { EstimateWarningModal } from '../estimate/components/EstimateWarningModal';
+import { ChatPopupModal } from '../../components/chat/ChatPopupModal';
+import { ReviewModal, ReviewModalType } from '../../components/common';
 
 interface RouteGroup {
   title: string;
   routes: { name: string; label: string; params?: any }[];
+}
+
+interface ModalItem {
+  key: string;
+  label: string;
 }
 
 const ROUTE_GROUPS: RouteGroup[] = [
@@ -31,6 +49,8 @@ const ROUTE_GROUPS: RouteGroup[] = [
     title: '인증',
     routes: [
       { name: 'Auth', label: '로그인 / 회원가입' },
+      { name: 'LoginRequired', label: '비회원 진입 불가 화면' },
+      { name: 'AccountRestricted', label: '이용 제한 계정' },
     ],
   },
   {
@@ -40,6 +60,7 @@ const ROUTE_GROUPS: RouteGroup[] = [
       { name: 'ProductUpload', label: '상품 등록' },
       { name: 'CategoryList', label: '카테고리 목록', params: { category: '공작기계', subCategory: 'CNC 선반' } },
       { name: 'CompareProducts', label: '상품 비교하기' },
+      { name: 'RecentlyViewed', label: '최근 본 상품' },
     ],
   },
   {
@@ -68,6 +89,10 @@ const ROUTE_GROUPS: RouteGroup[] = [
       { name: 'ProcessingDetail', label: '임가공 의뢰 상세 (만료)', params: { id: '3', status: 'exp' } },
       { name: 'ProcessingReplyWrite', label: '임가공 답변 등록' },
       { name: 'ProcessingReplyWrite', label: '임가공 답변 수정 (edit)', params: { mode: 'edit' } },
+      { name: 'ProcessingHome', label: '임가공 홈 메인' },
+      { name: 'ProcessingCompanyDetail', label: '임가공 업체 상세' },
+      { name: 'ProcessingCompanyWrite', label: '임가공 업체 등록' },
+      { name: 'ProcessingCompanyWrite', label: '임가공 업체 수정', params: { mode: 'edit' } },
     ],
   },
   {
@@ -86,6 +111,7 @@ const ROUTE_GROUPS: RouteGroup[] = [
     title: '거래',
     routes: [
       { name: 'PurchaseList', label: '구매 내역' },
+      { name: 'PurchaseList', label: '구매 내역 (빈 상태)', params: { empty: true } },
       { name: 'SalesList', label: '판매 내역' },
       { name: 'OrderDetail', label: '주문 상세' },
       { name: 'OrderWrite', label: '주문하기', params: { product: { id: '1', name: '접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H', price: 2400000 } } },
@@ -93,6 +119,8 @@ const ROUTE_GROUPS: RouteGroup[] = [
       { name: 'FavoriteList', label: '관심목록' },
       { name: 'FavoriteList', label: '관심목록 (빈 상태)', params: { initialProducts: [] } },
       { name: 'TradeReview', label: '거래 후기' },
+      { name: 'TradeReviewDetail', label: '거래후기 상세' },
+      { name: 'TradeReviewEdit', label: '거래후기 수정' },
       { name: 'ChatList', label: '채팅내역' },
       { name: 'ChatRoom', label: '채팅방 (일반회원)', params: { chatId: '1', userType: 'personal' } },
       { name: 'ChatRoom', label: '채팅방 (기업회원)', params: { chatId: '2', userType: 'business' } },
@@ -110,6 +138,14 @@ const ROUTE_GROUPS: RouteGroup[] = [
       { name: 'BusinessUpgradeForm', label: '사업자 업그레이드 폼', params: { plan: 'general' } },
       { name: 'BusinessUpgradeFormNormal', label: '일반 사업자 전환' },
       { name: 'BusinessUpgradeFormGold', label: '골드 사업자 전환' },
+      { name: 'BusinessUpgradeComplete', label: '일반기업회원 전환 완료', params: { type: 'general' } },
+      { name: 'BusinessUpgradeComplete', label: '골드기업회원 전환 완료', params: { type: 'gold' } },
+      { name: 'MyEstimateList', label: '견적 문의 내역' },
+      { name: 'MyEstimateDetail', label: '견적 문의 상세' },
+      { name: 'MyProcessingList', label: '임가공 문의 내역' },
+      { name: 'MyProcessingDetail', label: '임가공 문의 상세' },
+      { name: 'MyScrapList', label: '고철처리 의뢰 내역' },
+      { name: 'MyScrapDetail', label: '고철처리 의뢰 상세' },
     ],
   },
   {
@@ -149,8 +185,38 @@ const ROUTE_GROUPS: RouteGroup[] = [
   },
 ];
 
+const MODAL_ITEMS: ModalItem[] = [
+  { key: 'alreadyRegistered', label: '이미 가입된 계정 모달' },
+  { key: 'mainPopup', label: '메인 팝업 (웰컴 쿠폰)' },
+  { key: 'sendSms', label: '문자하기 (회원)' },
+  { key: 'sendSmsGuest', label: '문자하기 (비회원)' },
+  { key: 'report', label: '신고하기' },
+  { key: 'tempSave', label: '글 임시저장 확인' },
+  { key: 'productRegister', label: '상품 등록 확인' },
+  { key: 'bump', label: '끌어올리기' },
+  { key: 'selectBuyer', label: '거래 상대 선택' },
+  { key: 'guestAuth', label: '비회원 인증' },
+  { key: 'deleteConfirm', label: '삭제하기 확인' },
+  { key: 'estimateSelectBuyer', label: '견적 거래자 선택' },
+  { key: 'estimateWarning', label: '견적 문의 주의사항' },
+  { key: 'processingGuide', label: '임가공 견적 문의 프로세스' },
+  { key: 'scrapGuide', label: '고철 처리 견적 문의 프로세스' },
+  { key: 'reviewIntro', label: '후기 도착 알림' },
+  { key: 'reviewScore', label: '후기 평점 선택' },
+  { key: 'reviewWrite', label: '후기 작성' },
+  { key: 'reviewView', label: '후기 도착 (프롬프트 포함)' },
+  { key: 'reviewReceived', label: '받은 후기 상세' },
+  { key: 'reviewSent', label: '보낸 후기 상세' },
+  { key: 'chatPopup', label: '채팅 팝업' },
+  { key: 'chatPopupPayment', label: '채팅 팝업 (안전결제-입금전)' },
+];
+
 export const DevRouteScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [reviewModalType, setReviewModalType] = useState<ReviewModalType>(null);
 
   return (
     <SafeAreaView style={st.safe}>
@@ -181,8 +247,219 @@ export const DevRouteScreen: React.FC = () => {
             ))}
           </View>
         ))}
+
+        <View style={st.group}>
+          <Text style={st.groupTitle}>모달 / 팝업</Text>
+          {MODAL_ITEMS.map((item) => (
+            <TouchableOpacity
+              key={item.key}
+              style={st.routeItem}
+              activeOpacity={0.6}
+              onPress={() => setActiveModal(item.key)}
+            >
+              <View style={[st.routeDot, { backgroundColor: colors.primary }]} />
+              <View style={st.routeInfo}>
+                <Text style={st.routeLabel}>{item.label}</Text>
+                <Text style={st.routeName}>Modal</Text>
+              </View>
+              <Text style={st.routeArrow}>{'>'}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      <AlreadyRegisteredModal
+        visible={activeModal === 'alreadyRegistered'}
+        onClose={() => setActiveModal(null)}
+        onLogin={() => {
+          setActiveModal(null);
+          navigation.navigate('Auth' as any);
+        }}
+      />
+
+      <MainPopupModal
+        visible={activeModal === 'mainPopup'}
+        onClose={() => setActiveModal(null)}
+        onDismissToday={() => setActiveModal(null)}
+      />
+
+      <SendSmsModal
+        visible={activeModal === 'sendSms'}
+        onClose={() => setActiveModal(null)}
+        onSend={() => setActiveModal(null)}
+        sellerName="김샘플"
+        productName="CNC선반"
+        phoneNumber="0501-2345-6789"
+      />
+
+      <SendSmsModal
+        visible={activeModal === 'sendSmsGuest'}
+        onClose={() => setActiveModal(null)}
+        onSend={() => setActiveModal(null)}
+        sellerName="김샘플"
+        productName="CNC선반"
+      />
+
+      <ReportModal
+        visible={activeModal === 'report'}
+        onClose={() => setActiveModal(null)}
+        onSubmit={() => {
+          setActiveModal(null);
+          setToastMessage('신고가 접수되었습니다.');
+          setToastVisible(true);
+        }}
+      />
+
+      <ConfirmModal
+        visible={activeModal === 'tempSave'}
+        title="글 임시저장 확인"
+        message="작성중인 글을 임시저장 하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="임시저장"
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => setActiveModal(null)}
+      />
+
+      <ConfirmModal
+        visible={activeModal === 'productRegister'}
+        title="상품 등록 확인"
+        message="상품을 등록 하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="등록"
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => {
+          setActiveModal(null);
+          setToastMessage('상품이 등록 되었습니다.');
+          setToastVisible(true);
+        }}
+      />
+
+      <BumpModal
+        visible={activeModal === 'bump'}
+        onClose={() => setActiveModal(null)}
+        onBump={() => setActiveModal(null)}
+      />
+
+      <SelectBuyerModal
+        visible={activeModal === 'selectBuyer'}
+        onClose={() => setActiveModal(null)}
+        onSelect={() => setActiveModal(null)}
+      />
+
+      <GuestAuthModal
+        visible={activeModal === 'guestAuth'}
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => setActiveModal(null)}
+      />
+
+      <ConfirmModal
+        visible={activeModal === 'deleteConfirm'}
+        title="삭제하기"
+        message="삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="확인"
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => setActiveModal(null)}
+      />
+
+      <EstimateSelectBuyerModal
+        visible={activeModal === 'estimateSelectBuyer'}
+        onClose={() => setActiveModal(null)}
+        onSelect={() => setActiveModal(null)}
+      />
+
+      <EstimateWarningModal
+        visible={activeModal === 'estimateWarning'}
+        onClose={() => setActiveModal(null)}
+      />
+
+      <ProcessGuideModal
+        visible={activeModal === 'processingGuide'}
+        title="임가공 견적 문의"
+        processTitle="견적 문의 프로세스"
+        steps={[
+          { number: 1, label: '견적 등록' },
+          { number: 2, label: '검수 후 답변 등록' },
+          { number: 3, label: '견적 선택' },
+        ]}
+        completeLabel="의뢰완료"
+        ctaLabel="임가공 견적 받기"
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => {
+          setActiveModal(null);
+          navigation.navigate('ProcessingUpload' as any);
+        }}
+      />
+
+      <ProcessGuideModal
+        visible={activeModal === 'scrapGuide'}
+        title="고철 처리 견적 문의"
+        processTitle="고철 처리 프로세스"
+        steps={[
+          { number: 1, label: '의뢰 등록' },
+          { number: 2, label: '검수 후 답변 등록' },
+          { number: 3, label: '견적 선택' },
+        ]}
+        completeLabel="의뢰완료"
+        ctaLabel="고철 처리 의뢰 받기"
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => {
+          setActiveModal(null);
+          navigation.navigate('ScrapUpload' as any);
+        }}
+      />
+
+      <ReviewModal
+        visible={['reviewIntro', 'reviewScore', 'reviewWrite', 'reviewView'].includes(activeModal || '')}
+        type={
+          activeModal === 'reviewIntro' ? 'intro' :
+          activeModal === 'reviewScore' ? 'score' :
+          activeModal === 'reviewWrite' ? 'write' :
+          activeModal === 'reviewView' ? 'view' : null
+        }
+        onClose={() => setActiveModal(null)}
+        onChangeType={(type) => {
+          const keyMap: Record<string, string> = { intro: 'reviewIntro', score: 'reviewScore', write: 'reviewWrite', view: 'reviewView' };
+          setActiveModal(type ? keyMap[type] || null : null);
+        }}
+      />
+
+      <ReviewModal
+        visible={activeModal === 'reviewReceived'}
+        type="view"
+        showPrompt={false}
+        viewTitle="김샘플님이 보낸 후기가 도착했어요"
+        onClose={() => setActiveModal(null)}
+        onChangeType={() => setActiveModal(null)}
+      />
+
+      <ReviewModal
+        visible={activeModal === 'reviewSent'}
+        type="view"
+        showPrompt={false}
+        viewTitle="김샘플님께 보낸 후기입니다"
+        onClose={() => setActiveModal(null)}
+        onChangeType={() => setActiveModal(null)}
+      />
+
+      <ChatPopupModal
+        visible={activeModal === 'chatPopup'}
+        onClose={() => setActiveModal(null)}
+      />
+
+      <ChatPopupModal
+        visible={activeModal === 'chatPopupPayment'}
+        onClose={() => setActiveModal(null)}
+        chatContext="payment_before"
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
+      />
     </SafeAreaView>
   );
 };

@@ -13,6 +13,7 @@ import { colors } from '../../styles/colors';
 import EyeIcon from '../../assets/icon/eye.svg';
 import EyeClosedIcon from '../../assets/icon/eye-closed.svg';
 import { BottomButtonBar } from '../../components/common';
+import { EstimateWarningModal } from './components/EstimateWarningModal';
 import {
   MACHINE_CATEGORIES,
   MACHINE_SUB_CATEGORIES,
@@ -47,6 +48,7 @@ const EDIT_SAMPLE = {
 
 export const EstimateWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit' } } }> = ({ route }) => {
   const isEditMode = route?.params?.mode === 'edit';
+  const [warningVisible, setWarningVisible] = useState(!isEditMode);
   const [title, setTitle] = useState(isEditMode ? EDIT_SAMPLE.title : '');
   const [productName, setProductName] = useState(isEditMode ? EDIT_SAMPLE.productName : '');
   const [productTypeUsed, setProductTypeUsed] = useState(true);
@@ -310,6 +312,11 @@ export const EstimateWriteScreen: React.FC<{ route?: { params?: { mode?: 'edit' 
           { label: '취소', variant: 'gray', onPress: () => {} },
           { label: isEditMode ? '수정하기' : '등록하기', onPress: handleSubmit },
         ]}
+      />
+
+      <EstimateWarningModal
+        visible={warningVisible}
+        onClose={() => setWarningVisible(false)}
       />
     </View>
   );

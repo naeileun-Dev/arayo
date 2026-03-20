@@ -20,6 +20,7 @@ import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import XIcon from '../../assets/icon/X.svg';
 import type { RootStackParamList } from '../../types';
+import { CompareToast } from '../../components/common';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -579,6 +580,7 @@ export const ChatRoomScreen: React.FC = () => {
   const [message, setMessage] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
   const [exitVisible, setExitVisible] = useState(false);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [viewerImages, setViewerImages] = useState<any[]>([]);
@@ -625,7 +627,7 @@ export const ChatRoomScreen: React.FC = () => {
 
   const handleReportSubmit = () => {
     setReportVisible(false);
-    // TODO: Submit report
+    setToastVisible(true);
   };
 
   const handleImagePicker = () => {
@@ -823,6 +825,12 @@ export const ChatRoomScreen: React.FC = () => {
           setImageSendVisible(false);
           // TODO: Send images
         }}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message="신고 접수되었습니다."
+        onClose={() => setToastVisible(false)}
       />
     </SafeAreaView>
   );

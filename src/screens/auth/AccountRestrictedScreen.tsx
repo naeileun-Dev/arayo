@@ -1,26 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button } from '../../components/common';
+import WarningIcon from '../../assets/icon/auth_warning.svg';
 import { colors } from '../../styles/colors';
 import { typography } from '../../styles/typography';
 import { spacing, screenPadding } from '../../styles/spacing';
-import type { AuthStackParamList } from '../../types';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'AccountRestricted'>;
+export const AccountRestrictedScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-export const AccountRestrictedScreen: React.FC<Props> = ({ navigation }) => {
   const handleGoHome = () => {
-    navigation.navigate('Login');
+    navigation.navigate('Main');
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <View style={styles.warningIcon}>
-            <View style={styles.warningIconPlaceholder} />
-          </View>
+          <WarningIcon width={64} height={64} />
         </View>
 
         <Text style={styles.title}>이용이 제한된 계정입니다.</Text>
@@ -50,18 +49,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginBottom: spacing.xl,
-  },
-  warningIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.warningLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  warningIconPlaceholder: {
-    width: 32,
-    height: 32,
   },
   title: {
     ...typography.h3,

@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Pressable,
+  Platform,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
@@ -38,6 +40,9 @@ import {
 import { styles } from './ProductViewScreen.styles';
 import { ReviewItem } from './components/ReviewItem';
 import { ProductCard } from './components/ProductCard';
+import { ReportModal } from '../../components/product/ReportModal';
+import { CompareToast } from '../../components/common';
+import { fontFamily } from '../../styles/typography';
 import { SectionHeader } from '../../components/common';
 import { ServiceTag } from '../../components/common';
 import { RatingBreakdown } from '../../components/common';
@@ -56,6 +61,10 @@ export const ProductViewScreen = () => {
   const [reviews, setReviews] = useState([1, 2]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isServiceOpen, setIsServiceOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const sectionRefs = useRef<Record<SectionKey, number>>({
     intro: 0,
@@ -160,7 +169,7 @@ export const ProductViewScreen = () => {
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.overlayBtn}>
               <ChevronLeftIcon width={30} height={30} color={colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.overlayBtn}>
+            <TouchableOpacity style={styles.overlayBtn} onPress={() => setMenuVisible(!menuVisible)}>
               <Text style={styles.moreIcon}>⋮</Text>
             </TouchableOpacity>
           </View>
@@ -444,9 +453,100 @@ export const ProductViewScreen = () => {
           <Text style={styles.btnChatText}>채팅하기</Text>
         </TouchableOpacity>
       </View>
+
+      {/* More Dropdown */}
+      {menuVisible && (
+        <>
+          <Pressable style={moreStyles.overlay} onPress={() => setMenuVisible(false)} />
+          <View style={moreStyles.dropdown}>
+            <TouchableOpacity
+              style={moreStyles.item}
+              activeOpacity={0.6}
+              onPress={() => {
+                setMenuVisible(false);
+              }}
+            >
+              <Text style={moreStyles.itemText}>공유하기</Text>
+            </TouchableOpacity>
+            <View style={moreStyles.divider} />
+            <TouchableOpacity
+              style={moreStyles.item}
+              activeOpacity={0.6}
+              onPress={() => {
+                setMenuVisible(false);
+                setReportVisible(true);
+              }}
+            >
+              <Text style={moreStyles.itemText}>신고하기</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
+
+      <ReportModal
+        visible={reportVisible}
+        onClose={() => setReportVisible(false)}
+        onSubmit={() => {
+          setReportVisible(false);
+          setToastMessage('신고가 접수되었습니다.');
+          setToastVisible(true);
+        }}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message={toastMessage}
+        onClose={() => setToastVisible(false)}
+      />
     </SafeAreaView>
   );
 };
+
+const moreStyles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 99,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 56 : 16,
+    right: 20,
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    minWidth: 140,
+    zIndex: 100,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  item: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  itemText: {
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.G200,
+  },
+});
 
 const localStyles = StyleSheet.create({
   serviceToggle: {

@@ -10,11 +10,12 @@ interface Props {
   sortType: InquirySortType;
   onTabChange: (tab: string) => void;
   onSortPress: () => void;
+  hideSortDropdown?: boolean;
 }
 
 const DEFAULT_TABS = ['전체', '신품', '중고'];
 
-export const InquiryTabSort: React.FC<Props> = ({ tabs = DEFAULT_TABS, activeTab, sortType, onTabChange, onSortPress }) => {
+export const InquiryTabSort: React.FC<Props> = ({ tabs = DEFAULT_TABS, activeTab, sortType, onTabChange, onSortPress, hideSortDropdown = false }) => {
   const activeIndex = tabs.indexOf(activeTab);
 
   return (
@@ -26,10 +27,12 @@ export const InquiryTabSort: React.FC<Props> = ({ tabs = DEFAULT_TABS, activeTab
           onChange={(i) => onTabChange(tabs[i])}
         />
       </View>
-      <TouchableOpacity style={styles.sortDropdown} onPress={onSortPress} activeOpacity={0.6}>
-        <Text style={styles.sortLabel}>{sortType}</Text>
-        <View style={styles.sortCaretIcon} />
-      </TouchableOpacity>
+      {!hideSortDropdown && (
+        <TouchableOpacity style={styles.sortDropdown} onPress={onSortPress} activeOpacity={0.6}>
+          <Text style={styles.sortLabel}>{sortType}</Text>
+          <View style={styles.sortCaretIcon} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

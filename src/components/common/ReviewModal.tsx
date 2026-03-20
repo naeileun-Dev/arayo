@@ -36,6 +36,8 @@ export interface ReviewModalProps {
   type: ReviewModalType;
   onClose: () => void;
   onChangeType: (type: ReviewModalType) => void;
+  showPrompt?: boolean;
+  viewTitle?: string;
 }
 
 const SCORE_ITEMS = [
@@ -62,6 +64,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
   type,
   onClose,
   onChangeType,
+  showPrompt = true,
+  viewTitle,
 }) => {
   const [selectedScore, setSelectedScore] = useState<number | null>(null);
   const [reviewText, setReviewText] = useState('');
@@ -328,7 +332,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>김샘플님이 보낸 후기가 도착했어요</Text>
+              <Text style={styles.modalTitle}>{viewTitle || '김샘플님이 보낸 후기가 도착했어요'}</Text>
               <TouchableOpacity onPress={onClose} style={styles.modalCloseBtn}>
                 <XIcon width={20} height={20} color={colors.black} />
               </TouchableOpacity>
@@ -338,26 +342,52 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                 <Image source={USER_IMG} style={styles.reviewWriterImg} />
                 <Text style={styles.reviewWriterName}>김샘플</Text>
               </View>
-              <View style={styles.reviewSampleBoxView}>
-                <View style={styles.starRow}>
-                  <StarIcon width={18} height={18} color={colors.star} />
-                  <Text style={styles.starNumber}>4</Text>
-                </View>
-                <Text style={styles.reviewSampleTextView}>
-                  문의 단계부터 응대가 빠르고, 제품 상태와 사양에 대해 상세하게
-                  설명해 주셔서 신뢰가 갔습니다.
-                </Text>
-                <View style={styles.reviewBlurOverlay} />
-              </View>
-              <View style={styles.reviewInfoBox}>
-                <Text style={styles.reviewInfoTitle}>전체 후기가 궁금하다면?</Text>
-                <Text style={styles.reviewInfoSub}>
-                  <Text style={styles.colorBlue}>5초만에</Text> 후기 작성하고, 받은 후기 확인하기
-                </Text>
-              </View>
-              <View style={styles.modalBtnSet}>
-                <ModalBtn label="5초 후기 작성" onPress={() => onChangeType('score')} />
-              </View>
+              {showPrompt ? (
+                <>
+                  <View style={styles.reviewSampleBoxView}>
+                    <View style={styles.starRow}>
+                      <StarIcon width={18} height={18} color={colors.star} />
+                      <Text style={styles.starNumber}>4</Text>
+                    </View>
+                    <Text style={styles.reviewSampleTextView}>
+                      문의 단계부터 응대가 빠르고, 제품 상태와 사양에 대해 상세하게
+                      설명해 주셔서 신뢰가 갔습니다.
+                    </Text>
+                    <View style={styles.reviewBlurOverlay} />
+                  </View>
+                  <View style={styles.reviewInfoBox}>
+                    <Text style={styles.reviewInfoTitle}>전체 후기가 궁금하다면?</Text>
+                    <Text style={styles.reviewInfoSub}>
+                      <Text style={styles.colorBlue}>5초만에</Text> 후기 작성하고, 받은 후기 확인하기
+                    </Text>
+                  </View>
+                  <View style={styles.modalBtnSet}>
+                    <ModalBtn label="5초 후기 작성" onPress={() => onChangeType('score')} />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={styles.reviewFullBox}>
+                    <View style={styles.starRow}>
+                      <StarIcon width={18} height={18} color={colors.star} />
+                      <Text style={styles.starNumber}>4</Text>
+                    </View>
+                    <View style={styles.reviewPointsList}>
+                      <Text style={styles.reviewPointItem}>•  시간 약속을 잘 지켜요.</Text>
+                      <Text style={styles.reviewPointItem}>•  설비 상태가 설명한 것과 같아요.</Text>
+                      <Text style={styles.reviewPointItem}>•  친절하고 매너가 좋아요.</Text>
+                      <Text style={styles.reviewPointItem}>•  좋은 설비를 저렴하게 판매해요.</Text>
+                    </View>
+                    <View style={styles.reviewDivider} />
+                    <Text style={styles.reviewFullText}>
+                      문의 단계부터 응대가 빠르고, 제품 상태와 사양에 대해 상세하게 설명해 주셔서 신뢰가 갔습니다. 중고 장비 특성상 궁금한 점이 많았는데, 추가 요청 자료나 사진도 바로 공유해 주셔서 검토에 도움이 됐습니다.
+                    </Text>
+                  </View>
+                  <View style={styles.modalBtnSet}>
+                    <ModalBtn label="확인" onPress={onClose} />
+                  </View>
+                </>
+              )}
             </ScrollView>
           </View>
         </View>
@@ -480,6 +510,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 40,
     backgroundColor: 'rgba(247,247,247,0.8)',
+  },
+  reviewFullBox: {
+    padding: 16,
+    marginBottom: 14,
+    borderRadius: 8,
+    backgroundColor: colors.G100,
+  },
+  reviewPointsList: {
+    marginTop: 12,
+    gap: 6,
+  },
+  reviewPointItem: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.G600,
+  },
+  reviewDivider: {
+    height: 1,
+    backgroundColor: colors.G200,
+    marginVertical: 16,
+  },
+  reviewFullText: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: colors.G700,
   },
   reviewInfoBox: {
     alignItems: 'center',

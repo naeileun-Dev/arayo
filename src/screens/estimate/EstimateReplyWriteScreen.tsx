@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { colors } from '../../styles/colors';
-import { BottomButtonBar } from '../../components/common';
+import { BottomButtonBar, ConfirmModal, CompareToast } from '../../components/common';
 import {
   MACHINE_CATEGORIES,
   MACHINE_SUB_CATEGORIES,
@@ -164,7 +164,10 @@ export const EstimateReplyWriteScreen: React.FC<{ route?: { params?: { mode?: 'e
     );
   };
 
-  const handleSubmit = () => setShowValidation(true);
+  const [registerVisible, setRegisterVisible] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+
+  const handleSubmit = () => setRegisterVisible(true);
 
   return (
     <View style={styles.root}>
@@ -429,6 +432,25 @@ export const EstimateReplyWriteScreen: React.FC<{ route?: { params?: { mode?: 'e
           { label: '취소', variant: 'gray', onPress: () => {} },
           { label: isEditMode ? '수정하기' : '등록하기', onPress: handleSubmit },
         ]}
+      />
+
+      <ConfirmModal
+        visible={registerVisible}
+        title="등록하기"
+        message="등록하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="확인"
+        onClose={() => setRegisterVisible(false)}
+        onConfirm={() => {
+          setRegisterVisible(false);
+          setToastVisible(true);
+        }}
+      />
+
+      <CompareToast
+        visible={toastVisible}
+        message="견적 답변이 등록되었습니다."
+        onClose={() => setToastVisible(false)}
       />
     </View>
   );

@@ -32,7 +32,7 @@ export const SignUpCompleteScreen: React.FC<Props> = ({ navigation, route }) => 
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <StateCheckIcon width={64} height={64} />
+          <StateCheckIcon width={40} height={40} />
         </View>
 
         <Text style={styles.title}>

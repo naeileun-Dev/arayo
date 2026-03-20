@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthNavigator } from './AuthNavigator';
 import { MainNavigator } from './MainTabNavigator';
 import { SearchScreen, NotificationScreen, ServiceIntroduceScreen } from '../screens/main';
+import { LoginRequiredScreen } from '../screens/auth/LoginRequiredScreen';
+import { AccountRestrictedScreen } from '../screens/auth/AccountRestrictedScreen';
 import { TermsScreen } from '../screens/terms/TermsScreen';
 import { PrivacyScreen } from '../screens/terms/PrivacyScreen';
 import { FAQScreen } from '../screens/terms/FAQScreen';
@@ -10,6 +12,7 @@ import {
   BusinessUpgradeFormScreen,
   BusinessUpgradeFormNormalScreen,
   BusinessUpgradeFormGoldScreen,
+  BusinessUpgradeCompleteScreen,
   ProfileScreen,
   ProfileEditScreen,
   PasswordResetScreen,
@@ -17,9 +20,18 @@ import {
   FavoriteListScreen,
   OrderDetailScreen,
   PurchasListScreen,
+  TradeReviewDetailScreen,
+  TradeReviewEditScreen,
+  MyEstimateListScreen,
+  MyEstimateDetailScreen,
+  MyProcessingListScreen,
+  MyProcessingDetailScreen,
+  MyScrapListScreen,
+  MyScrapDetailScreen,
 } from '../screens/mypage';
 import { ProductViewScreen } from '../screens/product/ProductViewScreen';
 import { ProductUploadScreen } from '../screens/product/ProductUploadScreen';
+import { RecentlyViewedScreen } from '../screens/product/RecentlyViewedScreen';
 import { CategoryListScreen } from '../screens/category/CategoryListScreen';
 import { SellListScreen } from '../screens/corporation/SellListScreen';
 import { ChatListScreen } from '../screens/chat/ChatListScreen';
@@ -55,6 +67,9 @@ import { BrandNoticeWriteScreen } from '../screens/brand/BrandNoticeWriteScreen'
 import { BrandProductsScreen } from '../screens/brand/BrandProductsScreen';
 import { BrandContactScreen } from '../screens/brand/BrandContactScreen';
 import { BrandProductDetailScreen } from '../screens/brand/BrandProductDetailScreen';
+import { ProcessingHomeScreen } from '../screens/processing/ProcessingHomeScreen';
+import { ProcessingCompanyDetailScreen } from '../screens/processing/ProcessingCompanyDetailScreen';
+import { ProcessingCompanyWriteScreen } from '../screens/processing/ProcessingCompanyWriteScreen';
 import { DevRouteScreen } from '../screens/dev/DevRouteScreen';
 import type { RootStackParamList } from '../types';
 
@@ -62,12 +77,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const SCREENS = [
   { name: 'Search', component: SearchScreen },
+  { name: 'LoginRequired', component: LoginRequiredScreen },
+  { name: 'AccountRestricted', component: AccountRestrictedScreen },
   { name: 'Notification', component: NotificationScreen },
   { name: 'Terms', component: TermsScreen },
   { name: 'Privacy', component: PrivacyScreen },
   { name: 'BusinessUpgrade', component: BusinessUpgradeScreen },
   { name: 'ProductView', component: ProductViewScreen },
   { name: 'ProductUpload', component: ProductUploadScreen },
+  { name: 'RecentlyViewed', component: RecentlyViewedScreen },
   { name: 'CategoryList', component: CategoryListScreen },
   { name: 'FAQ', component: FAQScreen },
   { name: 'PurchaseList', component: PurchasListScreen },
@@ -82,12 +100,21 @@ const SCREENS = [
   { name: 'ProfileEdit', component: ProfileEditScreen },
   { name: 'PasswordReset', component: PasswordResetScreen },
   { name: 'TradeReview', component: TradeReviewScreen },
+  { name: 'TradeReviewDetail', component: TradeReviewDetailScreen },
+  { name: 'TradeReviewEdit', component: TradeReviewEditScreen },
+  { name: 'MyEstimateList', component: MyEstimateListScreen },
+  { name: 'MyEstimateDetail', component: MyEstimateDetailScreen },
+  { name: 'MyProcessingList', component: MyProcessingListScreen },
+  { name: 'MyProcessingDetail', component: MyProcessingDetailScreen },
+  { name: 'MyScrapList', component: MyScrapListScreen },
+  { name: 'MyScrapDetail', component: MyScrapDetailScreen },
   { name: 'EstimateReplyList', component: EstimateReplyListScreen },
   { name: 'EstimateDetail', component: EstimateDetailScreen },
   { name: 'BusinessUpgradeForm', component: BusinessUpgradeFormScreen },
   { name: 'EstimateList', component: EstimateListScreen },
   { name: 'BusinessUpgradeFormNormal', component: BusinessUpgradeFormNormalScreen },
   { name: 'BusinessUpgradeFormGold', component: BusinessUpgradeFormGoldScreen },
+  { name: 'BusinessUpgradeComplete', component: BusinessUpgradeCompleteScreen },
   { name: 'EstimateUpload', component: EstimateWriteScreen },
   { name: 'EstimateReplyWrite', component: EstimateReplyWriteScreen },
   { name: 'ProcessingList', component: ProcessingListScreen },
@@ -115,6 +142,9 @@ const SCREENS = [
   { name: 'BrandProducts', component: BrandProductsScreen },
   { name: 'BrandContact', component: BrandContactScreen },
   { name: 'BrandProductDetail', component: BrandProductDetailScreen },
+  { name: 'ProcessingHome', component: ProcessingHomeScreen },
+  { name: 'ProcessingCompanyDetail', component: ProcessingCompanyDetailScreen },
+  { name: 'ProcessingCompanyWrite', component: ProcessingCompanyWriteScreen },
 ] as const;
 
 export const RootNavigator = () => (
