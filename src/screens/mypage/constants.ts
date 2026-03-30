@@ -23,10 +23,10 @@ export const MENU_ICONS: Record<string, React.FC<any>> = {
   '거래후기': ReviewsIcon,
   '내 브랜드관 기업 홈': BrandhomeIcon,
   '브랜드관 업체 등록/수정': ManagebrandIcon,
-  '견적답변 내역': EstimatesIcon,
+  '견적 문의 내역': EstimatesIcon,
   '내 임가공 기업 홈': OemhomeIcon,
   '임가공 업체 등록/수정': ManageoemIcon,
-  '임가공 답변 내역': OemrepliesIcon,
+  '임가공 문의 내역': OemrepliesIcon,
   '고철처리 의뢰 내역': ScrapmgtIcon,
   '1:1 문의': InquiryIcon,
   '공지사항': NoticeIcon,
@@ -41,11 +41,11 @@ export const MENU_SECTIONS = [
   },
   {
     label: 'MY 견적',
-    items: ['내 브랜드관 기업 홈', '브랜드관 업체 등록/수정', '견적답변 내역'],
+    items: ['내 브랜드관 기업 홈', '브랜드관 업체 등록/수정', '견적 문의 내역'],
   },
   {
     label: 'MY 임가공',
-    items: ['내 임가공 기업 홈', '임가공 업체 등록/수정', '임가공 답변 내역'],
+    items: ['내 임가공 기업 홈', '임가공 업체 등록/수정', '임가공 문의 내역'],
   },
   {
     label: 'MY 고철처리',

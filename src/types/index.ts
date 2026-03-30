@@ -27,6 +27,7 @@ export type RootStackParamList = {
   Notification: undefined;
   Terms: undefined;
   Privacy: undefined;
+  BusinessUpgradeVerify: undefined;
   BusinessUpgrade: undefined;
   ProductView: { productId: string };
   ProductUpload: undefined;
@@ -81,6 +82,7 @@ export type RootStackParamList = {
   InquiryList: undefined;
   InquiryWrite: undefined;
   BrandHome: undefined;
+  BrandSearch: undefined;
   BrandDetail: { brandId?: string };
   BrandWrite: { mode?: 'create' | 'edit'; brandId?: string };
   BrandAbout: { brandId?: string };
@@ -92,6 +94,19 @@ export type RootStackParamList = {
   ProcessingHome: undefined;
   ProcessingCompanyDetail: undefined;
   ProcessingCompanyWrite: { mode?: 'create' | 'edit' };
+  PurchaseInquiry: undefined;
+  LoginRequired: undefined;
+  AccountRestricted: undefined;
+  RecentlyViewed: undefined;
+  TradeReviewDetail: undefined;
+  TradeReviewEdit: undefined;
+  MyEstimateList: undefined;
+  MyEstimateDetail: undefined;
+  MyProcessingList: undefined;
+  MyProcessingDetail: undefined;
+  MyScrapList: undefined;
+  MyScrapDetail: undefined;
+  BusinessUpgradeComplete: { type?: 'general' | 'gold' };
 };
 
 export interface SignUpFormData {

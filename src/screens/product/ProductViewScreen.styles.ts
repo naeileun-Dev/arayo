@@ -24,15 +24,25 @@ export const styles = StyleSheet.create({
   slideSection: { height: 339, position: 'relative', backgroundColor: colors.white },
   headerOverlay: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 10 : 20,
+    top: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
-    zIndex: 10,
+    paddingTop: Platform.OS === 'ios' ? 10 : 20,
+    paddingBottom: 8,
+    zIndex: 100,
+    backgroundColor: 'transparent',
+  },
+  headerOverlayScrolled: {
+    backgroundColor: colors.white,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#E0E0E0',
   },
   overlayBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  overlayRightGroup: { flexDirection: 'row', alignItems: 'center' },
   moreIcon: { fontSize: 24, color: colors.white },
   slideImg: { width: SCREEN_WIDTH, height: 339 },
   paginationBadge: {
@@ -91,6 +101,15 @@ export const styles = StyleSheet.create({
 
   bannerImg: { width: '100%', height: 80, borderRadius: 6 },
 
+  fixedTabBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    zIndex: 99,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.G200,
+  },
   tabWrap: { backgroundColor: colors.white, borderBottomWidth: 1, borderBottomColor: colors.G200 },
   tabRow: { flexDirection: 'row', width: SCREEN_WIDTH },
   tabBtn: {

@@ -7,6 +7,7 @@ export { FavoriteListScreen } from './FavoriteListScreen';
 export { OrderDetailScreen } from './OrderDetailScreen';
 export { PurchasListScreen } from './PurchasListScreen';
 export { BusinessUpgradeScreen } from './BusinessUpgradeScreen';
+export { BusinessUpgradeVerifyScreen } from './BusinessUpgradeVerifyScreen';
 export { BusinessUpgradeFormScreen } from './BusinessUpgradeFormScreen';
 export { BusinessUpgradeFormNormalScreen } from './BusinessUpgradeFormNormalScreen';
 export { BusinessUpgradeFormGoldScreen } from './BusinessUpgradeFormGoldScreen';

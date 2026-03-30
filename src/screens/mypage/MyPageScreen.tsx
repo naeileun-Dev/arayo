@@ -53,7 +53,7 @@ export const MyPageScreen: React.FC = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.upgradeBtn} activeOpacity={0.8} onPress={() => navigation.navigate('BusinessUpgrade')}>
+          <TouchableOpacity style={styles.upgradeBtn} activeOpacity={0.8} onPress={() => navigation.navigate('BusinessUpgradeVerify')}>
             <RefreshCwIcon width={16} height={16} color={colors.white} />
             <Text style={styles.upgradeBtnText}>기업회원 전환하기</Text>
           </TouchableOpacity>
@@ -88,7 +88,7 @@ export const MyPageScreen: React.FC = () => {
                       navigation.navigate('TradeReview');
                     } else if (item === '내 정보 확인/수정') {
                       navigation.navigate('Profile');
-                    } else if (item === '견적답변 내역') {
+                    } else if (item === '견적 문의 내역') {
                       navigation.navigate('EstimateReplyList');
                     }
                   }}
@@ -108,13 +108,13 @@ export const MyPageScreen: React.FC = () => {
         <TouchableOpacity
           style={styles.menuItem}
           activeOpacity={0.7}
-          onPress={() => setIsWithdrawVisible(true)}
+          onPress={() => {}}
         >
           <View style={styles.menuItemLeft}>
             <View style={styles.withdrawIconWrap}>
               <ShareIcon width={20} height={20} color="#7E7E7E" />
             </View>
-            <Text style={[styles.menuItemText, { color: '#7E7E7E' }]}>회원탈퇴</Text>
+            <Text style={[styles.menuItemText, { color: '#7E7E7E' }]}>로그아웃</Text>
           </View>
           <ChevronRightIcon width={16} height={16} color={colors.G300} />
         </TouchableOpacity>

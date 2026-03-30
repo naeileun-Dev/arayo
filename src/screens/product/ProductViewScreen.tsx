@@ -11,12 +11,14 @@ import {
   Platform,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Share,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../types';
 
 import MapPinIcon from '../../assets/icon/map-pin.svg';
+import ShareIcon from '../../assets/icon/share.svg';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
@@ -63,6 +65,21 @@ export const ProductViewScreen = () => {
   const [isServiceOpen, setIsServiceOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
+  const [tabBarScrolled, setTabBarScrolled] = useState(false);
+  const headerHeightRef = useRef(56);
+  const tabBarYRef = useRef(0);
+
+  const handleShare = useCallback(async () => {
+    try {
+      await Share.share({
+        title: '아라요 상품 공유',
+        message: '아라요에서 중고 기계 상품을 확인해보세요!\nhttps://arayo.co.kr',
+      });
+    } catch {
+      // 공유 취소 또는 오류 — 별도 처리 없음
+    }
+  }, []);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -91,6 +108,9 @@ export const ProductViewScreen = () => {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const scrollY = contentOffset.y;
+
+    setHeaderScrolled(scrollY > 280);
+    setTabBarScrolled(scrollY >= tabBarYRef.current - headerHeightRef.current);
 
     if (!isTabPressScrolling.current) {
       const offset = STICKY_HEADER_HEIGHT + 20;
@@ -153,26 +173,57 @@ export const ProductViewScreen = () => {
     });
   };
 
+  const iconColor = headerScrolled ? '#1B1B1B' : colors.white;
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* Sticky Header — absolute, always on top */}
+      <View
+        style={[styles.headerOverlay, headerScrolled && styles.headerOverlayScrolled]}
+        onLayout={(e) => { headerHeightRef.current = e.nativeEvent.layout.height; }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.overlayBtn}>
+          <ChevronLeftIcon width={30} height={30} color={iconColor} />
+        </TouchableOpacity>
+        <View style={styles.overlayRightGroup}>
+          <TouchableOpacity style={styles.overlayBtn} onPress={handleShare}>
+            <ShareIcon width={24} height={24} color={iconColor} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.overlayBtn} onPress={() => setMenuVisible(!menuVisible)}>
+            <Text style={[styles.moreIcon, { color: iconColor }]}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Fixed Tab Bar — shown below the header when scrolled past original tab bar */}
+      {tabBarScrolled && (
+        <View style={[styles.fixedTabBar, { top: headerHeightRef.current }]}>
+          <View style={styles.tabRow}>
+            {TABS.map((tab, idx) => (
+              <TouchableOpacity
+                key={idx}
+                style={[styles.tabBtn, activeTab === idx && styles.tabBtnActive]}
+                onPress={() => handleTabPress(idx)}
+              >
+                <Text style={[styles.tabText, activeTab === idx && styles.tabTextActive]}>
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      )}
+
       <ScrollView
         ref={scrollViewRef}
         style={styles.flex1}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[3]}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
         <View style={styles.slideSection}>
-          <View style={styles.headerOverlay}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.overlayBtn}>
-              <ChevronLeftIcon width={30} height={30} color={colors.white} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.overlayBtn} onPress={() => setMenuVisible(!menuVisible)}>
-              <Text style={styles.moreIcon}>⋮</Text>
-            </TouchableOpacity>
-          </View>
+
 
           <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
             {PRODUCT_IMGS.map((img, idx) => (
@@ -266,7 +317,10 @@ export const ProductViewScreen = () => {
           <Image source={BANNER_IMG} style={styles.bannerImg} resizeMode="cover" />
         </View>
 
-        <View style={styles.tabWrap}>
+        <View
+          style={styles.tabWrap}
+          onLayout={(e) => { tabBarYRef.current = e.nativeEvent.layout.y; }}
+        >
           <View style={styles.tabRow}>
             {TABS.map((tab, idx) => (
               <TouchableOpacity

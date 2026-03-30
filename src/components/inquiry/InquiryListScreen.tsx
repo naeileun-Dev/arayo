@@ -19,6 +19,12 @@ import { InquiryHeader } from './InquiryHeader';
 import { InquiryTabSort } from './InquiryTabSort';
 import { InquiryListItem } from './InquiryListItem';
 
+export interface FabSpeedDialItem {
+  label: string;
+  icon: React.ReactNode;
+  navigateTo: string;
+}
+
 interface Props {
   title: string;
   tabs?: string[];
@@ -30,6 +36,7 @@ interface Props {
   hideSort?: boolean;
   hideSearch?: boolean;
   hideFab?: boolean;
+  fabSpeedDial?: FabSpeedDialItem[];
 }
 
 export const InquiryListScreen: React.FC<Props> = ({
@@ -43,11 +50,13 @@ export const InquiryListScreen: React.FC<Props> = ({
   hideSort = false,
   hideSearch = false,
   hideFab = false,
+  fabSpeedDial,
 }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeTab, setActiveTab] = useState(tabs?.[0] ?? '전체');
   const [sortType] = useState<InquirySortType>('최신순');
   const [isLoadingMore] = useState(true);
+  const [speedDialOpen, setSpeedDialOpen] = useState(false);
 
   const handleTabChange = useCallback((tab: string) => setActiveTab(tab), []);
 
@@ -71,14 +80,12 @@ export const InquiryListScreen: React.FC<Props> = ({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* 배너 */}
         {!hideBanner && (
           <View style={styles.bannerWrapper}>
             <View style={styles.bannerImage} />
           </View>
         )}
 
-        {/* 탭 + 정렬 */}
         {hideSort ? (
           <InquiryTabSort
             tabs={tabs}
@@ -98,7 +105,6 @@ export const InquiryListScreen: React.FC<Props> = ({
           />
         )}
 
-        {/* 목록 */}
         <View style={styles.listContainer}>
           {sampleData.map((item, index) => (
             <InquiryListItem
@@ -121,8 +127,37 @@ export const InquiryListScreen: React.FC<Props> = ({
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
-      {/* 플로팅 버튼 */}
-      {!hideFab && (
+      {!hideFab && fabSpeedDial ? (
+        <View style={styles.speedDialContainer} pointerEvents="box-none">
+          {speedDialOpen && (
+            <>
+              {fabSpeedDial.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.speedDialItem}
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    setSpeedDialOpen(false);
+                    (navigation as any).navigate(item.navigateTo);
+                  }}
+                >
+                  <View style={styles.speedDialCircle}>
+                    <View style={styles.speedDialIcon}>{item.icon}</View>
+                    <Text style={styles.speedDialLabel}>{item.label}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </>
+          )}
+          <TouchableOpacity
+            style={[styles.fabCircle, speedDialOpen && styles.fabCircleOpen]}
+            activeOpacity={0.85}
+            onPress={() => setSpeedDialOpen(v => !v)}
+          >
+            <Text style={styles.fabCirclePlus}>{speedDialOpen ? '×' : '+'}</Text>
+          </TouchableOpacity>
+        </View>
+      ) : !hideFab ? (
         <TouchableOpacity
           style={styles.fab}
           activeOpacity={0.8}
@@ -131,7 +166,7 @@ export const InquiryListScreen: React.FC<Props> = ({
           <Text style={styles.fabPlus}>+</Text>
           <Text style={styles.fabLabel}>{fabLabel}</Text>
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 };
@@ -161,7 +196,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: colors.G200,
   },
-  listContainer: {},
+  listContainer: {
+    flex: 0,
+  },
   loadingWrap: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -204,6 +241,72 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.white,
+  },
+
+  speedDialContainer: {
+    position: 'absolute',
+    bottom: 30,
+    right: 15,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  fabCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.primary200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: { elevation: 6 },
+    }),
+  },
+  fabCircleOpen: {
+    backgroundColor: '#DB0025',
+  },
+  fabCirclePlus: {
+    fontSize: 28,
+    fontWeight: '300',
+    color: colors.white,
+    lineHeight: 34,
+    includeFontPadding: false,
+  },
+  speedDialItem: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  speedDialCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.18,
+        shadowRadius: 4,
+      },
+      android: { elevation: 4 },
+    }),
+  },
+  speedDialIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  speedDialLabel: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#1B1B1B',
   },
 });
 

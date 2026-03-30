@@ -6,4 +6,5 @@ export { InquiryCaseCount } from './InquiryCaseCount';
 export { InquirySubRow } from './InquirySubRow';
 export { InquiryListItem } from './InquiryListItem';
 export { InquiryListScreen } from './InquiryListScreen';
+export type { FabSpeedDialItem } from './InquiryListScreen';
 export * from './types';

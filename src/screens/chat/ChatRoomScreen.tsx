@@ -18,6 +18,8 @@ import {
 import { colors } from '../../styles/colors';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
+import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
+import CalendarIcon from '../../assets/icon/calendar.svg';
 import XIcon from '../../assets/icon/X.svg';
 import type { RootStackParamList } from '../../types';
 import { CompareToast } from '../../components/common';
@@ -475,6 +477,214 @@ const ChatExitModal: React.FC<ChatExitModalProps> = ({ visible, onClose, onConfi
   </Modal>
 );
 
+// Calendar Picker Component
+const WEEK_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+interface CalendarPickerProps {
+  selectedDate: Date | null;
+  onSelect: (date: Date) => void;
+}
+const CalendarPicker: React.FC<CalendarPickerProps> = ({ selectedDate, onSelect }) => {
+  const [viewYear, setViewYear] = useState(() => {
+    const d = selectedDate || new Date();
+    return d.getFullYear();
+  });
+  const [viewMonth, setViewMonth] = useState(() => {
+    const d = selectedDate || new Date();
+    return d.getMonth();
+  });
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11); }
+    else setViewMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0); }
+    else setViewMonth(m => m + 1);
+  };
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array(firstDay).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  // Pad to complete last row
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const isSelected = (day: number) =>
+    selectedDate &&
+    selectedDate.getFullYear() === viewYear &&
+    selectedDate.getMonth() === viewMonth &&
+    selectedDate.getDate() === day;
+
+  return (
+    <View style={calSt.wrap}>
+      <View style={calSt.header}>
+        <Text style={calSt.monthTitle}>{viewYear}년 {viewMonth + 1}월</Text>
+        <View style={calSt.navBtns}>
+          <TouchableOpacity onPress={prevMonth} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <ChevronLeftIcon width={20} height={20} color={colors.black} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={nextMonth} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} style={{ marginLeft: 16 }}>
+            <ChevronRightIcon width={20} height={20} color={colors.black} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={calSt.weekRow}>
+        {WEEK_DAYS.map(d => (
+          <Text key={d} style={calSt.weekLabel}>{d}</Text>
+        ))}
+      </View>
+
+      <View style={calSt.grid}>
+        {cells.map((day, idx) => (
+          <TouchableOpacity
+            key={idx}
+            style={calSt.dayCell}
+            disabled={!day}
+            onPress={() => day && onSelect(new Date(viewYear, viewMonth, day))}
+            activeOpacity={0.7}
+          >
+            {day ? (
+              <View style={[calSt.dayInner, isSelected(day) && calSt.daySelected]}>
+                <Text style={[calSt.dayText, isSelected(day) && calSt.daySelectedText]}>{day}</Text>
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+const calSt = StyleSheet.create({
+  wrap: { paddingHorizontal: 4, paddingTop: 8 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 },
+  monthTitle: { fontSize: 20, fontWeight: '700', color: colors.black },
+  navBtns: { flexDirection: 'row', alignItems: 'center' },
+  weekRow: { flexDirection: 'row', marginBottom: 8 },
+  weekLabel: { flex: 1, textAlign: 'center', fontSize: 12, fontWeight: '500', color: colors.G500 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap' },
+  dayCell: { width: `${100 / 7}%`, alignItems: 'center', paddingVertical: 4 },
+  dayInner: { width: 40, height: 40, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  daySelected: { backgroundColor: colors.primary },
+  dayText: { fontSize: 16, fontWeight: '500', color: colors.black },
+  daySelectedText: { color: colors.white, fontWeight: '700' },
+});
+
+// Reservation Modal Component
+interface ReservationModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onConfirm: (date: Date) => void;
+}
+const ReservationModal: React.FC<ReservationModalProps> = ({ visible, onClose, onConfirm }) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const formatDate = (d: Date) =>
+    `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+
+  const handleConfirm = () => {
+    if (!selectedDate) return;
+    onConfirm(selectedDate);
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={rsvSt.overlay}>
+        <View style={rsvSt.container}>
+          <View style={rsvSt.header}>
+            <Text style={rsvSt.title}>예약하기</Text>
+            <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <XIcon width={24} height={24} color={colors.black} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={rsvSt.body}>
+            <View style={rsvSt.labelRow}>
+              <Text style={rsvSt.label}>배송 날짜</Text>
+              <Text style={rsvSt.required}> *</Text>
+            </View>
+
+            <TouchableOpacity
+              style={rsvSt.dateInput}
+              onPress={() => setShowCalendar(v => !v)}
+              activeOpacity={0.7}
+            >
+              <Text style={[rsvSt.dateText, !selectedDate && rsvSt.datePlaceholder]}>
+                {selectedDate ? formatDate(selectedDate) : '날짜를 선택해 주세요.'}
+              </Text>
+              <CalendarIcon width={24} height={24} color={colors.G500} />
+            </TouchableOpacity>
+
+            {showCalendar && (
+              <CalendarPicker
+                selectedDate={selectedDate}
+                onSelect={(d) => {
+                  setSelectedDate(d);
+                  setShowCalendar(false);
+                }}
+              />
+            )}
+          </View>
+
+          {!showCalendar && (
+            <View style={rsvSt.footer}>
+              <TouchableOpacity style={rsvSt.btnCancel} onPress={onClose} activeOpacity={0.7}>
+                <Text style={rsvSt.btnCancelText}>취소</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[rsvSt.btnConfirm, !selectedDate && rsvSt.btnConfirmDisabled]}
+                onPress={handleConfirm}
+                activeOpacity={0.8}
+              >
+                <Text style={rsvSt.btnConfirmText}>확인</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {showCalendar && (
+            <TouchableOpacity style={rsvSt.calendarConfirmBtn} onPress={() => setShowCalendar(false)} activeOpacity={0.8}>
+              <Text style={rsvSt.btnConfirmText}>확인</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const rsvSt = StyleSheet.create({
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
+  container: { backgroundColor: colors.white, borderRadius: 16, paddingBottom: 24, width: '100%' },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 20 },
+  title: { fontSize: 22, fontWeight: '700', color: colors.black },
+  body: { paddingHorizontal: 24, paddingBottom: 24 },
+  labelRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  label: { fontSize: 16, fontWeight: '600', color: colors.black },
+  required: { fontSize: 16, fontWeight: '600', color: colors.primary },
+  dateInput: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    height: 56, borderWidth: 1, borderColor: colors.G200, borderRadius: 8,
+    paddingHorizontal: 16,
+  },
+  dateText: { fontSize: 15, fontWeight: '500', color: colors.black },
+  datePlaceholder: { color: colors.G400 },
+  footer: { flexDirection: 'row', gap: 12, paddingHorizontal: 24 },
+  btnCancel: {
+    flex: 1, height: 56, borderRadius: 8, borderWidth: 1, borderColor: colors.G200,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  btnCancelText: { fontSize: 16, fontWeight: '600', color: colors.black },
+  btnConfirm: { flex: 1, height: 56, borderRadius: 8, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
+  btnConfirmDisabled: { backgroundColor: colors.G300 },
+  btnConfirmText: { fontSize: 16, fontWeight: '700', color: colors.white },
+  calendarConfirmBtn: { marginHorizontal: 24, height: 56, borderRadius: 8, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
+});
+
 // Image Viewer Modal Component
 interface ImageViewerModalProps {
   visible: boolean;
@@ -582,6 +792,7 @@ export const ChatRoomScreen: React.FC = () => {
   const [reportVisible, setReportVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [exitVisible, setExitVisible] = useState(false);
+  const [reservationVisible, setReservationVisible] = useState(false);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [viewerImages, setViewerImages] = useState<any[]>([]);
   const [viewerInitialIndex, setViewerInitialIndex] = useState(0);
@@ -656,6 +867,19 @@ export const ChatRoomScreen: React.FC = () => {
           <Text style={styles.headerTitle}>판매자 이름</Text>
           <TouchableOpacity style={styles.headerBtn} onPress={() => setMenuVisible(true)}>
             <Text style={styles.headerMoreIcon}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Action Button Bar */}
+        <View style={styles.actionBar}>
+          <TouchableOpacity style={styles.actionBtn} activeOpacity={0.7}>
+            <Text style={styles.actionBtnText}>안전결제</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} activeOpacity={0.7} onPress={() => setReservationVisible(true)}>
+            <Text style={styles.actionBtnText}>예약하기</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.actionBtn, styles.actionBtnMore]} activeOpacity={0.7} onPress={() => setMenuVisible(true)}>
+            <Text style={styles.headerMoreIcon}>⋯</Text>
           </TouchableOpacity>
         </View>
 
@@ -810,6 +1034,14 @@ export const ChatRoomScreen: React.FC = () => {
         onConfirm={handleExitConfirm}
       />
 
+      <ReservationModal
+        visible={reservationVisible}
+        onClose={() => setReservationVisible(false)}
+        onConfirm={() => {
+          setReservationVisible(false);
+        }}
+      />
+
       <ImageViewerModal
         visible={imageViewerVisible}
         images={viewerImages}
@@ -852,6 +1084,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.G200,
+  },
+  actionBar: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    marginTop: 10,
+    marginBottom: 2,
+    gap: 8,
+  },
+  actionBtn: {
+    flex: 1,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.G200,
+    borderRadius: 6,
+  },
+  actionBtnMore: {
+    flex: 0,
+    width: 44,
+  },
+  actionBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.system100,
+  },
+  actionBarDivider: {
+    width: 1,
+    backgroundColor: colors.G200,
+    marginVertical: 10,
   },
   headerBtn: {
     width: 32,

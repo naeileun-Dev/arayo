@@ -1,9 +1,8 @@
 import React from 'react';
-import { InquiryListScreen, InquiryListItemData } from '../../components/inquiry';
+import { InquiryListScreen, InquiryListItemData, FabSpeedDialItem } from '../../components/inquiry';
+import CompanyIcon from '../../assets/icon/company.svg';
+import GearsIcon from '../../assets/icon/gears.svg';
 
-// ─────────────────────────────────────────────────
-// Sample Data
-// ─────────────────────────────────────────────────
 const SAMPLE_DATA: InquiryListItemData[] = [
   {
     id: '1',
@@ -88,6 +87,19 @@ const SAMPLE_DATA: InquiryListItemData[] = [
   },
 ];
 
+const SPEED_DIAL_ITEMS: FabSpeedDialItem[] = [
+  {
+    label: '업체찾기',
+    icon: <CompanyIcon width={24} height={24} color="#1B1B1B" />,
+    navigateTo: 'ProcessingHome',
+  },
+  {
+    label: '의뢰하기',
+    icon: <GearsIcon width={24} height={24} color="#1B1B1B" />,
+    navigateTo: 'ProcessingUpload',
+  },
+];
+
 export const ProcessingListScreen: React.FC = () => (
   <InquiryListScreen
     title="임가공 견적 문의"
@@ -96,6 +108,7 @@ export const ProcessingListScreen: React.FC = () => (
     fabNavigateTo="ProcessingUpload"
     detailNavigateTo="ProcessingDetail"
     sampleData={SAMPLE_DATA}
+    fabSpeedDial={SPEED_DIAL_ITEMS}
   />
 );
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -98,10 +98,33 @@ export const ProductUploadScreen = () => {
     onSelect: () => {},
   });
 
+  const [draftLoadVisible, setDraftLoadVisible] = useState(false);
   const [tempSaveVisible, setTempSaveVisible] = useState(false);
   const [registerVisible, setRegisterVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  useEffect(() => {
+    setDraftLoadVisible(true);
+  }, []);
+
+  const handleLoadDraft = () => {
+    setDraftLoadVisible(false);
+    setProductName('접촉+비접촉 겸용 래쇼날 CNC 비디오메타 CS-3020H');
+    setProductType('중고');
+    setManufacturer('래쇼날');
+    setModelName('CS-3020H');
+    setDescription('상태 매우 양호한 중고 장비입니다. 직접 확인 가능하며 즉시 거래 가능합니다.');
+    setPrice('10000000');
+    setMachineCategory('공작기계');
+    setMachineSubCategory('CNC 선반');
+    setProduceYear('2019');
+    setProduceMonth('3');
+    setCity('서울');
+    setCounty('강남구');
+    setKeywords(['신품급', '즉시설치', '빠른대응']);
+    setServices(['도착도', '점검완료', '네고 가능']);
+  };
 
   const toggleKeyword = (word: string) => {
     setKeywords(prev =>
@@ -586,6 +609,16 @@ export const ProductUploadScreen = () => {
         selectedValue={modalConfig.selectedValue}
         onSelect={modalConfig.onSelect}
         onClose={() => setModalVisible(false)}
+      />
+
+      <ConfirmModal
+        visible={draftLoadVisible}
+        title="임시저장 글 불러오기"
+        message="임시저장된 글을&#10;불러오시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="확인"
+        onClose={() => setDraftLoadVisible(false)}
+        onConfirm={handleLoadDraft}
       />
 
       <ConfirmModal

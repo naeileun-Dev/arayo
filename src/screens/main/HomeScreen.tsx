@@ -27,7 +27,7 @@ import HeadsetIcon from '../../assets/icon/headset.svg';
 import BuildingIcon from '../../assets/icon/building.svg';
 import AboutIcon from '../../assets/icon/about.svg';
 import GearsIcon from '../../assets/icon/gears.svg';
-import NewsIcon from '../../assets/icon/news.svg';
+import CompanyIcon from '../../assets/icon/company.svg';
 import ProcessIcon from '../../assets/icon/process.svg';
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
 import { SectionHeader, Spinner, CompanyCard } from '../../components/common';
@@ -157,13 +157,13 @@ export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
             <AboutIcon width={24} height={24} />
             <Text style={styles.bottomMenuText}>서비스 소개</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ProcessingHome')}>
+            <CompanyIcon width={24} height={24} />
+            <Text style={styles.bottomMenuText}>{'임가공\n업체찾기'}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ProcessingList')}>
             <GearsIcon width={24} height={24} />
-            <Text style={styles.bottomMenuText}>임가공</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomMenuItem} onPress={() => Alert.alert('산업소식')}>
-            <NewsIcon width={24} height={24} />
-            <Text style={styles.bottomMenuText}>산업소식</Text>
+            <Text style={styles.bottomMenuText}>{'임가공\n의뢰하기'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.bottomMenuItem} onPress={() => navigation.navigate('ScrapList')}>
             <ProcessIcon width={24} height={24} />
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
   gridBottomTitle: { fontSize: 16, fontWeight: '600', marginBottom: 20, color: colors.black },
   gridBottomMenu: { flexDirection: 'row', justifyContent: 'space-between' },
   bottomMenuItem: { flex: 1, alignItems: 'center', gap: 8 },
-  bottomMenuText: { fontSize: 12, color: colors.G600, fontWeight: '500' },
+  bottomMenuText: { fontSize: 12, color: colors.G600, fontWeight: '500', textAlign: 'center' },
 
   bannerContainer: { height: 222, position: 'relative' },
   bannerImage: { width, height: 222 },

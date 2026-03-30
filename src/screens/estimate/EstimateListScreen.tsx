@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../types';
 import { InquiryListScreen, InquiryListItemData } from '../../components/inquiry';
+import { EstimateInquiryModal } from './components/EstimateInquiryModal';
 
-// ─────────────────────────────────────────────────
-// Sample Data
-// ─────────────────────────────────────────────────
 const SAMPLE_DATA: InquiryListItemData[] = [
   {
     id: '1',
@@ -88,13 +89,28 @@ const SAMPLE_DATA: InquiryListItemData[] = [
   },
 ];
 
-export const EstimateListScreen: React.FC = () => (
-  <InquiryListScreen
-    title="견적 문의"
-    fabLabel="견적문의"
-    fabNavigateTo="EstimateUpload"
-    detailNavigateTo="EstimateDetail"
-    sampleData={SAMPLE_DATA}
-  />
-);
+export const EstimateListScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [modalVisible, setModalVisible] = useState(true);
 
+  return (
+    <>
+      <InquiryListScreen
+        title="견적 문의"
+        fabLabel="견적문의"
+        fabNavigateTo="EstimateUpload"
+        detailNavigateTo="EstimateDetail"
+        sampleData={SAMPLE_DATA}
+      />
+
+      <EstimateInquiryModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={() => {
+          setModalVisible(false);
+          navigation.navigate('EstimateUpload', { mode: undefined });
+        }}
+      />
+    </>
+  );
+};

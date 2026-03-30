@@ -22,6 +22,7 @@ import { SelectBuyerModal } from '../../components/trade/SelectBuyerModal';
 import { GuestAuthModal } from '../../components/common/GuestAuthModal';
 import { EstimateSelectBuyerModal } from '../../components/estimate/EstimateSelectBuyerModal';
 import { EstimateWarningModal } from '../estimate/components/EstimateWarningModal';
+import { EstimateInquiryModal } from '../estimate/components/EstimateInquiryModal';
 import { ChatPopupModal } from '../../components/chat/ChatPopupModal';
 import { ReviewModal, ReviewModalType } from '../../components/common';
 
@@ -134,7 +135,8 @@ const ROUTE_GROUPS: RouteGroup[] = [
       { name: 'Profile', label: '프로필' },
       { name: 'ProfileEdit', label: '프로필 수정' },
       { name: 'PasswordReset', label: '비밀번호 변경' },
-      { name: 'BusinessUpgrade', label: '사업자 업그레이드' },
+      { name: 'BusinessUpgradeVerify', label: '기업회원 전환 인증' },
+      { name: 'BusinessUpgrade', label: '기업회원 전환 (플랜 선택)' },
       { name: 'BusinessUpgradeForm', label: '사업자 업그레이드 폼', params: { plan: 'general' } },
       { name: 'BusinessUpgradeFormNormal', label: '일반 사업자 전환' },
       { name: 'BusinessUpgradeFormGold', label: '골드 사업자 전환' },
@@ -156,9 +158,16 @@ const ROUTE_GROUPS: RouteGroup[] = [
     ],
   },
   {
+    title: '구매 문의',
+    routes: [
+      { name: 'PurchaseInquiry', label: '구매 문의 등록' },
+    ],
+  },
+  {
     title: '브랜드관',
     routes: [
       { name: 'BrandHome', label: '브랜드관 메인' },
+      { name: 'BrandSearch', label: '브랜드 검색' },
       { name: 'BrandDetail', label: '브랜드관 상세 (메인)', params: { brandId: '1' } },
       { name: 'BrandAbout', label: '브랜드관 회사소개', params: { brandId: '1' } },
       { name: 'BrandNotice', label: '브랜드관 공지사항', params: { brandId: '1' } },
@@ -199,6 +208,7 @@ const MODAL_ITEMS: ModalItem[] = [
   { key: 'deleteConfirm', label: '삭제하기 확인' },
   { key: 'estimateSelectBuyer', label: '견적 거래자 선택' },
   { key: 'estimateWarning', label: '견적 문의 주의사항' },
+  { key: 'estimateInquiry', label: '비교 견적 문의 팝업' },
   { key: 'processingGuide', label: '임가공 견적 문의 프로세스' },
   { key: 'scrapGuide', label: '고철 처리 견적 문의 프로세스' },
   { key: 'reviewIntro', label: '후기 도착 알림' },
@@ -373,6 +383,15 @@ export const DevRouteScreen: React.FC = () => {
       <EstimateWarningModal
         visible={activeModal === 'estimateWarning'}
         onClose={() => setActiveModal(null)}
+      />
+
+      <EstimateInquiryModal
+        visible={activeModal === 'estimateInquiry'}
+        onClose={() => setActiveModal(null)}
+        onConfirm={() => {
+          setActiveModal(null);
+          navigation.navigate('EstimateUpload' as any);
+        }}
       />
 
       <ProcessGuideModal

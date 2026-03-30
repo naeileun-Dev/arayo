@@ -27,7 +27,6 @@ interface FormField {
 }
 
 const FORM_FIELDS: FormField[] = [
-  { label: '기업회원 아이디', required: false, disabled: true, value: 'ss_korea', placeholder: '기업회원 아이디', key: 'userId' },
   { label: '상호명', required: true, disabled: false, value: '', placeholder: '', key: 'companyName' },
   { label: '사업자등록번호', required: true, disabled: false, value: '', placeholder: '', keyboardType: 'numeric', key: 'businessNumber' },
   { label: '050 번호', required: false, disabled: true, value: '', placeholder: '최초 상품 시 자동 생성됩니다.', keyboardType: 'phone-pad', key: 'phone050' },

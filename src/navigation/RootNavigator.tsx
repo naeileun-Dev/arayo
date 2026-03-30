@@ -9,6 +9,7 @@ import { PrivacyScreen } from '../screens/terms/PrivacyScreen';
 import { FAQScreen } from '../screens/terms/FAQScreen';
 import {
   BusinessUpgradeScreen,
+  BusinessUpgradeVerifyScreen,
   BusinessUpgradeFormScreen,
   BusinessUpgradeFormNormalScreen,
   BusinessUpgradeFormGoldScreen,
@@ -59,6 +60,7 @@ import { IndustryNewsDetailScreen } from '../screens/news/IndustryNewsDetailScre
 import { InquiryListScreen } from '../screens/inquiry/InquiryListScreen';
 import { InquiryWriteScreen } from '../screens/inquiry/InquiryWriteScreen';
 import { BrandHomeScreen } from '../screens/brand/BrandHomeScreen';
+import { BrandSearchScreen } from '../screens/brand/BrandSearchScreen';
 import { BrandDetailScreen } from '../screens/brand/BrandDetailScreen';
 import { BrandWriteScreen } from '../screens/brand/BrandWriteScreen';
 import { BrandAboutScreen } from '../screens/brand/BrandAboutScreen';
@@ -70,6 +72,7 @@ import { BrandProductDetailScreen } from '../screens/brand/BrandProductDetailScr
 import { ProcessingHomeScreen } from '../screens/processing/ProcessingHomeScreen';
 import { ProcessingCompanyDetailScreen } from '../screens/processing/ProcessingCompanyDetailScreen';
 import { ProcessingCompanyWriteScreen } from '../screens/processing/ProcessingCompanyWriteScreen';
+import { PurchaseInquiryScreen } from '../screens/purchase/PurchaseInquiryScreen';
 import { DevRouteScreen } from '../screens/dev/DevRouteScreen';
 import type { RootStackParamList } from '../types';
 
@@ -82,6 +85,7 @@ const SCREENS = [
   { name: 'Notification', component: NotificationScreen },
   { name: 'Terms', component: TermsScreen },
   { name: 'Privacy', component: PrivacyScreen },
+  { name: 'BusinessUpgradeVerify', component: BusinessUpgradeVerifyScreen },
   { name: 'BusinessUpgrade', component: BusinessUpgradeScreen },
   { name: 'ProductView', component: ProductViewScreen },
   { name: 'ProductUpload', component: ProductUploadScreen },
@@ -134,6 +138,7 @@ const SCREENS = [
   { name: 'InquiryList', component: InquiryListScreen },
   { name: 'InquiryWrite', component: InquiryWriteScreen },
   { name: 'BrandHome', component: BrandHomeScreen },
+  { name: 'BrandSearch', component: BrandSearchScreen },
   { name: 'BrandDetail', component: BrandDetailScreen },
   { name: 'BrandWrite', component: BrandWriteScreen },
   { name: 'BrandAbout', component: BrandAboutScreen },
@@ -145,6 +150,7 @@ const SCREENS = [
   { name: 'ProcessingHome', component: ProcessingHomeScreen },
   { name: 'ProcessingCompanyDetail', component: ProcessingCompanyDetailScreen },
   { name: 'ProcessingCompanyWrite', component: ProcessingCompanyWriteScreen },
+  { name: 'PurchaseInquiry', component: PurchaseInquiryScreen },
 ] as const;
 
 export const RootNavigator = () => (

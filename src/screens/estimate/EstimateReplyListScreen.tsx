@@ -111,7 +111,7 @@ export const EstimateReplyListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="견적 답변 내역" onBack={() => navigation.goBack()} />
+      <Header title="견적 문의 내역" onBack={() => navigation.goBack()} />
 
       <EstimateTabBar
         tabs={REPLY_TABS}

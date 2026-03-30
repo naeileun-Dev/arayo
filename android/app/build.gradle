@@ -83,6 +83,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        buildConfigField "boolean", "IS_HERMES_ENABLED", hermesEnabled
     }
     packagingOptions {
         jniLibs {
@@ -120,4 +122,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+}
+
+def isNewArchitectureEnabled() {
+    return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }

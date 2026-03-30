@@ -158,7 +158,7 @@ export const EstimateDetailScreen: React.FC<{ route?: { params?: { id?: string; 
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="견적 답변 상세" onBack={() => navigation.goBack()} />
+      <Header title="견적 문의 상세" onBack={() => navigation.goBack()} />
 
       <ScrollView
         style={styles.scrollView}

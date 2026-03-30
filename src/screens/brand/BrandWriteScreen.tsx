@@ -58,6 +58,7 @@ export const BrandWriteScreen: React.FC = () => {
 
   const [introText, setIntroText] = useState('');
   const [detailText, setDetailText] = useState('');
+  const [homepageId, setHomepageId] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [showValidation, setShowValidation] = useState(false);
@@ -159,6 +160,33 @@ export const BrandWriteScreen: React.FC = () => {
                   <View style={styles.infoValueWrap}>
                     <Text style={styles.infoValue}>0504-1383-5656</Text>
                   </View>
+                </View>
+              </View>
+            </View>
+
+            {/* 기업회원 홈페이지 주소 */}
+            <View style={[styles.gBox, { marginTop: 15 }]}>
+              <Text style={styles.boxTitle}>기업회원 홈페이지 주소</Text>
+              <View style={styles.formGroup}>
+                <View style={styles.formItem}>
+                  <View style={styles.labelRow}>
+                    <Text style={styles.labelText}>홈페이지 아이디</Text>
+                    <Text style={styles.requiredMark}> *</Text>
+                  </View>
+                  <Text style={styles.homepageUrlPreview}>
+                    https://www.arayo.co.kr/home/
+                    <Text style={styles.homepageUrlId}>{homepageId || ''}</Text>
+                  </Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요."
+                    placeholderTextColor={colors.G400}
+                    value={homepageId}
+                    onChangeText={setHomepageId}
+                    autoCapitalize="none"
+                    maxLength={20}
+                  />
+                  <Text style={styles.homepageNote}>*추후 변경 불가능합니다.</Text>
                 </View>
               </View>
             </View>
@@ -506,6 +534,21 @@ const styles = StyleSheet.create({
   validationText: {
     fontSize: 13,
     color: colors.error,
+    marginTop: 2,
+  },
+  homepageUrlPreview: {
+    fontSize: 13,
+    color: '#0F53FF',
+    marginBottom: 4,
+  },
+  homepageUrlId: {
+    fontSize: 13,
+    color: '#0F53FF',
+    fontWeight: '600',
+  },
+  homepageNote: {
+    fontSize: 12,
+    color: colors.G500,
     marginTop: 2,
   },
   blueInfoBox: {

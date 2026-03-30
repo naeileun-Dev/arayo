@@ -222,13 +222,9 @@ export const ProfileEditScreen: React.FC = () => {
     (value: FormState[K]) =>
       setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
-    // TODO: API 저장 로직
-  };
+  const handleSave = () => {};
 
-  const handleSearchZipcode = () => {
-    // TODO: 우편번호 검색 (카카오 주소 API 등)
-  };
+  const handleSearchZipcode = () => {};
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -304,10 +300,13 @@ export const ProfileEditScreen: React.FC = () => {
             <FormLabel label="전화번호" />
             <FormInput
               value={form.phone}
-              onChangeText={setField('phone')}
               placeholder="전화번호를 입력해 주세요."
               keyboardType="phone-pad"
+              editable={false}
             />
+            <TouchableOpacity style={styles.passBtn} activeOpacity={0.8} onPress={() => {}}>
+              <Text style={styles.passBtnText}>PASS 본인 인증</Text>
+            </TouchableOpacity>
           </View>
 
           {/* 사업장 주소지 */}
@@ -415,7 +414,7 @@ export const ProfileEditScreen: React.FC = () => {
           </View>
 
           <View style={styles.fieldItem}>
-            <FormLabel label="업종" required />
+            <FormLabel label="업종" />
             <FormInput
               value={form.bizType}
               onChangeText={setField('bizType')}
@@ -425,7 +424,7 @@ export const ProfileEditScreen: React.FC = () => {
           </View>
 
           <View style={styles.fieldItem}>
-            <FormLabel label="업태" required />
+            <FormLabel label="업태" />
             <FormInput
               value={form.bizCategory}
               onChangeText={setField('bizCategory')}
@@ -435,7 +434,7 @@ export const ProfileEditScreen: React.FC = () => {
           </View>
 
           <View style={styles.fieldItem}>
-            <FormLabel label="과세유형" required />
+            <FormLabel label="과세유형" />
             <FormInput
               value={form.taxType}
               onChangeText={setField('taxType')}
@@ -453,6 +452,10 @@ export const ProfileEditScreen: React.FC = () => {
               keyboardType="email-address"
             />
           </View>
+
+          <TouchableOpacity style={styles.withdrawBtn} activeOpacity={0.7} onPress={() => {}}>
+            <Text style={styles.withdrawBtnText}>회원탈퇴</Text>
+          </TouchableOpacity>
 
           <View style={styles.bottomSpacer} />
         </ScrollView>
@@ -659,5 +662,31 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.primary,
     fontWeight: '700',
+  },
+
+  passBtn: {
+    height: 44,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: colors.G300,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+  },
+  passBtnText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.black,
+  },
+
+  withdrawBtn: {
+    marginTop: 16,
+    alignSelf: 'flex-start',
+  },
+  withdrawBtnText: {
+    fontSize: 13,
+    color: colors.G500,
+    textDecorationLine: 'underline',
   },
 });
