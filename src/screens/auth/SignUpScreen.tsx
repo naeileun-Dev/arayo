@@ -218,13 +218,18 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.formLabel}>
                 아이디<Text style={styles.req}> *</Text>
               </Text>
-              <Input
-                placeholder="5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요."
-                value={formData.userId}
-                onChangeText={(text) => updateField('userId', text)}
-                onBlur={() => validateField('userId')}
-                containerStyle={styles.inputNoMargin}
-              />
+              <View style={styles.inputWithButton}>
+                <Input
+                  placeholder="5자 ~ 20자 이내의 영문으로 아이디를 입력해 주세요."
+                  value={formData.userId}
+                  onChangeText={(text) => updateField('userId', text)}
+                  onBlur={() => validateField('userId')}
+                  containerStyle={[styles.inputNoMargin, styles.flex1]}
+                />
+                <TouchableOpacity style={styles.dupCheckBtn} onPress={checkUserIdAvailability}>
+                  <Text style={styles.dupCheckBtnText}>중복확인</Text>
+                </TouchableOpacity>
+              </View>
               {renderSuccess(errors.userIdSuccess)}
               {renderErrors(errors.userId)}
             </View>
@@ -273,16 +278,18 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.formLabel}>
                 닉네임<Text style={styles.req}> *</Text>
               </Text>
-              <Input
-                placeholder="닉네임을 입력 해주세요."
-                value={formData.nickname}
-                onChangeText={(text) => updateField('nickname', text)}
-                onBlur={() => {
-                  validateField('nickname');
-                  checkNicknameAvailability();
-                }}
-                containerStyle={styles.inputNoMargin}
-              />
+              <View style={styles.inputWithButton}>
+                <Input
+                  placeholder="닉네임을 입력 해주세요."
+                  value={formData.nickname}
+                  onChangeText={(text) => updateField('nickname', text)}
+                  onBlur={() => validateField('nickname')}
+                  containerStyle={[styles.inputNoMargin, styles.flex1]}
+                />
+                <TouchableOpacity style={styles.dupCheckBtn} onPress={checkNicknameAvailability}>
+                  <Text style={styles.dupCheckBtnText}>중복확인</Text>
+                </TouchableOpacity>
+              </View>
               {renderErrors(errors.nickname)}
             </View>
 
@@ -303,21 +310,18 @@ export const SignUpScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.formLabel}>
                 이메일<Text style={styles.req}> *</Text>
               </Text>
-              <View style={styles.emailRow}>
+              <View style={styles.inputWithButton}>
                 <Input
                   placeholder="이메일을 입력 해주세요."
                   value={formData.email}
                   onChangeText={(text) => updateField('email', text)}
-                  containerStyle={[styles.inputNoMargin, styles.flex1]}
-                />
-                <Text style={styles.atSymbol}>@</Text>
-                <Input
-                  placeholder="도메인을 입력 해주세요."
-                  value={formData.emailDomain}
-                  onChangeText={(text) => updateField('emailDomain', text)}
                   onBlur={() => validateField('email')}
+                  keyboardType="email-address"
                   containerStyle={[styles.inputNoMargin, styles.flex1]}
                 />
+                <TouchableOpacity style={styles.dupCheckBtn} onPress={() => {}}>
+                  <Text style={styles.dupCheckBtnText}>중복확인</Text>
+                </TouchableOpacity>
               </View>
               {renderErrors(errors.email)}
             </View>
@@ -593,6 +597,24 @@ const styles = StyleSheet.create({
   },
   mt5: {
     marginTop: 5,
+  },
+  inputWithButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dupCheckBtn: {
+    height: 50,
+    paddingHorizontal: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dupCheckBtnText: {
+    fontFamily: fontFamily.medium,
+    fontSize: 14,
+    color: colors.white,
   },
   formBtnSet: {
     marginTop: 30,

@@ -19,6 +19,7 @@ import type { RootStackParamList } from '../../types';
 
 import MapPinIcon from '../../assets/icon/map-pin.svg';
 import ShareIcon from '../../assets/icon/share.svg';
+import PhoneIcon from '../../assets/icon/phone.svg';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
@@ -30,7 +31,6 @@ import {
   colors,
   PRODUCT_IMGS,
   BANNER_IMG,
-  PROFILE_IMG,
   TABS,
   SECTION_KEYS,
   STICKY_HEADER_HEIGHT,
@@ -43,7 +43,7 @@ import { styles } from './ProductViewScreen.styles';
 import { ReviewItem } from './components/ReviewItem';
 import { ProductCard } from './components/ProductCard';
 import { ReportModal } from '../../components/product/ReportModal';
-import { CompareToast } from '../../components/common';
+import { CompareToast, ImageViewerModal } from '../../components/common';
 import { fontFamily } from '../../styles/typography';
 import { SectionHeader } from '../../components/common';
 import { ServiceTag } from '../../components/common';
@@ -82,6 +82,8 @@ export const ProductViewScreen = () => {
   }, []);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [imageViewerIndex, setImageViewerIndex] = useState(0);
 
   const sectionRefs = useRef<Record<SectionKey, number>>({
     intro: 0,
@@ -227,7 +229,16 @@ export const ProductViewScreen = () => {
 
           <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
             {PRODUCT_IMGS.map((img, idx) => (
-              <Image key={idx} source={img} style={styles.slideImg} resizeMode="cover" />
+              <TouchableOpacity
+                key={idx}
+                activeOpacity={0.9}
+                onPress={() => {
+                  setImageViewerIndex(idx);
+                  setImageViewerVisible(true);
+                }}
+              >
+                <Image source={img} style={styles.slideImg} resizeMode="cover" />
+              </TouchableOpacity>
             ))}
           </ScrollView>
 
@@ -250,11 +261,24 @@ export const ProductViewScreen = () => {
             </View>
           </View>
 
-          <View style={styles.profileRow}>
-            <Image source={PROFILE_IMG} style={styles.profileImg} resizeMode="cover" />
-            <View style={styles.flex1}>
+          <View style={styles.sellerCard}>
+            <Image source={require('../../assets/images/user01.png')} style={styles.profileImg} resizeMode="cover" />
+            <View style={styles.sellerCardInfo}>
               <Text style={styles.profileName}>주식회사 아라요 기계장터 (대표)</Text>
-              <Text style={styles.profileTel}>0501-2345-6789</Text>
+              <View style={styles.profileTelRow}>
+                <PhoneIcon width={30} height={30} color="#000000" />
+                <Text style={styles.profileTel}>0501-2345-6789</Text>
+              </View>
+              <View style={styles.sellerCardBottom}>
+                <Text style={styles.sellerStat}>판매중 <Text style={styles.sellerStatBold}>24</Text></Text>
+                <View style={styles.sellerStatDivider} />
+                <Text style={styles.sellerStat}>후기 <Text style={styles.sellerStatBold}>999+</Text></Text>
+                <View style={styles.sellerStatDivider} />
+                <View style={styles.sellerLocationRow}>
+                  <MapPinIcon width={16} height={16} color="#626262" />
+                  <Text style={styles.sellerStat}>서울시 송파구</Text>
+                </View>
+              </View>
             </View>
           </View>
 
@@ -551,6 +575,13 @@ export const ProductViewScreen = () => {
         visible={toastVisible}
         message={toastMessage}
         onClose={() => setToastVisible(false)}
+      />
+
+      <ImageViewerModal
+        visible={imageViewerVisible}
+        images={PRODUCT_IMGS}
+        initialIndex={imageViewerIndex}
+        onClose={() => setImageViewerVisible(false)}
       />
     </SafeAreaView>
   );

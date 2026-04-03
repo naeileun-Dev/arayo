@@ -6,6 +6,7 @@ import StarIcon from '../../../assets/icon/star.svg';
 
 import { colors, PRODUCT_IMGS, USER_IMG } from '../constants';
 import { styles } from '../ProductViewScreen.styles';
+import { ImageViewerModal } from '../../../components/common';
 
 interface ReviewItemProps {
   id: number;
@@ -21,6 +22,10 @@ const REVIEW_IMAGES = [1, 2, 3, 4, 5];
 
 export const ReviewItem = ({ id }: ReviewItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [imageViewerIndex, setImageViewerIndex] = useState(0);
+
+  const reviewImages = REVIEW_IMAGES.map(img => PRODUCT_IMGS[img % 3]);
 
   const handleToggleExpand = () => {
     setIsExpanded(prev => !prev);
@@ -52,13 +57,21 @@ export const ReviewItem = ({ id }: ReviewItemProps) => {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.reImgScroll}>
-        {REVIEW_IMAGES.map(img => (
-          <Image
+        {REVIEW_IMAGES.map((img, idx) => (
+          <TouchableOpacity
             key={img}
-            source={PRODUCT_IMGS[img % 3]}
-            style={styles.reAttachedImg}
-            resizeMode="cover"
-          />
+            activeOpacity={0.9}
+            onPress={() => {
+              setImageViewerIndex(idx);
+              setImageViewerVisible(true);
+            }}
+          >
+            <Image
+              source={PRODUCT_IMGS[img % 3]}
+              style={styles.reAttachedImg}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
         ))}
       </ScrollView>
 
@@ -76,6 +89,13 @@ export const ReviewItem = ({ id }: ReviewItemProps) => {
           <ChevronDownIcon width={14} height={14} color={colors.G600} />
         </View>
       </TouchableOpacity>
+
+      <ImageViewerModal
+        visible={imageViewerVisible}
+        images={reviewImages}
+        initialIndex={imageViewerIndex}
+        onClose={() => setImageViewerVisible(false)}
+      />
     </View>
   );
 };

@@ -41,6 +41,7 @@ export const Input = forwardRef<TextInput, InputProps & TextInputProps>(
       maxLength,
       onBlur,
       onFocus,
+      variant = 'outlined',
       ...rest
     },
     ref
@@ -62,11 +63,13 @@ export const Input = forwardRef<TextInput, InputProps & TextInputProps>(
       setIsPasswordVisible((prev) => !prev);
     };
 
+    const isUnderline = variant === 'underline';
+
     const inputContainerStyles = [
-      styles.inputContainer,
-      isFocused && styles.inputContainerFocused,
+      isUnderline ? styles.inputContainerUnderline : styles.inputContainer,
+      isFocused && (isUnderline ? styles.inputContainerUnderlineFocused : styles.inputContainerFocused),
       error && styles.inputContainerError,
-      disabled && styles.inputContainerDisabled,
+      disabled && (isUnderline ? styles.inputContainerUnderlineDisabled : styles.inputContainerDisabled),
     ];
 
     return (
@@ -170,14 +173,30 @@ const styles = StyleSheet.create({
     borderColor: colors.borderMedium,
     backgroundColor: colors.white,
   },
+  inputContainerUnderline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: INPUT_HEIGHT,
+    paddingHorizontal: 4,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.G200,
+    backgroundColor: colors.white,
+  },
   inputContainerFocused: {
     borderColor: 'rgba(0,0,0,0.65)',
+  },
+  inputContainerUnderlineFocused: {
+    borderBottomColor: 'rgba(0,0,0,0.65)',
   },
   inputContainerError: {
     borderColor: colors.error,
   },
   inputContainerDisabled: {
     backgroundColor: colors.G200,
+  },
+  inputContainerUnderlineDisabled: {
+    backgroundColor: colors.white,
   },
   input: {
     flex: 1,

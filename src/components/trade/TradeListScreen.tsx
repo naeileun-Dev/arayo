@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -48,8 +48,6 @@ interface TradeListScreenProps {
 
 interface MoreMenuState {
   itemId: string;
-  y: number;
-  right: number;
 }
 
 function getStateColor(state: TradeState): string {
@@ -100,11 +98,10 @@ const Btn: React.FC<BtnProps> = ({ label, type = 'primary', flex, onPress, style
 interface ItemCardProps {
   item: TradeItem;
   onAction: (action: string, item: TradeItem) => void;
-  onMorePress: (item: TradeItem, y: number, right: number) => void;
+  onMorePress: (item: TradeItem) => void;
 }
 
 const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
-  const moreBtnRef = useRef<View>(null);
   const stateColor = getStateColor(item.state);
   const hasMore = item.moreButtons && item.moreButtons.length > 0;
   const hasReviewBtn = item.buttons.some((b) => b.action === 'review_send');
@@ -131,19 +128,13 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
             />
           )}
           {hasMore && (
-            <View ref={moreBtnRef} collapsable={false}>
-              <TouchableOpacity
-                style={styles.moreToggleBtn}
-                onPress={() => {
-                  moreBtnRef.current?.measure((_x, _y, w, h, pageX, pageY) => {
-                    onMorePress(item, pageY + h, pageX + w);
-                  });
-                }}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.moreToggleIcon}>···</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.moreToggleBtn}
+              onPress={() => onMorePress(item)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.moreToggleIcon}>···</Text>
+            </TouchableOpacity>
           )}
         </View>
       );
@@ -161,19 +152,13 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onAction, onMorePress }) => {
           />
         ))}
         {hasMore && (
-          <View ref={moreBtnRef} collapsable={false}>
-            <TouchableOpacity
-              style={styles.moreToggleBtn}
-              onPress={() => {
-                moreBtnRef.current?.measure((_x, _y, w, h, pageX, pageY) => {
-                  onMorePress(item, pageY + h, pageX + w);
-                });
-              }}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.moreToggleIcon}>···</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.moreToggleBtn}
+            onPress={() => onMorePress(item)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.moreToggleIcon}>···</Text>
+          </TouchableOpacity>
         )}
       </View>
     );
@@ -426,7 +411,7 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
               key={item.id}
               item={item}
               onAction={handleAction}
-              onMorePress={(it, y, right) => setMoreOpen({ itemId: it.id, y, right })}
+              onMorePress={(it) => setMoreOpen({ itemId: it.id })}
             />
           ))
         )}
@@ -501,9 +486,10 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
         const targetItem = items.find((it) => it.id === moreOpen.itemId);
         if (!targetItem || !targetItem.moreButtons) return null;
         return (
-          <Modal transparent animationType="none" onRequestClose={() => setMoreOpen(null)}>
+          <Modal transparent animationType="slide" onRequestClose={() => setMoreOpen(null)}>
             <TouchableOpacity style={styles.moreOverlay} activeOpacity={1} onPress={() => setMoreOpen(null)}>
-              <View style={[styles.moreMenu, { position: 'absolute', top: moreOpen.y + 4, right: 15 }]}>
+              <View style={styles.moreSheet}>
+                <View style={styles.moreSheetHandle} />
                 {targetItem.moreButtons.map((btn, idx) => (
                   <TouchableOpacity
                     key={idx}
@@ -517,6 +503,13 @@ export const TradeListScreen: React.FC<TradeListScreenProps> = ({ title, items, 
                     <Text style={styles.moreMenuText}>{btn.label}</Text>
                   </TouchableOpacity>
                 ))}
+                <TouchableOpacity
+                  style={styles.moreSheetCancel}
+                  onPress={() => setMoreOpen(null)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.moreSheetCancelText}>닫기</Text>
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Modal>
@@ -802,7 +795,8 @@ const styles = StyleSheet.create({
   },
   moreOverlay: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
   },
   moreToggleBtn: {
     width: 44,
@@ -820,26 +814,41 @@ const styles = StyleSheet.create({
     fontWeight: '800' as const,
     letterSpacing: 2,
   },
-  moreMenu: {
+  moreSheet: {
     backgroundColor: '#fff',
-    borderRadius: 6,
-    minWidth: 180,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: 30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: C.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
   },
   moreMenuItem: {
-    paddingHorizontal: 18,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: C.G100,
   },
   moreMenuText: {
-    fontSize: 14,
+    fontSize: 15,
     color: C.black,
     fontWeight: '600' as const,
+  },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: C.G500,
   },
   btn: {
     height: 44,

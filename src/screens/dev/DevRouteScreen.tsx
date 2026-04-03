@@ -50,6 +50,7 @@ const ROUTE_GROUPS: RouteGroup[] = [
     title: '인증',
     routes: [
       { name: 'Auth', label: '로그인 / 회원가입' },
+      { name: 'Auth', label: '회원가입 완료', params: { screen: 'SignUpComplete' } },
       { name: 'LoginRequired', label: '비회원 진입 불가 화면' },
       { name: 'AccountRestricted', label: '이용 제한 계정' },
     ],

@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   TextInput,
   Platform,
-  Image,
   Alert,
   Dimensions,
 } from 'react-native';
@@ -27,6 +26,7 @@ import { SelectModal } from '../../components/common';
 import { FormField } from '../../components/common';
 import { ConfirmModal } from '../../components/common';
 import { CompareToast } from '../../components/common';
+import { ImageUploadGrid } from '../../components/common/ImageUploadGrid';
 
 const MAX_IMAGES = 10;
 
@@ -204,32 +204,13 @@ export const ProductUploadScreen = () => {
   };
 
   const renderImageList = () => {
-    if (images.length === 0) return null;
-
     return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={localStyles.imageListWrap}
-        contentContainerStyle={{ gap: 10 }}
-      >
-        {images.map((img, idx) => (
-          <View key={idx} style={localStyles.imageThumb}>
-            <Image source={{ uri: img.uri }} style={localStyles.imageThumbImg} resizeMode="cover" />
-            {idx === 0 && (
-              <View style={localStyles.representBadge}>
-                <Text style={localStyles.representBadgeText}>대표</Text>
-              </View>
-            )}
-            <TouchableOpacity
-              style={localStyles.imageRemoveBtn}
-              onPress={() => handleRemoveImage(idx)}
-            >
-              <Text style={localStyles.imageRemoveBtnText}>✕</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
+      <ImageUploadGrid
+        images={images.map((img) => img.uri!)}
+        maxCount={MAX_IMAGES}
+        onRemove={handleRemoveImage}
+        onAdd={handlePickImage}
+      />
     );
   };
 
@@ -336,9 +317,6 @@ export const ProductUploadScreen = () => {
             </Text>
           </View>
           {renderImageList()}
-          <TouchableOpacity style={localStyles.uploadBtn} onPress={handlePickImage}>
-            <Text style={localStyles.uploadBtnText}>+ 이미지 등록하기</Text>
-          </TouchableOpacity>
         </FormField>
 
         <FormField label="상품명" required>
@@ -730,48 +708,6 @@ const localStyles = StyleSheet.create({
   fileCount: { fontWeight: 'normal', color: colors.G400, fontSize: 13 },
   blueBox: { backgroundColor: '#F0F6FF', padding: 12, borderRadius: 6, marginBottom: 6 },
   blueBoxText: { fontSize: 13, color: colors.black, lineHeight: 20 },
-  imageListWrap: { marginTop: 10, marginBottom: 10 },
-  imageThumb: {
-    width: 100,
-    height: 100,
-    borderRadius: 6,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  imageThumbImg: { width: '100%', height: '100%' },
-  representBadge: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    backgroundColor: colors.primary,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderBottomRightRadius: 6,
-  },
-  representBadgeText: { fontSize: 11, fontWeight: 'bold', color: colors.white },
-  imageRemoveBtn: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageRemoveBtnText: { fontSize: 12, color: colors.white, fontWeight: 'bold' },
-  uploadBtn: {
-    height: 48,
-    backgroundColor: colors.white,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: colors.G200,
-    flexDirection: 'row',
-  },
-  uploadBtnText: { fontSize: 14, color: colors.black, fontWeight: '500' },
 
   flexRow: { flexDirection: 'row', gap: 10 },
   radioBtn: {

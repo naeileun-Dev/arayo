@@ -42,7 +42,7 @@ export const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.container}>
+      <TouchableOpacity style={styles.container} activeOpacity={1} onPress={onClose}>
         <View style={styles.header}>
           <Text style={styles.title}>이미지 보기</Text>
           <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -67,7 +67,7 @@ export const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
             </ScrollView>
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 };
@@ -75,7 +75,7 @@ export const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
   },
   header: {
     flexDirection: 'row',

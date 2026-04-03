@@ -70,9 +70,8 @@ export const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
         activeOpacity={1}
       >
         <View style={iconContainerStyle}>
-          <IconComponent width={44} height={44} />
+          <IconComponent width={56} height={56} />
         </View>
-        <Text style={styles.iconLabel}>{label}</Text>
       </TouchableOpacity>
     );
   }
@@ -99,8 +98,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    width: 44,
-    height: 44,
+    width: 56,
+    height: 56,
     borderRadius: borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',

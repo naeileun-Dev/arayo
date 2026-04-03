@@ -310,6 +310,9 @@ interface MenuModalProps {
   onChatEnd: () => void;
   onReport: () => void;
   onCancelOrder?: () => void;
+  onSafePayment?: () => void;
+  onReservation?: () => void;
+  onTradeComplete?: () => void;
 }
 const MenuModal: React.FC<MenuModalProps> = ({
   visible,
@@ -318,17 +321,28 @@ const MenuModal: React.FC<MenuModalProps> = ({
   onChatEnd,
   onReport,
   onCancelOrder,
+  onSafePayment,
+  onReservation,
+  onTradeComplete,
 }) => {
   const getMenuItems = () => {
+    const commonActions = [
+      { label: '안전결제', onPress: onSafePayment },
+      { label: '예약하기', onPress: onReservation },
+      { label: '거래 완료하기', onPress: onTradeComplete },
+    ];
+
     switch (chatContext) {
       case 'payment_before':
         return [
+          ...commonActions,
           { label: '주문 취소', onPress: onCancelOrder },
           { label: '채팅 종료하기', onPress: onChatEnd },
           { label: '신고하기', onPress: onReport },
         ];
       case 'payment_after':
         return [
+          ...commonActions,
           { label: '채팅 종료하기', onPress: onChatEnd },
           { label: '신고하기', onPress: onReport },
         ];
@@ -336,6 +350,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
       case 'product':
       default:
         return [
+          ...commonActions,
           { label: '채팅 종료하기', onPress: onChatEnd },
           { label: '신고하기', onPress: onReport },
         ];
@@ -870,19 +885,6 @@ export const ChatRoomScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Action Button Bar */}
-        <View style={styles.actionBar}>
-          <TouchableOpacity style={styles.actionBtn} activeOpacity={0.7}>
-            <Text style={styles.actionBtnText}>안전결제</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} activeOpacity={0.7} onPress={() => setReservationVisible(true)}>
-            <Text style={styles.actionBtnText}>예약하기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionBtn, styles.actionBtnMore]} activeOpacity={0.7} onPress={() => setMenuVisible(true)}>
-            <Text style={styles.headerMoreIcon}>⋯</Text>
-          </TouchableOpacity>
-        </View>
-
         <ScrollView
           ref={scrollViewRef}
           style={styles.scrollArea}
@@ -1004,12 +1006,6 @@ export const ChatRoomScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Bottom Button */}
-        <View style={styles.bottomFloating}>
-          <TouchableOpacity style={styles.bottomFloatingBtn} activeOpacity={0.8}>
-            <Text style={styles.bottomFloatingBtnText}>거래 완료하기</Text>
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
 
       {/* Modals */}
@@ -1020,6 +1016,9 @@ export const ChatRoomScreen: React.FC = () => {
         onChatEnd={handleChatEnd}
         onReport={handleReport}
         onCancelOrder={handleCancelOrder}
+        onSafePayment={() => {}}
+        onReservation={() => setReservationVisible(true)}
+        onTradeComplete={() => {}}
       />
 
       <ReportModal

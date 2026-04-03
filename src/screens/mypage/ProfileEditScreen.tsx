@@ -2,13 +2,11 @@ import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
   SafeAreaView,
   Platform,
-  Modal,
   KeyboardAvoidingView,
   Animated,
 } from 'react-native';
@@ -16,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../types';
 import { colors } from '../../styles/colors';
-import { Header } from '../../components/common';
+import { Header, Input } from '../../components/common';
 import SaveIcon from '../../assets/icon/Save.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 
@@ -62,36 +60,6 @@ const FormLabel: React.FC<{ label: string; required?: boolean }> = ({ label, req
   </View>
 );
 
-interface FormInputProps {
-  value: string;
-  onChangeText?: (text: string) => void;
-  placeholder?: string;
-  keyboardType?: 'default' | 'email-address' | 'phone-pad' | 'numeric';
-  editable?: boolean;
-  style?: object;
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
-}
-const FormInput: React.FC<FormInputProps> = ({
-  value,
-  onChangeText,
-  placeholder,
-  keyboardType = 'default',
-  editable = true,
-  style,
-  autoCapitalize = 'none',
-}) => (
-  <TextInput
-    style={[styles.input, !editable && styles.inputReadonly, style]}
-    value={value}
-    onChangeText={onChangeText}
-    placeholder={placeholder}
-    placeholderTextColor={colors.G400}
-    keyboardType={keyboardType}
-    editable={editable}
-    autoCapitalize={autoCapitalize}
-    autoCorrect={false}
-  />
-);
 
 interface ToggleSwitchProps {
   value: boolean;
@@ -135,61 +103,50 @@ interface CorpTypeDropdownProps {
   onSelect: (val: string) => void;
 }
 const CorpTypeDropdown: React.FC<CorpTypeDropdownProps> = ({ value, options, onSelect }) => {
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <View style={styles.dropdownWrapper}>
       <TouchableOpacity
-        style={styles.dropdownTrigger}
-        onPress={() => setVisible(true)}
+        style={[styles.dropdownTrigger, open && styles.dropdownTriggerOpen]}
+        onPress={() => setOpen(!open)}
         activeOpacity={0.7}
       >
         <Text style={styles.dropdownTriggerText}>{value}</Text>
-        <ChevronDownIcon width={16} height={16} color={colors.G500} />
+        <View style={{ transform: [{ rotate: open ? '180deg' : '0deg' }] }}>
+          <ChevronDownIcon width={16} height={16} color={colors.black} />
+        </View>
       </TouchableOpacity>
 
-      <Modal
-        visible={visible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalDim}
-          activeOpacity={1}
-          onPress={() => setVisible(false)}
-        >
-          <TouchableOpacity style={styles.bottomSheet} activeOpacity={1} onPress={() => {}}>
-            <View style={styles.bottomSheetHandle} />
-            {options.map((opt, idx) => {
-              const isSelected = opt === value;
-              const isLast = idx === options.length - 1;
-              return (
-                <TouchableOpacity
-                  key={opt}
-                  style={[
-                    styles.bottomSheetItem,
-                    !isLast && styles.bottomSheetItemDivider,
-                    isSelected && styles.bottomSheetItemSelected,
-                  ]}
-                  onPress={() => { onSelect(opt); setVisible(false); }}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[
-                    styles.bottomSheetItemText,
-                    isSelected && styles.bottomSheetItemTextSelected,
-                  ]}>
-                    {opt}
-                  </Text>
-                  {isSelected && <Text style={styles.checkmark}>{'✓'}</Text>}
-                </TouchableOpacity>
-              );
-            })}
-            <View style={{ height: Platform.OS === 'ios' ? 34 : 16 }} />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
-    </>
+      {open && (
+        <View style={styles.dropdownMenu}>
+          {options.map((opt, idx) => {
+            const isSelected = opt === value;
+            const isLast = idx === options.length - 1;
+            return (
+              <TouchableOpacity
+                key={opt}
+                style={[
+                  styles.dropdownItem,
+                  !isLast && styles.dropdownItemBorder,
+                  isSelected && styles.dropdownItemActive,
+                ]}
+                onPress={() => { onSelect(opt); setOpen(false); }}
+                activeOpacity={0.7}
+              >
+                <Text style={[
+                  styles.dropdownItemText,
+                  isSelected && styles.dropdownItemTextActive,
+                ]}>
+                  {opt}
+                </Text>
+                {isSelected && <Text style={styles.dropdownCheck}>✓</Text>}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
+    </View>
   );
 };
 
@@ -269,40 +226,54 @@ export const ProfileEditScreen: React.FC = () => {
 
           <View style={styles.fieldItem}>
             <FormLabel label="이름" required />
-            <FormInput
+            <Input
               value={form.name}
               onChangeText={setField('name')}
               placeholder="이름을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="닉네임" required />
-            <FormInput
-              value={form.nickname}
-              onChangeText={setField('nickname')}
-              placeholder="닉네임 입력해 주세요.."
-            />
+            <View style={styles.inputWithButton}>
+              <Input
+                value={form.nickname}
+                onChangeText={setField('nickname')}
+                placeholder="닉네임 입력해 주세요.."
+                containerStyle={[styles.inputNoMargin, styles.flex1]}
+              />
+              <TouchableOpacity style={styles.dupCheckBtn} onPress={() => {}}>
+                <Text style={styles.dupCheckBtnText}>중복확인</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="이메일" required />
-            <FormInput
-              value={form.email}
-              onChangeText={setField('email')}
-              placeholder="이메일을 입력해 주세요.."
-              keyboardType="email-address"
-            />
+            <View style={styles.inputWithButton}>
+              <Input
+                value={form.email}
+                onChangeText={setField('email')}
+                placeholder="이메일을 입력해 주세요.."
+                keyboardType="email-address"
+                containerStyle={[styles.inputNoMargin, styles.flex1]}
+              />
+              <TouchableOpacity style={styles.dupCheckBtn} onPress={() => {}}>
+                <Text style={styles.dupCheckBtnText}>중복확인</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="전화번호" />
-            <FormInput
+            <Input
               value={form.phone}
               placeholder="전화번호를 입력해 주세요."
               keyboardType="phone-pad"
-              editable={false}
+              disabled
+              containerStyle={styles.inputNoMargin}
             />
             <TouchableOpacity style={styles.passBtn} activeOpacity={0.8} onPress={() => {}}>
               <Text style={styles.passBtnText}>PASS 본인 인증</Text>
@@ -310,15 +281,14 @@ export const ProfileEditScreen: React.FC = () => {
           </View>
 
           {/* 사업장 주소지 */}
-          <View style={styles.fieldItem}>
+          <View style={[styles.fieldItem, { gap: 8 }]}>
             <FormLabel label="사업장 주소지" />
             <View style={styles.zipcodeRow}>
-              <TextInput
-                style={[styles.input, styles.inputReadonly, styles.zipcodeInput]}
+              <Input
                 value={form.zipcode}
                 placeholder="우편번호"
-                placeholderTextColor={colors.G400}
-                editable={false}
+                disabled
+                containerStyle={[styles.inputNoMargin, styles.flex1]}
               />
               <TouchableOpacity
                 style={styles.zipcodeBtn}
@@ -328,19 +298,18 @@ export const ProfileEditScreen: React.FC = () => {
                 <Text style={styles.zipcodeBtnText}>우편번호 검색</Text>
               </TouchableOpacity>
             </View>
-            <TextInput
-              style={[styles.input, styles.inputReadonly, styles.mt8]}
+            <Input
               value={form.address}
               placeholder="주소"
-              placeholderTextColor={colors.G400}
-              editable={false}
+              disabled
+              containerStyle={styles.inputNoMargin}
             />
-            <FormInput
+            <Input
               value={form.addressDetail}
               onChangeText={setField('addressDetail')}
               placeholder="상세주소"
-              style={styles.mt8}
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
             <Text style={styles.helpText}>
               입력하신 사업장 소재지를 기준으로 가까운 거리부터 순서대로 확인 하실 수 있습니다.
@@ -351,46 +320,50 @@ export const ProfileEditScreen: React.FC = () => {
 
           <View style={styles.fieldItem}>
             <FormLabel label="기업회원아이디" />
-            <FormInput value={form.corpId} editable={false} />
+            <Input value={form.corpId} disabled containerStyle={styles.inputNoMargin} />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="상호명" required />
-            <FormInput
+            <Input
               value={form.companyName}
               onChangeText={setField('companyName')}
               placeholder="상호명을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="사업자등록번호" required />
-            <FormInput
+            <Input
               value={form.bizNumber}
               onChangeText={setField('bizNumber')}
               placeholder="사업자등록번호를 입력해 주세요.."
               keyboardType="numeric"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="050 번호" required />
-            <FormInput
+            <Input
               value={form.tel050}
               onChangeText={setField('tel050')}
               placeholder="050 번호를 입력해 주세요.."
               keyboardType="phone-pad"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="연락처" required />
-            <FormInput
+            <Input
               value={form.contact}
               onChangeText={setField('contact')}
               placeholder="연락처를 입력해 주세요.."
               keyboardType="phone-pad"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
@@ -405,51 +378,56 @@ export const ProfileEditScreen: React.FC = () => {
 
           <View style={styles.fieldItem}>
             <FormLabel label="대표자명" required />
-            <FormInput
+            <Input
               value={form.ceoName}
               onChangeText={setField('ceoName')}
               placeholder="대표자명을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="업종" />
-            <FormInput
+            <Input
               value={form.bizType}
               onChangeText={setField('bizType')}
               placeholder="업종명을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="업태" />
-            <FormInput
+            <Input
               value={form.bizCategory}
               onChangeText={setField('bizCategory')}
               placeholder="업태명을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="과세유형" />
-            <FormInput
+            <Input
               value={form.taxType}
               onChangeText={setField('taxType')}
               placeholder="과세유형을 입력해 주세요.."
               autoCapitalize="words"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
           <View style={styles.fieldItem}>
             <FormLabel label="이메일주소" required />
-            <FormInput
+            <Input
               value={form.bizEmail}
               onChangeText={setField('bizEmail')}
               placeholder="이메일주소를 입력해 주세요.."
               keyboardType="email-address"
+              containerStyle={styles.inputNoMargin}
             />
           </View>
 
@@ -469,6 +447,7 @@ const styles = StyleSheet.create({
 
   flex1: { flex: 1 },
   mt8: { marginTop: 8 },
+  inputNoMargin: { marginBottom: 0 },
 
   safeArea: {
     flex: 1,
@@ -555,10 +534,10 @@ const styles = StyleSheet.create({
 
   input: {
     height: 44,
-    borderWidth: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.G200,
-    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: colors.borderMedium,
+    borderRadius: 4,
+    paddingHorizontal: 12,
     fontSize: 14,
     fontWeight: '400',
     color: colors.black,
@@ -599,67 +578,73 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
+  dropdownWrapper: {
+    zIndex: 10,
+  },
   dropdownTrigger: {
     height: 44,
-    borderWidth: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.G200,
-    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: colors.borderMedium,
+    borderRadius: 4,
+    paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.white,
+  },
+  dropdownTriggerOpen: {
+    borderColor: colors.black,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   dropdownTriggerText: {
     fontSize: 14,
     fontWeight: '400',
     color: colors.black,
   },
-
-  modalDim: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-  },
-  bottomSheet: {
+  dropdownMenu: {
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderColor: colors.borderMedium,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
     backgroundColor: colors.white,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    paddingTop: 12,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  bottomSheetHandle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.G300,
-    alignSelf: 'center',
-    marginBottom: 12,
-  },
-  bottomSheetItem: {
+  dropdownItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
   },
-  bottomSheetItemDivider: {
+  dropdownItemBorder: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.G200,
   },
-  bottomSheetItemSelected: {
-    backgroundColor: colors.selectedItemBg,
+  dropdownItemActive: {
+    backgroundColor: colors.G100,
   },
-  bottomSheetItemText: {
-    fontSize: 15,
-    color: colors.G600,
-    fontWeight: '400',
+  dropdownItemText: {
+    fontSize: 14,
+    color: colors.black,
   },
-  bottomSheetItemTextSelected: {
+  dropdownItemTextActive: {
     color: colors.primary,
     fontWeight: '600',
   },
-  checkmark: {
-    fontSize: 15,
+  dropdownCheck: {
+    fontSize: 14,
     color: colors.primary,
     fontWeight: '700',
   },
@@ -678,6 +663,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.black,
+  },
+
+  inputWithButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dupCheckBtn: {
+    height: 44,
+    paddingHorizontal: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dupCheckBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.white,
   },
 
   withdrawBtn: {

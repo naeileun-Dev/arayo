@@ -62,6 +62,7 @@ export const MainNavigator = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeTab, setActiveTab] = useState<keyof MainTabParamList>('Home');
   const [quickMenuVisible, setQuickMenuVisible] = useState(false);
+  const [unreadCount] = useState(5);
   const [showBrandHome, setShowBrandHome] = useState(false);
   const animValue = useRef(new Animated.Value(0)).current;
 
@@ -159,7 +160,14 @@ export const MainNavigator = () => {
                 onPress={() => handleTabPress(tabKey)}
                 activeOpacity={0.7}
               >
-                <Icon width={58} height={46} />
+                <View>
+                  <Icon width={58} height={46} />
+                  {tabKey === 'Chat' && unreadCount > 0 && (
+                    <View style={styles.badge}>
+                      <Text style={styles.badgeText}>{unreadCount > 99 ? '99+' : unreadCount}</Text>
+                    </View>
+                  )}
+                </View>
               </TouchableOpacity>
             );
           })}
@@ -237,5 +245,21 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: colors.black,
+  },
+  badge: {
+    position: 'absolute',
+    top: 2,
+    right: 6,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FF0000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#FFFFFF',
   },
 });

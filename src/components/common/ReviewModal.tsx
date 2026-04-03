@@ -9,24 +9,18 @@ import {
   Modal,
   TextInput,
   Alert,
-  Dimensions,
 } from 'react-native';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import StarIcon from '../../assets/icon/star.svg';
 import EmptyStarIcon from '../../assets/icon/empty_star.svg';
-import CameraPlusIcon from '../../assets/icon/camera-plus.svg';
-import TrashIcon from '../../assets/icon/trash.svg';
 import XIcon from '../../assets/icon/X.svg';
 import { colors } from '../../styles/colors';
+import { ImageUploadGrid } from './ImageUploadGrid';
 
 const USER_IMG = require('../../assets/images/user01.png');
 const MODAL_IMG = require('../../assets/images/img02.png');
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const MODAL_HORIZONTAL_PADDING = 40;
-const IMAGE_GAP = 16;
-const IMAGE_GRID_SIZE = (SCREEN_WIDTH - MODAL_HORIZONTAL_PADDING - IMAGE_GAP) / 3;
 const MAX_IMAGES = 5;
 
 export type ReviewModalType = 'intro' | 'score' | 'write' | 'view' | null;
@@ -294,27 +288,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   <Text style={styles.sectionCount}>({reviewImages.length}/{MAX_IMAGES})</Text>
                 </View>
                 <Text style={styles.imgHelpText}>• 최대 100MB까지 업로드 가능해요.</Text>
-                <View style={styles.imgGrid}>
-                  <TouchableOpacity
-                    style={styles.imgAddBtn}
-                    onPress={handlePickImage}
-                    activeOpacity={0.7}
-                  >
-                    <CameraPlusIcon width={28} height={28} color={colors.G400} />
-                  </TouchableOpacity>
-                  {reviewImages.map((img, idx) => (
-                    <View key={idx} style={styles.imgThumbWrap}>
-                      <Image source={{ uri: img.uri }} style={styles.imgThumb} />
-                      <TouchableOpacity
-                        style={styles.imgDeleteBtn}
-                        onPress={() => removeImage(idx)}
-                        activeOpacity={0.7}
-                      >
-                        <TrashIcon width={14} height={14} color="#fff" />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
+                <ImageUploadGrid
+                  images={reviewImages.map((img) => img.uri!)}
+                  maxCount={MAX_IMAGES}
+                  onRemove={removeImage}
+                  onAdd={handlePickImage}
+                />
               </View>
               <View style={styles.modalBtnSet}>
                 <ModalBtn label="후기보내기" onPress={onClose} />
@@ -661,44 +640,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 12,
     color: colors.G500,
-  },
-  imgGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  imgAddBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: IMAGE_GRID_SIZE,
-    height: IMAGE_GRID_SIZE,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderRadius: 4,
-    borderColor: colors.G300,
-    backgroundColor: colors.G100,
-  },
-  imgThumbWrap: {
-    position: 'relative',
-    overflow: 'hidden',
-    width: IMAGE_GRID_SIZE,
-    height: IMAGE_GRID_SIZE,
-    borderRadius: 4,
-  },
-  imgThumb: {
-    width: '100%',
-    height: '100%',
-  },
-  imgDeleteBtn: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 
   grayBox: {

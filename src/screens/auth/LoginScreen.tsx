@@ -264,8 +264,9 @@ const styles = StyleSheet.create({
   },
   socialButtons: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 25,
+    justifyContent: 'space-around',
+    paddingHorizontal: 10,
+    marginBottom: 35,
   },
   bannerSection: {
     paddingVertical: 25,

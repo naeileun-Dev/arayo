@@ -10,6 +10,7 @@ import {
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
+import { Header } from '../../components/common';
 import { formatPrice } from '../estimate/components/FormComponents';
 import CheckIcon from '../../assets/icon/check.svg';
 import PhoneIcon from '../../assets/icon/phone.svg';
@@ -56,6 +57,7 @@ export const OrderCompleteScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.root}>
+      <Header title="주문완료" onBack={() => navigation.goBack()} />
       <View style={styles.container}>
         {/* Success Icon */}
         <View style={styles.iconWrap}>
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 80,
+    paddingTop: 30,
   },
   iconWrap: {
     alignItems: 'center',

@@ -267,6 +267,7 @@ export interface InputProps {
   maxLength?: number;
   onBlur?: () => void;
   onFocus?: () => void;
+  variant?: 'outlined' | 'underline';
 }
 
 export interface CheckboxProps {

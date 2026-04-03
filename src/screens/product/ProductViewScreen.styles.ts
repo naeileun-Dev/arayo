@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { colors } from './constants';
+import { fontFamily } from '../../styles/typography';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ export const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 10 : 20,
     paddingBottom: 8,
     zIndex: 100,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0,0,0,0.15)',
   },
   headerOverlayScrolled: {
     backgroundColor: colors.white,
@@ -74,10 +75,25 @@ export const styles = StyleSheet.create({
   statsRow: { flexDirection: 'row', gap: 8 },
   statText: { fontSize: 13, color: colors.G600 },
 
-  profileRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  profileImg: { width: 60, height: 60, borderRadius: 12, marginRight: 12 },
-  profileName: { fontSize: 15, fontWeight: 'bold', color: colors.black, marginBottom: 4 },
-  profileTel: { fontSize: 14, color: colors.G600 },
+  sellerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 14,
+  },
+  profileImg: { width: 74, height: 74, borderRadius: 8 },
+  sellerCardInfo: { flex: 1, gap: 6 },
+  profileName: { fontFamily: fontFamily.semiBold, fontSize: 16, fontWeight: '600', color: '#1B1B1B' },
+  profileTelRow: { flexDirection: 'row', alignItems: 'center', gap: 6 , marginLeft: -4,marginRight: -4 },
+  profileTel: { fontFamily: fontFamily.semiBold, fontSize: 18, fontWeight: '600', color: '#000000' },
+  sellerCardBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sellerStat: { fontFamily: fontFamily.medium, fontSize: 12, color: '#626262' },
+  sellerStatBold: { fontFamily: fontFamily.medium, fontSize: 12, fontWeight: '500', color: '#1B1B1B' },
+  sellerStatDivider: { width: 1, height: 10, backgroundColor: colors.G300, marginHorizontal: 8 },
+  sellerLocationRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
 
   specBox: { gap: 8 },
   specRow: { flexDirection: 'row' },

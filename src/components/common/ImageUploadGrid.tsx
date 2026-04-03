@@ -1,14 +1,10 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { colors } from '../../styles/colors';
+import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import ImageUploadIcon from '../../assets/icon/image_upload.svg';
+import ImageDeleteIcon from '../../assets/icon/image_delete.svg';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const GRID_PADDING = 32;
-const GRID_GAP = 16;
-const IMAGE_SIZE = (SCREEN_WIDTH - GRID_PADDING - GRID_GAP) / 3;
-
-const REMOVE_BTN_SIZE = 20;
-const HIT_SLOP = { top: 5, bottom: 5, left: 5, right: 5 };
+const IMAGE_SIZE = 98;
+const DELETE_BTN_SIZE = 32;
 
 interface ImageUploadGridProps {
   images: string[];
@@ -30,16 +26,20 @@ export const ImageUploadGrid: React.FC<ImageUploadGridProps> = ({
         <TouchableOpacity
           style={styles.removeBtn}
           onPress={() => onRemove(idx)}
-          hitSlop={HIT_SLOP}
         >
-          <Text style={styles.removeText}>✕</Text>
+          <ImageDeleteIcon width={18} height={18} color="#fff" />
         </TouchableOpacity>
       </View>
     ))}
     {images.length < maxCount && (
-      <TouchableOpacity style={styles.uploader} activeOpacity={0.7} onPress={onAdd}>
-        <Text style={styles.uploaderPlus}>+</Text>
-      </TouchableOpacity>
+      <View style={styles.uploaderWrap}>
+        <TouchableOpacity style={styles.uploader} activeOpacity={0.7} onPress={onAdd}>
+          <ImageUploadIcon width={28} height={28} />
+        </TouchableOpacity>
+        <View style={styles.removeBtn}>
+          <ImageDeleteIcon width={18} height={18} color="#fff" />
+        </View>
+      </View>
     )}
   </View>
 );
@@ -51,25 +51,26 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 5,
   },
+  uploaderWrap: {
+    position: 'relative',
+    width: IMAGE_SIZE,
+    height: IMAGE_SIZE,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
   uploader: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: IMAGE_SIZE,
-    height: IMAGE_SIZE,
-    borderRadius: 5,
-    backgroundColor: colors.G100,
-  },
-  uploaderPlus: {
-    fontSize: 28,
-    fontWeight: '300',
-    color: colors.G400,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#FFFFFF',
   },
   previewWrap: {
     position: 'relative',
     overflow: 'hidden',
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
-    borderRadius: 5,
+    borderRadius: 8,
   },
   preview: {
     width: '100%',
@@ -77,18 +78,13 @@ const styles = StyleSheet.create({
   },
   removeBtn: {
     position: 'absolute',
-    top: 4,
-    right: 4,
+    bottom: 0,
+    right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    width: REMOVE_BTN_SIZE,
-    height: REMOVE_BTN_SIZE,
-    borderRadius: REMOVE_BTN_SIZE / 2,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  removeText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: colors.white,
+    width: DELETE_BTN_SIZE,
+    height: DELETE_BTN_SIZE,
+    borderTopLeftRadius: 2,
+    backgroundColor: 'rgba(27,27,27,0.7)',
   },
 });

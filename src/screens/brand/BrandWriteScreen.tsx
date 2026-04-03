@@ -15,7 +15,9 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
 import SearchIcon from '../../assets/icon/Search.svg';
-import CameraPlusIcon from '../../assets/icon/camera-plus.svg';
+import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
+import ImageUploadIcon from '../../assets/icon/image_upload.svg';
+import ImageDeleteIcon from '../../assets/icon/image_delete.svg';
 import PencilIcon from '../../assets/icon/pencil.svg';
 import ModifyIcon from '../../assets/icon/modify.svg';
 import { MultiSelectDropdown } from './components/MultiSelectDropdown';
@@ -83,8 +85,12 @@ export const BrandWriteScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerBtn} activeOpacity={0.6}>
-            <Text style={styles.moreIcon}>⋮</Text>
+          <TouchableOpacity
+            style={styles.headerBtn}
+            onPress={() => navigation.goBack()}
+            activeOpacity={0.6}
+          >
+            <ChevronLeftIcon width={24} height={24} color={colors.black} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>스마트기계</Text>
           <TouchableOpacity
@@ -273,10 +279,14 @@ export const BrandWriteScreen: React.FC = () => {
                     <Text style={styles.blueInfoText}>• 지원 형식: PNG, JPG</Text>
                   </View>
                   <View style={styles.imageUploadWrap}>
-                    <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
-                      <CameraPlusIcon width={32} height={32} color={colors.G400} />
-                    </TouchableOpacity>
-
+                    <View style={styles.imageUploadSlot}>
+                      <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
+                        <ImageUploadIcon width={28} height={28} />
+                      </TouchableOpacity>
+                      <View style={styles.imageDeleteBtn}>
+                        <ImageDeleteIcon width={18} height={18} color="#fff" />
+                      </View>
+                    </View>
                   </View>
                 </View>
 
@@ -288,10 +298,14 @@ export const BrandWriteScreen: React.FC = () => {
                     <Text style={styles.blueInfoText}>• 지원 형식: PNG, JPG</Text>
                   </View>
                   <View style={styles.imageUploadWrap}>
-                    <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
-                      <CameraPlusIcon width={32} height={32} color={colors.G400} />
-                    </TouchableOpacity>
-
+                    <View style={styles.imageUploadSlot}>
+                      <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
+                        <ImageUploadIcon width={28} height={28} />
+                      </TouchableOpacity>
+                      <View style={styles.imageDeleteBtn}>
+                        <ImageDeleteIcon width={18} height={18} color="#fff" />
+                      </View>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -339,11 +353,6 @@ const styles = StyleSheet.create({
     height: 32,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  moreIcon: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: colors.black,
   },
   headerTitle: {
     fontSize: 17,
@@ -566,25 +575,30 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginTop: 8,
   },
+  imageUploadSlot: {
+    position: 'relative',
+    width: 98,
+    height: 98,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
   imageUploadBox: {
-    width: 80,
-    height: 80,
-    backgroundColor: colors.white,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: colors.G300,
-    borderStyle: 'dashed',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
   imageDeleteBtn: {
-    width: 28,
-    height: 28,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderTopLeftRadius: 2,
+    backgroundColor: 'rgba(27,27,27,0.7)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 4,
-    alignSelf: 'flex-start',
-    marginLeft: 26,
   },
   bottomBar: {
     paddingHorizontal: PADDING_LR,
