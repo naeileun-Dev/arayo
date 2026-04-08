@@ -210,6 +210,7 @@ export const ProductUploadScreen = () => {
         maxCount={MAX_IMAGES}
         onRemove={handleRemoveImage}
         onAdd={handlePickImage}
+        showRepresentativeBadge
       />
     );
   };

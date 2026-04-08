@@ -16,8 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../styles/colors';
 import SearchIcon from '../../assets/icon/Search.svg';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
-import ImageUploadIcon from '../../assets/icon/image_upload.svg';
-import ImageDeleteIcon from '../../assets/icon/image_delete.svg';
+import { ImageUploadBox } from '../../components/common/ImageUploadGrid';
 import PencilIcon from '../../assets/icon/pencil.svg';
 import ModifyIcon from '../../assets/icon/modify.svg';
 import { MultiSelectDropdown } from './components/MultiSelectDropdown';
@@ -279,14 +278,7 @@ export const BrandWriteScreen: React.FC = () => {
                     <Text style={styles.blueInfoText}>• 지원 형식: PNG, JPG</Text>
                   </View>
                   <View style={styles.imageUploadWrap}>
-                    <View style={styles.imageUploadSlot}>
-                      <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
-                        <ImageUploadIcon width={28} height={28} />
-                      </TouchableOpacity>
-                      <View style={styles.imageDeleteBtn}>
-                        <ImageDeleteIcon width={18} height={18} color="#fff" />
-                      </View>
-                    </View>
+                    <ImageUploadBox onAdd={() => {}} plain />
                   </View>
                 </View>
 
@@ -298,14 +290,7 @@ export const BrandWriteScreen: React.FC = () => {
                     <Text style={styles.blueInfoText}>• 지원 형식: PNG, JPG</Text>
                   </View>
                   <View style={styles.imageUploadWrap}>
-                    <View style={styles.imageUploadSlot}>
-                      <TouchableOpacity style={styles.imageUploadBox} activeOpacity={0.7}>
-                        <ImageUploadIcon width={28} height={28} />
-                      </TouchableOpacity>
-                      <View style={styles.imageDeleteBtn}>
-                        <ImageDeleteIcon width={18} height={18} color="#fff" />
-                      </View>
-                    </View>
+                    <ImageUploadBox onAdd={() => {}} plain />
                   </View>
                 </View>
               </View>
@@ -574,31 +559,6 @@ const styles = StyleSheet.create({
   imageUploadWrap: {
     alignItems: 'flex-start',
     marginTop: 8,
-  },
-  imageUploadSlot: {
-    position: 'relative',
-    width: 98,
-    height: 98,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  imageUploadBox: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageDeleteBtn: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 32,
-    height: 32,
-    borderTopLeftRadius: 2,
-    backgroundColor: 'rgba(27,27,27,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   bottomBar: {
     paddingHorizontal: PADDING_LR,

@@ -18,8 +18,7 @@ import { fontFamily } from '../../styles/typography';
 import { spacing, screenPadding, borderRadius } from '../../styles/spacing';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
-import ImageUploadIcon from '../../assets/icon/image_upload.svg';
-import ImageDeleteIcon from '../../assets/icon/image_delete.svg';
+import { ImageUploadBox } from '../../components/common/ImageUploadGrid';
 import GearsIcon from '../../assets/icon/gears.svg';
 import { BottomButtonBar, Checkbox } from '../../components/common';
 
@@ -219,33 +218,15 @@ export const ProcessingCompanyWriteScreen: React.FC = () => {
   const renderImageSlot = (
     slot: ImageSlot,
     onDelete?: () => void,
-    fullWidth?: boolean,
+    _fullWidth?: boolean,
     onAdd?: () => void,
   ) => {
-    const sizeStyle = fullWidth ? { width: '100%' as const, aspectRatio: 1, height: undefined as any } : {};
-    if (slot.uri) {
-      return (
-        <View style={[st.imageSlotContainer, sizeStyle]}>
-          <Image source={IMG} style={[st.imageSlot, sizeStyle]} resizeMode="cover" />
-          <TouchableOpacity
-            style={st.imageDeleteBtn}
-            activeOpacity={0.6}
-            onPress={onDelete}
-          >
-            <ImageDeleteIcon width={18} height={18} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      );
-    }
     return (
-      <View style={[st.imageSlotContainer, sizeStyle]}>
-        <TouchableOpacity style={[st.imageUploadBox, sizeStyle]} activeOpacity={0.7} onPress={onAdd}>
-          <ImageUploadIcon width={28} height={28} />
-        </TouchableOpacity>
-        <View style={st.imageDeleteBtn}>
-          <ImageDeleteIcon width={18} height={18} color="#fff" />
-        </View>
-      </View>
+      <ImageUploadBox
+        uri={slot.uri || undefined}
+        onAdd={onAdd}
+        onDelete={onDelete}
+      />
     );
   };
 
@@ -1011,25 +992,6 @@ const st = StyleSheet.create({
   imageSlot: {
     width: '100%',
     height: '100%',
-  },
-  imageUploadBox: {
-    width: 98,
-    height: 98,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageDeleteBtn: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 32,
-    height: 32,
-    borderTopLeftRadius: 2,
-    backgroundColor: 'rgba(27,27,27,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   /* Half Grid (2 columns) */

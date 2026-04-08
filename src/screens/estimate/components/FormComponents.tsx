@@ -186,7 +186,7 @@ export const ServiceTag: React.FC<{
 // ─────────────────────────────────────────────
 // ImageUploadGrid (re-export from common)
 // ─────────────────────────────────────────────
-export { ImageUploadGrid } from '../../../components/common/ImageUploadGrid';
+export { ImageUploadGrid, ImageUploadBox } from '../../../components/common/ImageUploadGrid';
 
 // ─────────────────────────────────────────────
 // AgreementSection

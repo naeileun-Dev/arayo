@@ -16,7 +16,7 @@ export { StarRating } from './StarRating';
 export { RatingBreakdown } from './RatingBreakdown';
 export { ReviewModal } from './ReviewModal';
 export type { ReviewModalType, ReviewModalProps } from './ReviewModal';
-export { ImageUploadGrid } from './ImageUploadGrid';
+export { ImageUploadGrid, ImageUploadBox } from './ImageUploadGrid';
 export { CompareToast } from './CompareToast';
 export { ConfirmModal } from './ConfirmModal';
 export { SelectPartnerModal } from './SelectPartnerModal';

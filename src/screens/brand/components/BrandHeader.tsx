@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   View,
-  Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -17,6 +17,7 @@ type MenuType = 'about' | 'notice' | 'products' | 'contact';
 interface BrandHeaderProps {
   brandName?: string;
   brandId?: string;
+  brandLogoUri?: string;
   showMenu?: boolean;
   onMenuPress?: () => void;
   currentPage?: MenuType;
@@ -29,8 +30,10 @@ const MENU_ITEMS: { key: MenuType; label: string }[] = [
   { key: 'contact', label: '문의하기' },
 ];
 
+const defaultLogo = require('../../../assets/images/img01.png');
+
 export const BrandHeader: React.FC<BrandHeaderProps> = ({
-  brandName = '스마트기계',
+  brandLogoUri,
 }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -44,7 +47,11 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
         <ChevronLeftIcon width={24} height={24} color={colors.black} />
       </TouchableOpacity>
 
-      <Text style={styles.headerTitle}>{brandName}</Text>
+      <Image
+        source={brandLogoUri ? { uri: brandLogoUri } : defaultLogo}
+        style={styles.headerLogo}
+        resizeMode="contain"
+      />
 
       <TouchableOpacity
         style={styles.headerBtn}
@@ -74,10 +81,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.primary,
+  headerLogo: {
+    flex: 1,
+    height: 32,
+    marginHorizontal: 12,
+    aspectRatio: 680 / 148,
   },
 });
 
