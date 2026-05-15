@@ -35,7 +35,6 @@ export const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 10 : 20,
     paddingBottom: 8,
     zIndex: 100,
-    backgroundColor: 'rgba(0,0,0,0.15)',
   },
   headerOverlayScrolled: {
     backgroundColor: colors.white,
@@ -44,7 +43,8 @@ export const styles = StyleSheet.create({
   },
   overlayBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   overlayRightGroup: { flexDirection: 'row', alignItems: 'center' },
-  moreIcon: { fontSize: 24, color: colors.white },
+  moreIconContainer: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 },
+  moreIconDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: colors.white },
   slideImg: { width: SCREEN_WIDTH, height: 339 },
   paginationBadge: {
     position: 'absolute',

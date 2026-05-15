@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,9 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Alert,
+  Animated,
 } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../types';
@@ -42,6 +44,10 @@ import {
 
 const { width } = Dimensions.get('window');
 
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+const FAB_EXPANDED_WIDTH = 101;
+const FAB_COLLAPSED_WIDTH = 44;
+const FAB_TEXT_WIDTH = 56;
 
 interface HomeScreenProps {
   onBrandHomePress?: () => void;
@@ -58,6 +64,36 @@ export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
   const [hasMore, setHasMore] = useState(true);
   const [isBusinessInfoOpen, setIsBusinessInfoOpen] = useState(false);
   const bannerRef = useRef<FlatList>(null);
+
+  const fabWidth = useRef(new Animated.Value(FAB_EXPANDED_WIDTH)).current;
+  const fabTextWidth = useRef(new Animated.Value(FAB_TEXT_WIDTH)).current;
+  const fabTextOpacity = useRef(new Animated.Value(1)).current;
+  const isFabCollapsed = useRef(false);
+  const fabExpandTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const collapseFab = useCallback(() => {
+    if (isFabCollapsed.current) return;
+    isFabCollapsed.current = true;
+    Animated.parallel([
+      Animated.timing(fabTextOpacity, { toValue: 0, duration: 120, useNativeDriver: false }),
+      Animated.timing(fabTextWidth, { toValue: 0, duration: 200, useNativeDriver: false }),
+      Animated.timing(fabWidth, { toValue: FAB_COLLAPSED_WIDTH, duration: 200, useNativeDriver: false }),
+    ]).start();
+  }, [fabTextOpacity, fabTextWidth, fabWidth]);
+
+  const expandFab = useCallback(() => {
+    if (!isFabCollapsed.current) return;
+    isFabCollapsed.current = false;
+    Animated.parallel([
+      Animated.timing(fabWidth, { toValue: FAB_EXPANDED_WIDTH, duration: 200, useNativeDriver: false }),
+      Animated.timing(fabTextWidth, { toValue: FAB_TEXT_WIDTH, duration: 200, useNativeDriver: false }),
+      Animated.timing(fabTextOpacity, { toValue: 1, duration: 200, useNativeDriver: false }),
+    ]).start();
+  }, [fabTextOpacity, fabTextWidth, fabWidth]);
+
+  useEffect(() => () => {
+    if (fabExpandTimer.current) clearTimeout(fabExpandTimer.current);
+  }, []);
 
   const onBannerScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = e.nativeEvent.contentOffset.x;
@@ -98,7 +134,11 @@ export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
     if (distanceFromBottom < 200) {
       loadMoreProducts();
     }
-  }, [loadMoreProducts]);
+
+    collapseFab();
+    if (fabExpandTimer.current) clearTimeout(fabExpandTimer.current);
+    fabExpandTimer.current = setTimeout(expandFab, 200);
+  }, [loadMoreProducts, collapseFab, expandFab]);
 
   const handleSearch = () => {
     if (searchText.trim().length >= 2) {
@@ -128,7 +168,12 @@ export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.alarmIcon} onPress={() => navigation.navigate('Notification')}>
-        <AlarmIcon width={24} height={24} />
+        <View>
+          <AlarmIcon width={24} height={24} />
+          <View style={styles.alarmBadge}>
+            <Text style={styles.alarmBadgeText}>99</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -368,10 +413,16 @@ export const HomeScreen = ({ onBrandHomePress }: HomeScreenProps) => {
         {!hasMore && renderFooter()}
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => navigation.navigate('ProductUpload')}>
+      <AnimatedTouchable
+        style={[styles.fab, { width: fabWidth }]}
+        activeOpacity={0.85}
+        onPress={() => navigation.navigate('ProductUpload')}
+      >
         <Text style={styles.fabIcon}>+</Text>
-        <Text style={styles.fabText}> 상품등록</Text>
-      </TouchableOpacity>
+        <Animated.View style={[styles.fabTextWrap, { width: fabTextWidth, opacity: fabTextOpacity }]}>
+          <Text style={styles.fabText} numberOfLines={1}> 상품등록</Text>
+        </Animated.View>
+      </AnimatedTouchable>
     </SafeAreaView>
   );
 }
@@ -405,6 +456,24 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, fontSize: 14, color: colors.black, padding: 0 },
   searchIcon: { marginLeft: 8 },
   alarmIcon: { width: 34, alignItems: 'flex-end', justifyContent: 'center', marginLeft: 10 },
+  alarmBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FF0000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  alarmBadgeText: {
+    fontSize: 10,
+    color: '#FFFFFF',
+    fontWeight: '500',
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
 
   serviceGridSection: {
     paddingVertical: 25,
@@ -586,14 +655,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 54,
     right: 16,
-    width: 101,
     height: 44,
     borderRadius: 22,
     backgroundColor: colors.primary200,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    overflow: 'hidden',
   },
   fabIcon: {
     fontSize: 20,
@@ -601,6 +669,9 @@ const styles = StyleSheet.create({
     color: colors.white,
     includeFontPadding: false,
     lineHeight: 24,
+  },
+  fabTextWrap: {
+    overflow: 'hidden',
   },
   fabText: {
     fontSize: 13,

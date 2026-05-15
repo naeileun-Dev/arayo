@@ -62,34 +62,38 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ visible, anchor, onClose, o
   return (
     <Modal
       transparent
-      animationType="none"
+      animationType="slide"
       visible={visible}
-      statusBarTranslucent
       onRequestClose={onClose}
     >
       <TouchableOpacity
-        style={StyleSheet.absoluteFill}
+        style={s.menuOverlay}
         activeOpacity={1}
         onPress={onClose}
       />
 
-      <View style={[s.ddMenu, { position: 'absolute', top, left, width: MENU_W }]}>
+      <View style={s.menuContainer}>
+        <View style={s.moreSheetHandle} />
         <TouchableOpacity
-          style={s.ddItem}
+          style={[s.menuItem, s.menuItemBorder]}
           activeOpacity={0.7}
           onPress={() => { onClose(); onEdit?.(); }}
         >
-          <Text style={s.ddText}>수정</Text>
+          <Text style={s.menuItemText}>수정</Text>
         </TouchableOpacity>
-
-        <View style={s.ddLine} />
-
         <TouchableOpacity
-          style={s.ddItem}
+          style={[s.menuItem, s.menuItemBorder]}
           activeOpacity={0.7}
           onPress={() => { onClose(); onDelete?.(); }}
         >
-          <Text style={s.ddText}>삭제</Text>
+          <Text style={s.menuItemText}>삭제</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={s.moreSheetCancel}
+          onPress={onClose}
+          activeOpacity={0.7}
+        >
+          <Text style={s.moreSheetCancelText}>닫기</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -405,6 +409,50 @@ const s = StyleSheet.create({
     fontSize:  13,
     color:     colors.G500,
     marginTop: 8,
+  },
+  // Menu Modal
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  menuContainer: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom:30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  menuItem: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  menuItemBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.G200,
+  },
+  menuItemText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: colors.G500,
   },
 });
 

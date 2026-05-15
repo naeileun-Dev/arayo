@@ -14,6 +14,7 @@ import {
   Modal,
   Image,
   Dimensions,
+  Animated,
 } from 'react-native';
 import { colors } from '../../styles/colors';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
@@ -21,10 +22,12 @@ import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import ChevronRightIcon from '../../assets/icon/chevron-right.svg';
 import CalendarIcon from '../../assets/icon/calendar.svg';
 import XIcon from '../../assets/icon/X.svg';
+import ImageAddIcon from '../../assets/icon/image_add.svg';
+import SendIcon from '../../assets/icon/send.svg';
 import type { RootStackParamList } from '../../types';
 import { CompareToast } from '../../components/common';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const userAvatar = require('../../assets/images/user01.png');
 const gearIcon = require('../../assets/images/Gear_Icons.png');
@@ -358,15 +361,28 @@ const MenuModal: React.FC<MenuModalProps> = ({
   };
 
   const menuItems = getMenuItems();
+  const sheetTranslateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+
+  useEffect(() => {
+    if (visible) {
+      sheetTranslateY.setValue(SCREEN_HEIGHT);
+      Animated.timing(sheetTranslateY, {
+        toValue: 0,
+        duration: 220,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, sheetTranslateY]);
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
       <TouchableOpacity style={styles.menuOverlay} activeOpacity={1} onPress={onClose}>
-        <View style={styles.menuContainer}>
+        <Animated.View style={[styles.menuContainer, { transform: [{ translateY: sheetTranslateY }] }]}>
+          <View style={styles.moreSheetHandle} />
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={[styles.menuItem, index < menuItems.length - 1 && styles.menuItemBorder]}
+              style={[styles.menuItem, styles.menuItemBorder]}
               onPress={() => {
                 onClose();
                 item.onPress?.();
@@ -376,7 +392,14 @@ const MenuModal: React.FC<MenuModalProps> = ({
               <Text style={styles.menuItemText}>{item.label}</Text>
             </TouchableOpacity>
           ))}
-        </View>
+          <TouchableOpacity
+            style={styles.moreSheetCancel}
+            onPress={onClose}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.moreSheetCancelText}>닫기</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </TouchableOpacity>
     </Modal>
   );
@@ -977,12 +1000,7 @@ export const ChatRoomScreen: React.FC = () => {
             activeOpacity={0.7}
             onPress={handleImagePicker}
           >
-            <View style={styles.fileBtnInner}>
-              <View style={styles.fileBtnIconImg} />
-              <View style={styles.fileBtnIconPlus}>
-                <Text style={styles.fileBtnIconPlusText}>+</Text>
-              </View>
-            </View>
+            <ImageAddIcon width={24} height={24} />
           </TouchableOpacity>
 
           <TextInput
@@ -1000,9 +1018,7 @@ export const ChatRoomScreen: React.FC = () => {
             activeOpacity={0.7}
             onPress={handleSend}
           >
-            <View style={[styles.sendIcon, message.trim().length > 0 && styles.sendIconActive]}>
-              <View style={styles.sendTriangle} />
-            </View>
+            <SendIcon width={24} height={24} />
           </TouchableOpacity>
         </View>
 
@@ -1403,7 +1419,7 @@ const styles = StyleSheet.create({
   chatInputBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: PADDING_LR,
+    paddingHorizontal: 8,
     paddingVertical: 12,
     backgroundColor: colors.white,
     borderTopWidth: 1,
@@ -1415,40 +1431,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
-  },
-  fileBtnInner: {
-    width: 32,
-    height: 32,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: colors.G400,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  fileBtnIconImg: {
-    width: 18,
-    height: 14,
-    backgroundColor: colors.G300,
-    borderRadius: 2,
-  },
-  fileBtnIconPlus: {
-    position: 'absolute',
-    bottom: 1,
-    right: 1,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.G500,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fileBtnIconPlusText: {
-    fontSize: 10,
-    color: colors.white,
-    fontWeight: '700',
-    lineHeight: 12,
   },
   chatInput: {
     flex: 1,
@@ -1465,25 +1447,6 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  sendIcon: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sendIconActive: {},
-  sendTriangle: {
-    width: 0,
-    height: 0,
-    borderStyle: 'solid',
-    borderTopWidth: 8,
-    borderBottomWidth: 8,
-    borderLeftWidth: 12,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderLeftColor: colors.G400,
-    marginLeft: 4,
   },
   // Bottom Button
   bottomFloating: {
@@ -1507,36 +1470,48 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.system100,
   },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: colors.G500,
+  },
   // Menu Modal
   menuOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    paddingTop: Platform.OS === 'ios' ? 100 : 60,
-    paddingRight: 16,
+    justifyContent: 'flex-end',
   },
   menuContainer: {
     backgroundColor: colors.white,
-    borderRadius: 8,
-    minWidth: 150,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom:30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
   },
   menuItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   menuItemBorder: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.G200,
   },
   menuItemText: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
     color: colors.black,
   },
   // Modal Common

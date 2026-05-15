@@ -135,7 +135,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 
         <View style={styles.con}>
           <Text style={styles.subject}>{subject}</Text>
-          <Text style={styles.msg} numberOfLines={1} ellipsizeMode="tail">
+          <Text style={styles.msg}>
             {message}
           </Text>
         </View>

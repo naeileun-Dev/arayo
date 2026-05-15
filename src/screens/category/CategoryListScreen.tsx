@@ -17,6 +17,7 @@ import {
 import SearchIcon from '../../assets/icon/Search.svg';
 import FilterIcon from '../../assets/icon/filter.svg';
 import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
+import ChevronUpIcon from '../../assets/icon/chevron-up.svg';
 import ChevronLeftIcon from '../../assets/icon/chevron-left.svg';
 import { colors as C } from '../../styles/colors';
 
@@ -327,7 +328,7 @@ export const CategoryListScreen = () => {
             onPress={() => setCompareVisible(true)}
             activeOpacity={0.8}
           >
-            <Text style={styles.barToggleArrow}>▲</Text>
+            <ChevronUpIcon width={18} height={18} color={C.G600} />
           </TouchableOpacity>
           <View style={styles.compareBar}>
             <Text style={styles.compareBarTitle}>
@@ -571,11 +572,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   barToggleBtn: {
-    width: 80,
-    height: 36,
+    width: 64,
+    height: 22,
     backgroundColor: C.white,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: -1,
@@ -588,11 +589,6 @@ const styles = StyleSheet.create({
       },
       android: { elevation: 6 },
     }),
-  },
-  barToggleArrow: {
-    fontSize: 16,
-    color: C.G600,
-    fontWeight: '700',
   },
   compareBar: {
     width: '100%',
@@ -620,7 +616,8 @@ const styles = StyleSheet.create({
   },
   compareBarClose: {
     fontSize: 16,
-    color: C.G500,
+    fontWeight: '700',
+    color: C.black,
     padding: 4,
   },
 });

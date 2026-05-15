@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Image,
+  Image, 
+  Modal,
   Pressable,
   TouchableOpacity,
   Platform,
@@ -61,30 +62,40 @@ export const TradeReviewDetailScreen: React.FC = () => {
       {/* Dropdown */}
       {menuVisible && (
         <>
-          <Pressable style={styles.menuOverlay} onPress={() => setMenuVisible(false)} />
-          <View style={styles.menuDropdown}>
-            <TouchableOpacity
-              style={styles.menuItem}
-              activeOpacity={0.6}
-              onPress={() => {
-                setMenuVisible(false);
-                navigation.navigate('TradeReviewEdit' as any);
-              }}
-            >
-              <Text style={styles.menuItemText}>수정</Text>
+          <Modal visible={menuVisible} transparent animationType="slide" onRequestClose={() => setMenuVisible(false)}>
+            <TouchableOpacity style={styles.menuOverlay} activeOpacity={1} onPress={() => setMenuVisible(false)}>
+              <View style={styles.menuContainer}>
+                <View style={styles.moreSheetHandle} />
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setMenuVisible(false);
+                    navigation.navigate('TradeReviewEdit' as any);
+                  }}
+                >
+                  <Text style={styles.menuItemText}>수정</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setMenuVisible(false);
+                    setCancelVisible(true);
+                  }}
+                >
+                  <Text style={styles.menuItemText}>보낸 거래후기 취소하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.moreSheetCancel}
+                  onPress={() => setMenuVisible(false)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.moreSheetCancelText}>닫기</Text>
+                </TouchableOpacity>
+              </View>
             </TouchableOpacity>
-            <View style={styles.menuDivider} />
-            <TouchableOpacity
-              style={styles.menuItem}
-              activeOpacity={0.6}
-              onPress={() => {
-                setMenuVisible(false);
-                setCancelVisible(true);
-              }}
-            >
-              <Text style={styles.menuItemText}>보낸 거래후기 취소하기</Text>
-            </TouchableOpacity>
-          </View>
+          </Modal>
         </>
       )}
 
@@ -162,6 +173,7 @@ export const TradeReviewDetailScreen: React.FC = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -185,14 +197,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.textPrimary,
   },
-  menuOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 99,
-  },
   menuDropdown: {
     position: 'absolute',
     top: 52,
@@ -211,16 +215,6 @@ const styles = StyleSheet.create({
       },
       android: { elevation: 8 },
     }),
-  },
-  menuItem: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: 14,
-  },
-  menuItemText: {
-    fontSize: 15,
-    fontFamily: fontFamily.medium,
-    fontWeight: '500',
-    color: colors.textPrimary,
   },
   menuDivider: {
     height: StyleSheet.hairlineWidth,
@@ -353,5 +347,49 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: colors.black,
     lineHeight: 22,
+  },
+   // Menu Modal
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  menuContainer: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom:30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  menuItem: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  menuItemBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.G200,
+  },
+  menuItemText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: colors.G500,
   },
 });

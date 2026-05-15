@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Pressable,
   Platform,
+  Modal,
   NativeSyntheticEvent,
   NativeScrollEvent,
   Share,
@@ -192,7 +193,11 @@ export const ProductViewScreen = () => {
             <ShareIcon width={24} height={24} color={iconColor} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.overlayBtn} onPress={() => setMenuVisible(!menuVisible)}>
-            <Text style={[styles.moreIcon, { color: iconColor }]}>⋮</Text>
+            <View style={styles.moreIconContainer}>
+              <View style={[styles.moreIconDot, { backgroundColor: iconColor }]} />
+              <View style={[styles.moreIconDot, { backgroundColor: iconColor }]} />
+              <View style={[styles.moreIconDot, { backgroundColor: iconColor }]} />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -535,29 +540,39 @@ export const ProductViewScreen = () => {
       {/* More Dropdown */}
       {menuVisible && (
         <>
-          <Pressable style={moreStyles.overlay} onPress={() => setMenuVisible(false)} />
-          <View style={moreStyles.dropdown}>
-            <TouchableOpacity
-              style={moreStyles.item}
-              activeOpacity={0.6}
-              onPress={() => {
-                setMenuVisible(false);
-              }}
-            >
-              <Text style={moreStyles.itemText}>공유하기</Text>
+          <Modal visible={menuVisible} transparent animationType="slide" onRequestClose={() => setMenuVisible(false)}>
+            <TouchableOpacity style={menuStyles.menuOverlay} activeOpacity={1} onPress={() => setMenuVisible(false)}>
+              <View style={menuStyles.menuContainer}>
+                <View style={menuStyles.moreSheetHandle} />
+                <TouchableOpacity
+                  style={moreStyles.item}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setMenuVisible(false);
+                  }}
+                >
+                  <Text style={moreStyles.itemText}>공유하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={moreStyles.item}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setMenuVisible(false);
+                    setReportVisible(true);
+                  }}
+                >
+                  <Text style={moreStyles.itemText}>신고하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={menuStyles.moreSheetCancel}
+                  onPress={() => setMenuVisible(false)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={menuStyles.moreSheetCancelText}>닫기</Text>
+                </TouchableOpacity>
+              </View>
             </TouchableOpacity>
-            <View style={moreStyles.divider} />
-            <TouchableOpacity
-              style={moreStyles.item}
-              activeOpacity={0.6}
-              onPress={() => {
-                setMenuVisible(false);
-                setReportVisible(true);
-              }}
-            >
-              <Text style={moreStyles.itemText}>신고하기</Text>
-            </TouchableOpacity>
-          </View>
+          </Modal>
         </>
       )}
 
@@ -644,5 +659,52 @@ const localStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.black,
+  },
+});
+
+const menuStyles = StyleSheet.create({
+  // Menu Modal
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  menuContainer: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom:30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  menuItem: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  menuItemBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.G200,
+  },
+  menuItemText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: colors.G500,
   },
 });

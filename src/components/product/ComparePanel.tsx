@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import RefreshIcon from '../../assets/icon/refresh-cw.svg';
 import TrashIcon from '../../assets/icon/trash.svg';
+import ChevronDownIcon from '../../assets/icon/chevron-down.svg';
 import { colors } from '../../styles/colors';
-import { ProductListItem, BADGE_CONFIG, COMPARE_CARD_WIDTH, SCREEN_HEIGHT } from '../../types/product';
+import { ProductListItem, COMPARE_CARD_WIDTH, SCREEN_HEIGHT } from '../../types/product';
 
 interface ComparePanelProps {
   products: ProductListItem[];
@@ -56,19 +57,6 @@ export const ComparePanel = ({
         >
           <TrashIcon width={20} height={20} color={colors.G600} />
         </TouchableOpacity>
-        {product.state !== 'normal' && (
-          <View
-            style={[
-              styles.stateBadge,
-              { backgroundColor: BADGE_CONFIG[product.state].bg },
-              product.state === 'sold' && styles.stateBadgeSold,
-            ]}
-          >
-            <Text style={[styles.stateBadgeText, { color: BADGE_CONFIG[product.state].text }]}>
-              {BADGE_CONFIG[product.state].label}
-            </Text>
-          </View>
-        )}
       </View>
       <View style={styles.panelCardCon}>
         <Text style={styles.panelCardTitle} numberOfLines={2}>
@@ -104,7 +92,7 @@ export const ComparePanel = ({
   return (
     <View style={styles.comparePanelWrap}>
       <TouchableOpacity style={styles.panelToggleBtn} onPress={onClose} activeOpacity={0.8}>
-        <Text style={styles.panelToggleArrow}>▼</Text>
+        <ChevronDownIcon width={18} height={18} color={colors.G600} />
       </TouchableOpacity>
       <View style={styles.comparePanel}>
         <View style={styles.panelHead}>
@@ -142,11 +130,11 @@ export const ComparePanel = ({
 const styles = StyleSheet.create({
   comparePanelWrap: { position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center' },
   panelToggleBtn: {
-    width: 80,
-    height: 36,
+    width: 64,
+    height: 22,
     backgroundColor: colors.white,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: -1,
@@ -160,7 +148,6 @@ const styles = StyleSheet.create({
       android: { elevation: 6 },
     }),
   },
-  panelToggleArrow: { fontSize: 16, color: colors.G600, fontWeight: '700' },
   comparePanel: {
     width: '100%',
     backgroundColor: colors.white,
@@ -184,14 +171,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   panelTitle: { fontSize: 15, fontWeight: '700', color: colors.black },
-  panelCloseText: { fontSize: 16, color: colors.G500, padding: 4 },
+  panelCloseText: { fontSize: 16, fontWeight: '700', color: colors.black, padding: 4 },
   panelSlotsGrid: { maxHeight: SCREEN_HEIGHT * 0.45, marginBottom: 14 },
   panelGridRow: { flexDirection: 'row', gap: 10, marginBottom: 10 },
   panelCard: {
     width: COMPARE_CARD_WIDTH,
     backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.G200,
     borderRadius: 8,
     overflow: 'hidden',
   },
@@ -210,7 +195,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     backgroundColor: colors.white,
-    borderRadius: 10,
+    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
@@ -224,16 +209,6 @@ const styles = StyleSheet.create({
       android: { elevation: 3 },
     }),
   },
-  stateBadge: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    paddingHorizontal: 7,
-    paddingVertical: 4,
-    borderBottomRightRadius: 6,
-  },
-  stateBadgeSold: { borderWidth: 1, borderColor: colors.G300 },
-  stateBadgeText: { color: colors.white, fontSize: 11, fontWeight: '700', letterSpacing: -0.2 },
   panelCardCon: { padding: 8 },
   panelCardTitle: { fontSize: 12, fontWeight: '500', color: colors.black, lineHeight: 17 },
   panelCardTags: { fontSize: 10, color: colors.system100, marginTop: 2 },

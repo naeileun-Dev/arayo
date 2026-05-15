@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx react-native:*)",
+      "Bash(npm info:*)",
+      "Bash(rm -rf /tmp/haste-map-*)",
+      "Bash(rm -rf $TMPDIR/metro-*)",
+      "Bash(rm -rf $TMPDIR/haste-map-*)",
+      "Bash(du -sh /Users/leeeungjae/Documents/GitHub/arayo/android/*/)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }

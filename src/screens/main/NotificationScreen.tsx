@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Modal,
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
@@ -66,11 +67,27 @@ export const NotificationScreen: React.FC = () => {
           </TouchableOpacity>
 
           {isMenuOpen && (
-            <View style={styles.dropdownMenu}>
-              <TouchableOpacity style={styles.dropdownItem} onPress={handleDeleteAll}>
-                <Text style={styles.dropdownText}>전체 삭제</Text>
+            <Modal visible={isMenuOpen} transparent animationType="slide" onRequestClose={() => setIsMenuOpen(false)}>
+              <TouchableOpacity style={styles.menuOverlay} activeOpacity={1} onPress={() => setIsMenuOpen(false)}>
+                <View style={styles.menuContainer}>
+                  <View style={styles.moreSheetHandle} />
+                    <TouchableOpacity
+                      style={[styles.menuItem, styles.menuItemBorder]}
+                      onPress={handleDeleteAll}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.menuItemText}>전체 삭제</Text>
+                    </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.moreSheetCancel}
+                    onPress={() => setIsMenuOpen(false)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.moreSheetCancelText}>닫기</Text>
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
-            </View>
+            </Modal>
           )}
         </View>
       </View>
@@ -185,6 +202,50 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
+    color: colors.G500,
+  },
+  // Menu Modal
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  menuContainer: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom:30,
+  },
+  moreSheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.G300,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  menuItem: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  menuItemBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.G200,
+  },
+  menuItemText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  moreSheetCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  moreSheetCancelText: {
+    fontSize: 15,
+    fontWeight: '500',
     color: colors.G500,
   },
 });
